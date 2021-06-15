@@ -65,8 +65,8 @@ class Conversion extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            ID::make(  'status')->sortable(),
-            ID::make(  'status_code')->hideFromIndex(),
+            Text::make(  'status')->sortable(),
+            Text::make(  'status_code')->hideFromIndex(),
             DateTime::make('Created at' )->sortable(),
             DateTime::make('Updated at')->sortable(),
             Text::make('Affiliate id'),
