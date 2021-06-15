@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/convarsionsUpdateCommand-utils'
 import { createRenderer } from 'vue-server-renderer'
 import Index from '@/views/Index.vue'
 

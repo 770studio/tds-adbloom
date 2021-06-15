@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/convarsionsUpdateCommand-utils'
 import BelongsToField from '@/components/Form/BelongsToField'
 import flushPromises from 'flush-promises'
 

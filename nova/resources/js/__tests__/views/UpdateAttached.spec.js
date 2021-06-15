@@ -1,4 +1,4 @@
-import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
+import { mount, shallowMount, createLocalVue } from '@vue/convarsionsUpdateCommand-utils'
 import UpdateAttached from '@/views/UpdateAttached'
 // import flushPromises from 'flush-promises'
 

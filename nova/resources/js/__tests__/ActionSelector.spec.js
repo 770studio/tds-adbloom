@@ -1,4 +1,4 @@
-import { mount, shallowMount, createLocalVue } from '@vue/test-utils'
+import { mount, shallowMount, createLocalVue } from '@vue/convarsionsUpdateCommand-utils'
 import PortalVue from 'portal-vue'
 import ActionSelector from '@/components/ActionSelector'
 import flushPromises from 'flush-promises'

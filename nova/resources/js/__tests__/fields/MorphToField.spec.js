@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/convarsionsUpdateCommand-utils'
 import MorphToField from '@/components/Form/MorphToField'
 import flushPromises from 'flush-promises'
 
