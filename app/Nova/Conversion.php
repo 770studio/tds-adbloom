@@ -97,7 +97,7 @@ class Conversion extends Resource
             Text::make('ip'),
             Text::make('session_ip')->hideFromIndex(),
             Text::make('sale_amount'),
-            Text::make('user_agent'),
+            Text::make('user_agent')->hideFromIndex(),
             Text::make('country_code'),
             Text::make('event_city')->hideFromIndex(),
             Text::make('event_region')->hideFromIndex(),
