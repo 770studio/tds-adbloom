@@ -46,7 +46,7 @@ class Conversion extends Resource
      * @var bool
      */
     public static $showPollingToggle = true;
-    public static $pollingInterval = 30;
+    public static $pollingInterval = 600; // 10 minutes
     /**
      * Default ordering for index query.
      *

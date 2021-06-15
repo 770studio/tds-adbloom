@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Services\TuneAPI\TuneAPIService;
 use Illuminate\Console\Command;
 
-class convarsionsUpdateCommand extends Command
+class ConversionsUpdateCommand extends Command
 {
     /**
      * The name and signature of the console command.
