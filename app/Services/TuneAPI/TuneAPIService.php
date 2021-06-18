@@ -14,7 +14,7 @@ class TuneAPIService
 
     public function updateConversions(): void
     {
-        $uptoDate = now()->subMonth(3)->toDateTimeString();
+        $uptoDate = now()->subMonths(3)->toDateTimeString();
         $this->http_get(
             (new TuneAPIRequest())->findAll($uptoDate)
         )->map(function ($item, $id) {
