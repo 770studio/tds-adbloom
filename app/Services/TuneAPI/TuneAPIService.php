@@ -27,6 +27,8 @@ class TuneAPIService
     {
         //TODO curl or guzzle
 
+        //TODO logging
+        dd($urlRequest);
         return $this->parse_response(
             json_decode(
                 file_get_contents($urlRequest)
