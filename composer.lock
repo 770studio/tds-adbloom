@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "104019399f0334b83174b5c9b818a148",
+    "content-hash": "9adec200cfee820aa02a517437229dcc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -61,6 +61,59 @@
                 "source": "https://github.com/asm89/stack-cors/tree/v2.0.3"
             },
             "time": "2021-03-11T06:42:03+00:00"
+        },
+        {
+            "name": "bilaleren/tune-api",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bilaleren/tune-php.git",
+                "reference": "31a46ab3ee972997434438c67980e8b97e845029"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bilaleren/tune-php/zipball/31a46ab3ee972997434438c67980e8b97e845029",
+                "reference": "31a46ab3ee972997434438c67980e8b97e845029",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": ">=5.3.4",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tune\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bilal Eren",
+                    "email": "bilal@webnoi.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "TUNE makes the industry’s most flexible SaaS platform for managing marketing partnerships across mobile and web.",
+            "homepage": "https://github.com/bilaleren/tune-php.git",
+            "keywords": [
+                "Affiliate Marketing",
+                "Tune Api",
+                "network marketing",
+                "tune"
+            ],
+            "support": {
+                "issues": "https://github.com/bilaleren/tune-php/issues",
+                "source": "https://github.com/bilaleren/tune-php/tree/v1.0.3"
+            },
+            "time": "2021-01-24T19:46:32+00:00"
         },
         {
             "name": "brick/math",
