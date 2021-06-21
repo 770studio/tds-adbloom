@@ -19,18 +19,18 @@ class TuneAPIUpdateJob implements ShouldQueue
      *
      * @return void
      */
-    /**
-     * @var array
-     */
-    public $apiRequest;
 
+    public $apiRequest;
+    public $entityName;
     /**
      * TuneAPIUpdateJob constructor.
-     * @param $apiRequest
+     * @param array $apiRequest
+     * @param string $entityName
      */
-    public function __construct($apiRequest)
+    public function __construct(array $apiRequest, string $entityName)
     {
         $this->apiRequest = $apiRequest;
+        $this->entityName = $entityName;
     }
 
     /**
@@ -41,7 +41,10 @@ class TuneAPIUpdateJob implements ShouldQueue
      */
     public function handle(TuneAPIService $tuneAPIService)
     {
-        $response = $tuneAPIService->getConversions($this->apiRequest);
-        $tuneAPIService->processPage($response->data, Conversion::class);
+
+        $response = $tuneAPIService->setEntity($this->entityName)
+                                    ->getData($this->apiRequest);
+
+        $tuneAPIService->processPage($response->data);
     }
 }

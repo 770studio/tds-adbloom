@@ -5,36 +5,33 @@ namespace App\Services\TuneAPI;
 
 
 use App\Conversion;
-use App\Jobs\TuneAPIGetOneConversionJob;
 use App\Jobs\TuneAPIUpdateJob;
-use App\Services\TuneAPI\Response;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Tune\Networks;
-use Tune\AffiliateApi;
-use Tune\Utils\Network;
-use Tune\Repository\NetworkRepository;
 use Tune\Tune;
-use Tune\NetworkApi;
-
+use Tune\Utils\Network;
 use Tune\Utils\Operator;
-use Tune\Utils\HttpQueryBuilder;
-
 
 
 class TuneAPIService
 {
+    const UPDATE_STARTING_FROM_LAST_X_MONTHS = 3;
+    const LIMIT_PER_PAGE = 100;
 
     /**
-     * @var Networks
+     * @var \Tune\NetworkApi
      */
-    private $networks;
+    private $api;
+    private $entityName;
+    private $entity;
 
     public function __construct()
     {
-        $this->networks = new Networks([
+
+        $this->api = Tune::networkApi(new Networks([
             new Network('NETzcmyVZWooz2oPYnlWDzOu9kiQmD', 'adbloom'), // Auto selected network
-        ]);
+        ]));
+
     }
 
     /**
@@ -43,61 +40,90 @@ class TuneAPIService
     public function updateConversions(): void
     {
 
-        $fromDate = now()->subMonths(3)->toDateTimeString();
+        $this->setEntity('Conversion');
 
         $request = [
             'filters' => [
                 'datetime' => [
-                    Operator::GREATER_THAN_OR_EQUAL_TO => $fromDate,
+                    Operator::GREATER_THAN_OR_EQUAL_TO => now()
+                        ->subMonths(self::UPDATE_STARTING_FROM_LAST_X_MONTHS)
+                        ->toDateTimeString(),
                 ]
             ],
             //'fields' => [],
-            'limit'=> 2
+            'limit' => self::LIMIT_PER_PAGE
         ];
 
-        $response = getConversions($request);
+        $response = $this->getData($request);
 
         $this->setToQueue($request, $response->pageCount);
 
-        $this->processPage($response->data, Conversion::class);
+        $this->processPage($response->data);
 
 
     }
 
-
-    private function setToQueue(array $request, int $pageCount)
+    public function setEntity($entityName): self
     {
-        if($pageCount < 2) return;
-        for($p = 2; $p < $pageCount; $p++) {
-            TuneAPIUpdateJob::dispatch(
-                array_merge($request, ['page' => $p])
-            );
+        $this->entityName = $entityName;
+        switch ($entityName) {
+            case 'Conversion':
+                $this->entity = new Conversion;
+                break;
         }
-    }
 
-    public function processPage(Collection $items, Model $entity)
-    {
-        $items->each(function($item) use ($entity) {
-            $entity::updateOrCreate(
-                $item->only("id")->toArray(),
-                $item->toArray()
-            );
-
-        });
+        return $this;
     }
 
     /**
      * @throws \Exception
      */
-    public function getConversions(array $request) : Response
+    public function getData(array $request): Response
     {
-       return new Response(
-            Tune::networkApi($this->networks)
-                ->conversion()->findAll( $request, /* Request options */ []),
-           'Conversion'
-        );
+        switch ($this->getEntityName()) {
+            case 'Conversion':
+                return new Response(
+                    $this->api
+                        ->conversion()
+                        ->findAll($request, /* Request options */ [])
+                    , $this->entityName
+                );
+        }
+
 
     }
 
+    private function getEntityName()
+    {
+        return $this->entityName;
+    }
+
+    private function setToQueue(array $request, int $pageCount)
+    {
+        if ($pageCount < 2) return;
+        for ($p = 2; $p < $pageCount; $p++) {
+            TuneAPIUpdateJob::dispatch(
+                array_merge($request, ['page' => $p]),
+                $this->entityName
+            );
+        }
+    }
+
+    public function processPage(Collection $items)
+    {
+
+        $items->each(function ($item) {
+            $this->getEntity()::updateOrCreate(
+                ['id' => $item->id],
+                (array)$item
+            );
+
+        });
+    }
+
+    private function getEntity()
+    {
+        return $this->entity;
+    }
 
 }

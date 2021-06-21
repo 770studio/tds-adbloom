@@ -53,7 +53,7 @@ class Conversion extends Resource
      * @var array
      */
     public static $indexDefaultOrder = [
-        'datetime' => 'desc'
+        'created_at' => 'desc'
     ];
     /**
      * Get the fields displayed by the resource.
