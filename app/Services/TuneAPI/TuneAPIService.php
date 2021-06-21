@@ -84,6 +84,7 @@ class TuneAPIService
      */
     public function getData(array $request): Response
     {
+        dump($request);
         switch ($this->getEntityName()) {
             case 'Conversion':
                 return new Response(
