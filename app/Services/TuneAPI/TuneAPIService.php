@@ -56,7 +56,9 @@ class TuneAPIService
 
         $response = $this->getData($request);
 
+        dump('pageCount', $response->pageCount) ;
         $this->setToQueue($request, $response->pageCount);
+        dump('process page:', 1) ;
 
         $this->processPage($response->data);
 

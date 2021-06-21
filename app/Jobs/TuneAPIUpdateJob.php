@@ -41,10 +41,12 @@ class TuneAPIUpdateJob implements ShouldQueue
      */
     public function handle(TuneAPIService $tuneAPIService)
     {
+        dump('queuing page:', $this->apiRequest['page']) ;
 
         $response = $tuneAPIService->setEntity($this->entityName)
                                     ->getData($this->apiRequest);
 
+        dump('process page:', $this->apiRequest['page']) ;
         $tuneAPIService->processPage($response->data);
     }
 }
