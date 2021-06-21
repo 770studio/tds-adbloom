@@ -63,19 +63,5 @@ class BootNova
     }
 
 
-    /**
-     * Register the Nova gate.
-     *
-     * This gate determines who can access Nova in non-local environments.
-     *
-     * @return void
-     */
-    protected function gate()
-    {
-        Gate::define('viewNova', function ($user) {
-            return in_array($user->email, [
-                'test@adbloom.co',
-            ]);
-        });
-    }
+
 }
