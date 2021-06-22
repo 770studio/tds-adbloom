@@ -11,6 +11,7 @@ class Response
 {
     private $pageCount;
     private $data;
+    private $count;
 
     /**
      * @throws \Exception
@@ -32,9 +33,16 @@ class Response
     {
         return $this->data;
     }
+
     public function parseCountPages() : int
     {
         return $this->pageCount;
     }
+    public function parseCount() : int
+    {
+        return $this->count;
+    }
+
+
 
 }

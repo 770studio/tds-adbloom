@@ -88,13 +88,15 @@ class TuneAPIRecursiveConversionUpdateJob implements ShouldQueue
                     }
 
                     $last_id = $item->id;
+                })->whenNotEmpty(function () use ($last_id) {
+                    // run next job
+                    TuneAPIRecursiveConversionUpdateJob::dispatch($last_id, $this->startDateTime);
                 });
 
             dump('changed/created', [$changed, $created]);
             Log::channel('queue')->debug('changed/created:', [$changed, $created]);
 
-            // if there are no exception then run next job
-            TuneAPIRecursiveConversionUpdateJob::dispatch($last_id, $this->startDateTime);
+
 
         } catch(\Exception $e) {
             // if we are done (there are no more items) it would be an exception
