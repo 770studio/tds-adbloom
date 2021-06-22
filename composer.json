@@ -13,10 +13,11 @@
         "bilaleren/tune-api": "^1.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^6.3.1|^7.0.1",
+        "guzzlehttp/guzzle": "^7.3",
         "laravel/framework": "^v8.47.0",
         "laravel/nova": "*",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
