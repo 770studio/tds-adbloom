@@ -41,12 +41,10 @@ class ConversionsUpdateCommand extends Command
         //TuneAPIGetOneConversionJob::dispatch(1723221);
         // return;
 
-        try {
+
             $tuneAPIService->updateConversions();
 
-        } catch (\Exception $e) {
-            //TODO exception handling
-        }
+
 
     }
 }
