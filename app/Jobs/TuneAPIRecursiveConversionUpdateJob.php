@@ -53,7 +53,6 @@ class TuneAPIRecursiveConversionUpdateJob implements ShouldQueue
         $last_id = $this->startId;
 
 
-        try {
             $tuneAPIService
                 ->setEntity('Conversion')
                 ->getResponse(
@@ -98,13 +97,7 @@ class TuneAPIRecursiveConversionUpdateJob implements ShouldQueue
 
 
 
-        } catch(\Exception $e) {
-            // if we are done (there are no more items) it would be an exception
-            // so just write it in and stop working
-            dump('exception', $e->getMessage());
-            Log::channel('queue')->debug('exception:' . $e->getMessage());
-            return;
-        }
+
 
 
 
