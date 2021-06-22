@@ -33,6 +33,5 @@ class CreateConversionsTableChange220621 extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('conversions');
-    }
+     }
 }

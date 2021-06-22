@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConversionsTableChange220621_2 extends Migration
+class ChangeAffiliateInfoFieldInConversions extends Migration
 {
     /**
      * Run the migrations.
@@ -34,6 +34,6 @@ class CreateConversionsTableChange220621_2 extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('conversions');
+
     }
 }
