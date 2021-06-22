@@ -59,10 +59,10 @@ class TuneAPIService
 
         $response = $this->getData($request);
 
-        dump('pageCount', $response->pageCount) ;
+        dump('pageCount', $response->pageCount);
         Log::channel('queue')->debug($response->pageCount);
         $this->sendToQueue($request, $response->pageCount);
-        dump('process page:', 1) ;
+        dump('process page:', 1);
         Log::channel('queue')->debug('process page:', [1]);
 
         $this->processPage($response->data);
@@ -125,16 +125,22 @@ class TuneAPIService
     {
 
         $changed = $created = 0;
-        $items->each(function ($item) use(&$changed,&$created) {
+        $items->each(function ($item) use (&$changed, &$created) {
+            Log::channel('queue')->debug('updateOrCreate:', [
+                    'entity' => $this->getEntityName(),
+                    'id' => $item->id
+                ]
+            );
+
             $r = $this->getEntity()::updateOrCreate(
                 ['id' => $item->id],
                 (array)$item
             );
 
-            if($r->wasRecentlyCreated) {
+            if ($r->wasRecentlyCreated) {
                 // был инсерт
                 $created++;
-            } elseif( $r->wasChanged() ) {
+            } elseif ($r->wasChanged()) {
                 // был апдейт
                 $changed++;
             }

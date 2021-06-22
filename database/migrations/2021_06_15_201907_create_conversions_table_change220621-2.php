@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConversionsTableChange220621 extends Migration
+class CreateConversionsTableChange220621_2 extends Migration
 {
     /**
      * Run the migrations.
@@ -15,10 +15,11 @@ class CreateConversionsTableChange220621 extends Migration
     {
         Schema::table('conversions', function (Blueprint $table) {
 
-            $table->string("source" )->nullable()->change();
-            $table->text("refer" )->default('')->change();
-            $table->text("user_agent" )->default('')->change();
-
+            $table->text("affiliate_info1" )->nullable()->change();
+            $table->text("affiliate_info2" )->nullable()->change();
+            $table->text("affiliate_info3" )->nullable()->change();
+            $table->text("affiliate_info4" )->nullable()->change();
+            $table->text("affiliate_info5" )->nullable()->change();
 
 
 
