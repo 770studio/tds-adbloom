@@ -60,10 +60,10 @@ class TuneAPIService
         $response = $this->getData($request);
 
         dump('pageCount', $response->pageCount) ;
-        Log::channel('conversions_update')->debug($response->pageCount);
-        $this->setToQueue($request, $response->pageCount);
+        Log::channel('queue')->debug($response->pageCount);
+        $this->sendToQueue($request, $response->pageCount);
         dump('process page:', 1) ;
-        Log::channel('conversions_update')->debug('process page:', [1]);
+        Log::channel('queue')->debug('process page:', [1]);
 
         $this->processPage($response->data);
 
@@ -88,7 +88,7 @@ class TuneAPIService
     public function getData(array $request): Response
     {
         dump($request);
-        Log::channel('conversions_update')->debug('request:', $request);
+        Log::channel('queue')->debug('request:', $request);
 
         switch ($this->getEntityName()) {
             case 'Conversion':
@@ -108,10 +108,12 @@ class TuneAPIService
         return $this->entityName;
     }
 
-    private function setToQueue(array $request, int $pageCount)
+    private function sendToQueue(array $request, int $pageCount)
     {
         if ($pageCount < 2) return;
         for ($p = $pageCount; $p > 1; $p--) {
+            Log::channel('queue')->debug('queuing page:', [$p]);
+
             TuneAPIUpdateJob::dispatch(
                 array_merge($request, ['page' => $p]),
                 $this->entityName
@@ -139,7 +141,7 @@ class TuneAPIService
         });
 
         dump('changed/created', [$changed, $created]);
-        Log::channel('conversions_update')->debug('changed/created:', [$changed, $created]);
+        Log::channel('queue')->debug('changed/created:', [$changed, $created]);
 
     }
 

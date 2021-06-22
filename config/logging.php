@@ -54,9 +54,9 @@ return [
             'days' => 14,
         ],
 
-        'conversions_update' => [
+        'queue' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/conversions_update.log'),
+            'path' => storage_path('logs/queue.log'),
             'level' => 'debug',
             'days' => 14,
         ],
