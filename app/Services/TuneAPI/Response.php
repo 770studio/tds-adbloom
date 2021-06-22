@@ -4,12 +4,13 @@
 namespace App\Services\TuneAPI;
 
 
+use Illuminate\Support\Collection;
 use stdClass;
 
 class Response
 {
-    public $pageCount;
-    public $data;
+    private $pageCount;
+    private $data;
 
     /**
      * @throws \Exception
@@ -25,6 +26,15 @@ class Response
             });
 
 
+    }
+
+    public function parseData() : Collection
+    {
+        return $this->data;
+    }
+    public function parseCountPages() : int
+    {
+        return $this->pageCount;
     }
 
 }

@@ -24,7 +24,7 @@ class TuneAPIService
     /**
      * @var \Tune\NetworkApi
      */
-    private $api;
+    public $api;
     private $entityName;
     private $entity;
 
@@ -37,38 +37,7 @@ class TuneAPIService
 
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function updateConversions(): void
-    {
 
-        $this->setEntity('Conversion');
-
-        $request = [
-            'filters' => [
-                'datetime' => [
-                    Operator::GREATER_THAN_OR_EQUAL_TO => now()
-                        ->subMonths(self::UPDATE_STARTING_FROM_LAST_X_MONTHS)
-                        ->toDateTimeString(),
-                ]
-            ],
-            //'fields' => [],
-            'limit' => self::LIMIT_PER_PAGE
-        ];
-
-        $response = $this->getData($request);
-
-        dump('pageCount', $response->pageCount);
-        Log::channel('queue')->debug($response->pageCount);
-        $this->sendToQueue($request, $response->pageCount);
-        dump('process page:', 1);
-        Log::channel('queue')->debug('process page:', [1]);
-
-        $this->processPage($response->data);
-
-
-    }
 
     public function setEntity($entityName): self
     {
@@ -85,17 +54,17 @@ class TuneAPIService
     /**
      * @throws \Exception
      */
-    public function getData(array $request): Response
+    public function getResponse(Request $request): Response
     {
-        dump($request);
-        Log::channel('queue')->debug('request:', $request);
+        dump($request->toArray());
+        Log::channel('queue')->debug('request:', $request->toArray());
 
         switch ($this->getEntityName()) {
             case 'Conversion':
                 return new Response(
                     $this->api
                         ->conversion()
-                        ->findAll($request, /* Request options */ [])
+                        ->findAll($request->toArray(), /* Request options */ [])
                     , $this->entityName
                 );
         }
@@ -108,7 +77,12 @@ class TuneAPIService
         return $this->entityName;
     }
 
-    private function sendToQueue(array $request, int $pageCount)
+    private function getEntity()
+    {
+        return $this->entity;
+    }
+
+    private function sendToQueue_DEPR(array $request, int $pageCount)
     {
         if ($pageCount < 2) return;
         for ($p = $pageCount; $p > 1; $p--) {
@@ -121,7 +95,7 @@ class TuneAPIService
         }
     }
 
-    public function processPage(Collection $items)
+    public function processPage_DEPR(Collection $items)
     {
 
         $changed = $created = 0;
@@ -150,10 +124,48 @@ class TuneAPIService
         Log::channel('queue')->debug('changed/created:', [$changed, $created]);
 
     }
-
-    private function getEntity()
+    /**
+     * @throws \Exception
+     */
+    public function updateConversions_DEPR(): void
     {
-        return $this->entity;
+
+        $this->setEntity('Conversion');
+
+        $request = (new Request())
+            ->filter(
+                'datetime', Operator::GREATER_THAN_OR_EQUAL_TO
+                , now()->subMonths(self::UPDATE_STARTING_FROM_LAST_X_MONTHS)
+                ->toDateTimeString()
+                ->filter
+
+            );
+
+
+        [
+            'filters' => [
+                'datetime' => [
+                    Operator::GREATER_THAN_OR_EQUAL_TO => now()
+                        ->subMonths(self::UPDATE_STARTING_FROM_LAST_X_MONTHS)
+                        ->toDateTimeString(),
+                ]
+            ],
+            //'fields' => [],
+            'limit' => self::LIMIT_PER_PAGE
+        ];
+
+        $response = $this->getData($request);
+
+        dump('pageCount', $response->pageCount);
+        Log::channel('queue')->debug($response->pageCount);
+        $this->sendToQueue($request, $response->pageCount);
+        dump('process page:', 1);
+        Log::channel('queue')->debug('process page:', [1]);
+
+        $this->processPage($response->data);
+
+
     }
+
 
 }
