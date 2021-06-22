@@ -12,11 +12,13 @@ use Tune\Tune;
 use Tune\Utils\Network;
 use Tune\Utils\Operator;
 
+//TODO rate limiter
+// Networks are limited to a maximum of 50 API calls every 10 seconds. If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
 
 class TuneAPIService
 {
     const UPDATE_STARTING_FROM_LAST_X_MONTHS = 3;
-    const LIMIT_PER_PAGE = 100;
+    const LIMIT_PER_PAGE = 500;
 
     /**
      * @var \Tune\NetworkApi
@@ -56,7 +58,9 @@ class TuneAPIService
 
         $response = $this->getData($request);
 
+        dump('pageCount', $response->pageCount) ;
         $this->setToQueue($request, $response->pageCount);
+        dump('process page:', 1) ;
 
         $this->processPage($response->data);
 
@@ -80,6 +84,7 @@ class TuneAPIService
      */
     public function getData(array $request): Response
     {
+        dump($request);
         switch ($this->getEntityName()) {
             case 'Conversion':
                 return new Response(
@@ -101,7 +106,7 @@ class TuneAPIService
     private function setToQueue(array $request, int $pageCount)
     {
         if ($pageCount < 2) return;
-        for ($p = 2; $p < $pageCount; $p++) {
+        for ($p = $pageCount; $p > 1; $p--) {
             TuneAPIUpdateJob::dispatch(
                 array_merge($request, ['page' => $p]),
                 $this->entityName
@@ -112,13 +117,23 @@ class TuneAPIService
     public function processPage(Collection $items)
     {
 
-        $items->each(function ($item) {
-            $this->getEntity()::updateOrCreate(
+        $changed = $created = 0;
+        $items->each(function ($item) use(&$changed,&$created) {
+            $r = $this->getEntity()::updateOrCreate(
                 ['id' => $item->id],
                 (array)$item
             );
 
+            if($r->wasRecentlyCreated) {
+                // был инсерт
+                $created++;
+            } elseif( $r->wasChanged() ) {
+                // был апдейт
+                $changed++;
+            }
         });
+
+        dump('changed/created', [$changed, $created]);
     }
 
     private function getEntity()
