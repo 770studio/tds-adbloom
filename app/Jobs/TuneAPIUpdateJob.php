@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Conversion;
+use App\Services\TuneAPI\TuneAPIService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,18 +19,32 @@ class TuneAPIUpdateJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+
+    public $apiRequest;
+    public $entityName;
+    /**
+     * TuneAPIUpdateJob constructor.
+     * @param array $apiRequest
+     * @param string $entityName
+     */
+    public function __construct(array $apiRequest, string $entityName)
     {
-        //
+        $this->apiRequest = $apiRequest;
+        $this->entityName = $entityName;
     }
 
     /**
      * Execute the job.
      *
      * @return void
+     * @throws \Exception
      */
-    public function handle()
+    public function handle(TuneAPIService $tuneAPIService)
     {
-        //
+
+        $response = $tuneAPIService->setEntity($this->entityName)
+                                    ->getData($this->apiRequest);
+
+        $tuneAPIService->processPage($response->data);
     }
 }

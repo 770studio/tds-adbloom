@@ -5,7 +5,7 @@ namespace App\Services\TuneAPI;
 //TODO rate limiter
 // Networks are limited to a maximum of 50 API calls every 10 seconds. If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
 
-class TuneAPIRequest
+class TuneAPIRequestDEPR
 {
 
     const API_TOKEN = "NETzcmyVZWooz2oPYnlWDzOu9kiQmD";
