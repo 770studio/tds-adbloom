@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class TuneAPIUpdateJob implements ShouldQueue
 {
@@ -42,11 +43,14 @@ class TuneAPIUpdateJob implements ShouldQueue
     public function handle(TuneAPIService $tuneAPIService)
     {
         dump('queuing page:', $this->apiRequest['page']) ;
+        Log::channel('conversions_update')->debug('queuing page:', [$this->apiRequest['page']]);
 
         $response = $tuneAPIService->setEntity($this->entityName)
                                     ->getData($this->apiRequest);
 
         dump('process page:', $this->apiRequest['page']) ;
+        Log::channel('conversions_update')->debug('process page:', [$this->apiRequest['page']]);
+
         $tuneAPIService->processPage($response->data);
     }
 }

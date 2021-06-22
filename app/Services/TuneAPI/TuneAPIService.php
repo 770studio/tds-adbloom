@@ -7,6 +7,7 @@ namespace App\Services\TuneAPI;
 use App\Conversion;
 use App\Jobs\TuneAPIUpdateJob;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Tune\Networks;
 use Tune\Tune;
 use Tune\Utils\Network;
@@ -59,8 +60,10 @@ class TuneAPIService
         $response = $this->getData($request);
 
         dump('pageCount', $response->pageCount) ;
+        Log::channel('conversions_update')->debug($response->pageCount);
         $this->setToQueue($request, $response->pageCount);
         dump('process page:', 1) ;
+        Log::channel('conversions_update')->debug('process page:', [1]);
 
         $this->processPage($response->data);
 
@@ -85,6 +88,8 @@ class TuneAPIService
     public function getData(array $request): Response
     {
         dump($request);
+        Log::channel('conversions_update')->debug('request:', $request);
+
         switch ($this->getEntityName()) {
             case 'Conversion':
                 return new Response(
@@ -134,6 +139,8 @@ class TuneAPIService
         });
 
         dump('changed/created', [$changed, $created]);
+        Log::channel('conversions_update')->debug('changed/created:', [$changed, $created]);
+
     }
 
     private function getEntity()
