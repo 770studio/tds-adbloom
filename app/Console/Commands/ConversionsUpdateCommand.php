@@ -36,24 +36,15 @@ class ConversionsUpdateCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      * @throws \Exception
      */
     public function handle()
     {
-        //TuneAPIGetOneConversionJob::dispatch(1723221);
-        // return;
 
-
-         //   $tuneAPIService->updateConversions();
-
-        TuneAPIRecursiveConversionUpdateJob::dispatch(
-            0,
+        TuneAPIRecursiveConversionUpdateJob::dispatch( 0,
             CarbonImmutable::now()->subMonths(3)
         );
-
-// $now = CarbonImmutable::now()->subMonths(self::UPDATE_STARTING_FROM_LAST_X_MONTHS)
-//            ->toDateTimeString();
 
     }
 }
