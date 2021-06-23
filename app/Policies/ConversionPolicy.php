@@ -18,4 +18,10 @@ class ConversionPolicy
     {
         //
     }
+
+
+    public function view(): bool
+    {
+        return true; //in_array('view-posts', $user->permissions);
+    }
 }
