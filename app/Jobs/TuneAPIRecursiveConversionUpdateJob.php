@@ -67,6 +67,7 @@ class TuneAPIRecursiveConversionUpdateJob implements ShouldQueue
                 )
                 ->parseData()
                 ->each(function ($item) use (&$changed, &$created, &$last_id) {
+                    #TODO remove redundant log messages
                     Log::channel('queue')->debug('updateOrCreate:', [
                             'entity' => 'Conversion',
                             'id' => $item->id
