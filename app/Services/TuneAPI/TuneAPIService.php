@@ -32,7 +32,10 @@ class TuneAPIService
     {
 
         $this->api = Tune::networkApi(new Networks([
-            new Network('NETzcmyVZWooz2oPYnlWDzOu9kiQmD', 'adbloom'), // Auto selected network
+            new Network(
+                config('services.tune_api.key'),
+                config('services.tune_api.network_id')
+            ), // Auto selected network
         ]));
 
     }
@@ -77,95 +80,8 @@ class TuneAPIService
         return $this->entityName;
     }
 
-    private function getEntity()
-    {
-        return $this->entity;
-    }
-
-    private function sendToQueue_DEPR(array $request, int $pageCount)
-    {
-        if ($pageCount < 2) return;
-        for ($p = $pageCount; $p > 1; $p--) {
-            Log::channel('queue')->debug('queuing page:', [$p]);
-
-            TuneAPIUpdateJob::dispatch(
-                array_merge($request, ['page' => $p]),
-                $this->entityName
-            );
-        }
-    }
-
-    public function processPage_DEPR(Collection $items)
-    {
-
-        $changed = $created = 0;
-        $items->each(function ($item) use (&$changed, &$created) {
-            Log::channel('queue')->debug('updateOrCreate:', [
-                    'entity' => $this->getEntityName(),
-                    'id' => $item->id
-                ]
-            );
-
-            $r = $this->getEntity()::updateOrCreate(
-                ['id' => $item->id],
-                (array)$item
-            );
-
-            if ($r->wasRecentlyCreated) {
-                // был инсерт
-                $created++;
-            } elseif ($r->wasChanged()) {
-                // был апдейт
-                $changed++;
-            }
-        });
-
-        dump('changed/created', [$changed, $created]);
-        Log::channel('queue')->debug('changed/created:', [$changed, $created]);
-
-    }
-    /**
-     * @throws \Exception
-     */
-    public function updateConversions_DEPR(): void
-    {
-
-        $this->setEntity('Conversion');
-
-        $request = (new Request())
-            ->filter(
-                'datetime', Operator::GREATER_THAN_OR_EQUAL_TO
-                , now()->subMonths(self::UPDATE_STARTING_FROM_LAST_X_MONTHS)
-                ->toDateTimeString()
-                ->filter
-
-            );
 
 
-        [
-            'filters' => [
-                'datetime' => [
-                    Operator::GREATER_THAN_OR_EQUAL_TO => now()
-                        ->subMonths(self::UPDATE_STARTING_FROM_LAST_X_MONTHS)
-                        ->toDateTimeString(),
-                ]
-            ],
-            //'fields' => [],
-            'limit' => self::LIMIT_PER_PAGE
-        ];
-
-        $response = $this->getData($request);
-
-        dump('pageCount', $response->pageCount);
-        Log::channel('queue')->debug($response->pageCount);
-        $this->sendToQueue($request, $response->pageCount);
-        dump('process page:', 1);
-        Log::channel('queue')->debug('process page:', [1]);
-
-        $this->processPage($response->data);
-
-
-    }
 
 
 }

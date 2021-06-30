@@ -29,5 +29,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'tune_api' => [
+        'key' => env('TUNE_API_KEY'),
+        'network_id' => env('TUNE_API_NETWORK_ID'),
+    ],
 
 ];
