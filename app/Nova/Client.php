@@ -24,7 +24,7 @@ class Client extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -54,12 +54,16 @@ class Client extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make(  'Name')->sortable(),
-            Text::make('Short Id'),
-            Text::make('External Id'),
+            Text::make(  'Name')
+                ->creationRules('required')
+                ->sortable(),
+            Text::make('Short Id')->exceptOnForms(),
+            Text::make('External Id')
+                ->creationRules('required')
+                ->sortable(),
             HasMany::make('Opportunities'),
-            DateTime::make('Created at' )->sortable(),
-            DateTime::make('Updated at')->sortable(),
+            DateTime::make('Created at' )->sortable()->exceptOnForms(),
+            DateTime::make('Updated at')->sortable()->exceptOnForms(),
 
 
 

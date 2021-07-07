@@ -57,16 +57,23 @@ class Opportunity extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make(  'Name')->sortable(),
-            Text::make('Short Id'),
-            Text::make('External Id'),
-            Select::make('Size')->options([
+            Text::make(  'Name')
+                ->creationRules('required')
+                ->sortable(),
+            Text::make('Short Id')->exceptOnForms(),
+            Text::make('External Id')
+                ->creationRules('required')
+                ->sortable(),
+            Select::make('Type')->options([
                 'offer' => 'Offer',
                 'survey' => 'Survey',
-            ]),
+            ])->resolveUsing(function () {
+                return $this->status ?? 'offer';
+            }) ->creationRules('required')
+                ->sortable(),
             BelongsTo::make('Client'),
-            DateTime::make('Created at' )->sortable(),
-            DateTime::make('Updated at')->sortable(),
+            DateTime::make('Created at' )->sortable()->exceptOnForms(),
+            DateTime::make('Updated at')->sortable()->exceptOnForms(),
 
         ];
     }
