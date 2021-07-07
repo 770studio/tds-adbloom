@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Conversion;
+use App\Models\Conversion;
 use App\Services\TuneAPI\Request;
 use App\Services\TuneAPI\TuneAPIService;
 use Carbon\CarbonImmutable;

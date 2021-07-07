@@ -61,6 +61,7 @@ class Client extends Resource
             Text::make('External Id')
                 ->creationRules('required')
                 ->sortable(),
+            Text::make('Redirect to', 'redirect_to_domain'),
             HasMany::make('Opportunities'),
             DateTime::make('Created at' )->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),

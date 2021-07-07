@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\RedirectStatus;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::model('redirect_status', RedirectStatus::class);
 
         parent::boot();
     }
