@@ -16,7 +16,7 @@ class Conversion extends Resource
      *
      * @var string
      */
-    public static $model = \App\Conversion::class;
+    public static $model = \App\Models\Conversion::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
