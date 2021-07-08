@@ -11,12 +11,12 @@ class ClientController extends Controller
 {
     const DEFAULT_REDIRECT_DOMAIN = 'https://widget.adbloom.co/';
 
-    public function trackOpportunity(Request $request, Client $client, RedirectStatus $redirect_status)
+    public function trackOpportunity(Request $request, Client $client, string $surveyID, RedirectStatus $redirect_status)
     {
 
-        //dd( $request, $client, $redirect_status);
+        // dd( $request, $client, $surveyID, $redirect_status);
 
-        if (!$request->clickid) return response('', 400);
+        if (!$request->clickid) abort(404, 'clickid is required');
 
         switch ($redirect_status->code) {
             case "reject":
@@ -33,7 +33,8 @@ class ClientController extends Controller
                 break;
 
             default:
-                return response('', 400);
+                abort(404, 'undefined redirect status');
+
 
         }
 
