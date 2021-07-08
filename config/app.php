@@ -1,5 +1,8 @@
 <?php
 
+use App\Helpers\RedirectHelper;
+use App\Helpers\ShortIdGeneratorHelper;
+
 return [
 
     /*
@@ -227,7 +230,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'ShortIdGeneratorHelper' => \App\Helpers\ShortIdGeneratorHelper::class,
+        'ShortIdGeneratorHelper' => ShortIdGeneratorHelper::class,
+        'RedirectHelper' => RedirectHelper::class,
 
     ],
 

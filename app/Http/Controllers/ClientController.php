@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RedirectHelper;
 use App\Jobs\doPostBackJob;
 use App\Models\Client;
 use App\Models\RedirectStatus;
@@ -52,8 +53,11 @@ class ClientController extends Controller
                 Например https://widget.adbloom.co/status/?status=success
                 */
 
-        $domain = $client->redirect_to_domain ?? self::DEFAULT_REDIRECT_DOMAIN;
-        return redirect($domain . "/status/?status={$redirect_status->code}");
+        return RedirectHelper::opportunity(
+            $client->redirect_to_domain ?? self::DEFAULT_REDIRECT_DOMAIN
+            , $redirect_status->code
+        );
+
     }
 }
 
