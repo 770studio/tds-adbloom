@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf9b69916262ba043a5761ab7136b650",
+    "content-hash": "a5dc19d78daed6b0bb2f9da0c4a1af2a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1609,7 +1609,7 @@
             "dist": {
                 "type": "path",
                 "url": "./nova",
-                "reference": "c641e125c6a29a8854f873fdfe096fcda785f6a2"
+                "reference": "79d575e617393f7033fbb5fd0ed312e75e937ac9"
             },
             "require": {
                 "brick/money": "^0.5.0",
@@ -6708,6 +6708,71 @@
             "time": "2020-07-09T08:09:16+00:00"
         },
         {
+            "name": "kitloong/laravel-migrations-generator",
+            "version": "v4.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kitloong/laravel-migrations-generator.git",
+                "reference": "b027a1d174a031b401fb14ab1e288281eb5df46e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kitloong/laravel-migrations-generator/zipball/b027a1d174a031b401fb14ab1e288281eb5df46e",
+                "reference": "b027a1d174a031b401fb14ab1e288281eb5df46e",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "~2.4|^3.0",
+                "illuminate/support": "^5.6|^6.0|^7.0|^8.0",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "ext-pdo": "*",
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^3.6|^4.0|^5.0|^6.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "KitLoong\\MigrationsGenerator\\MigrationsGeneratorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "KitLoong\\MigrationsGenerator\\": "src/KitLoong/MigrationsGenerator",
+                    "Xethron\\MigrationsGenerator\\": "src/Xethron/MigrationsGenerator",
+                    "Way\\Generators\\": "src/Way/Generators"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kit Loong",
+                    "email": "kitloong1008@gmail.com"
+                }
+            ],
+            "description": "Generates Laravel Migrations from an existing database",
+            "keywords": [
+                "artisan",
+                "generator",
+                "laravel",
+                "lumen",
+                "migration",
+                "migrations"
+            ],
+            "support": {
+                "issues": "https://github.com/kitloong/laravel-migrations-generator/issues",
+                "source": "https://github.com/kitloong/laravel-migrations-generator/tree/v4.5.0"
+            },
+            "time": "2021-07-06T16:05:08+00:00"
+        },
+        {
             "name": "maximebf/debugbar",
             "version": "v1.16.5",
             "source": {
@@ -8841,5 +8906,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
