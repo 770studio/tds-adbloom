@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    const DEFAULT_REDIRECT_DOMAIN = 'https://widget.adbloom.co/';
+    const DEFAULT_REDIRECT_DOMAIN = 'https://widget.adbloom.co';
 
     public function trackOpportunity(Request $request, Client $client, string $surveyID, RedirectStatus $redirect_status)
     {
