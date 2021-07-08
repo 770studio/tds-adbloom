@@ -14,7 +14,7 @@ class AddRedirectToDomainToClient extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->string('redirect_to_domain', 100)->default('');
+            $table->string('redirect_to_domain', 100)->nullable();
         });
     }
 
