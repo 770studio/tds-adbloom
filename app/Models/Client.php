@@ -8,7 +8,12 @@ class Client extends BaseModel
 {
     use HasFactory;
 
-    const STATUSES = ['active', 'pending', 'deleted', 'paused'];
+    const STATUSES = [
+        'Active' => 'active',
+        'Pending' => 'pending',
+        'Deleted' => 'deleted',
+        'Paused' => 'paused'
+    ];
 
     public function opportunities()
     {
@@ -20,8 +25,8 @@ class Client extends BaseModel
      *
      * @return string
      */
-/*    public function getRouteKeyName()
-    {
-        return 'short_id';
-    }*/
+    /*    public function getRouteKeyName()
+        {
+            return 'short_id';
+        }*/
 }

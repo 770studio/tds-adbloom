@@ -95,7 +95,7 @@ class Client extends Resource
     public function filters(Request $request)
     {
         return [
-            new Filters\DateTimeFilter('datetime'),
+            new Filters\ClientStatus('status'),
         ];
     }
 
