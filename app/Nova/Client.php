@@ -54,21 +54,23 @@ class Client extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make(  'Name')
-                ->creationRules('required')
+            Text::make('Name')
+                ->rules('required')
                 ->sortable(),
             Text::make('Short Id')->exceptOnForms(),
             Text::make('External Id')
-                ->creationRules('required')
+                ->rules('required')
                 ->sortable(),
-            Text::make('Redirect to', 'redirect_to_domain'),
+            Text::make('Redirect to', 'redirect_to_domain')
+                ->sortable(),
             HasMany::make('Opportunities'),
+            Select::make('Status')->options(self::$model::STATUSES)
+                ->rules('required')->sortable(),
+            Text::make('Email')->sortable()
+                ->rules('required', 'email', 'max:255', 'unique:clients'),
+
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
-            Select::make('Status')->options(self::$model::STATUSES)->creationRules('required'),
-            Text::make('Email'),
-
-
         ];
     }
 

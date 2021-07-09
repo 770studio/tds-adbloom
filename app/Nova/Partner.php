@@ -53,11 +53,11 @@ class Partner extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
             Text::make('Name')
-                ->creationRules('required')
+                ->rules('required')
                 ->sortable(),
             Text::make('Short Id')->exceptOnForms(),
             Text::make('External Id')
-                ->creationRules('required')
+                ->rules('required')
                 ->sortable(),
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
