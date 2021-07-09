@@ -31,7 +31,7 @@ class Client extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'id', 'external_id', 'name', 'email'
     ];
 
 
