@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class Client extends BaseModel
 {
     use HasFactory;
+
+    const STATUSES = ['active', 'pending', 'deleted', 'paused'];
 
     public function opportunities()
     {

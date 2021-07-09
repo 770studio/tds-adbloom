@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Opportunity;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +19,7 @@ class CreateOpportunitiesTable extends Migration
             $table->string('short_id', 21);
             $table->string('external_id', 100);
             $table->string('name', 100);
-            $table->enum('type', ['offer','survey']);
+            $table->enum('type', Opportunity::TYPES);
             $table->timestamps();
         });
 
