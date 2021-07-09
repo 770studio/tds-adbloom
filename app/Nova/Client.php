@@ -63,9 +63,10 @@ class Client extends Resource
                 ->sortable(),
             Text::make('Redirect to', 'redirect_to_domain'),
             HasMany::make('Opportunities'),
-            DateTime::make('Created at' )->sortable()->exceptOnForms(),
+            DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
-            Select::make('Status')->options(self::$model::STATUSES)->creationRules('required')
+            Select::make('Status')->options(self::$model::STATUSES)->creationRules('required'),
+            Text::make('Email'),
 
 
         ];
