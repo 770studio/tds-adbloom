@@ -3,15 +3,11 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\ActionFields;
-use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Opportunity extends Resource
 {
@@ -50,7 +46,7 @@ class Opportunity extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function fields(Request $request)
@@ -68,7 +64,7 @@ class Opportunity extends Resource
                 'offer' => 'Offer',
                 'survey' => 'Survey',
             ])->resolveUsing(function () {
-                return $this->status ?? 'offer';
+                return $this->type ?? 'offer';
             }) ->creationRules('required')
                 ->sortable(),
             BelongsTo::make('Client'),
@@ -79,17 +75,10 @@ class Opportunity extends Resource
     }
 
 
-
-
-
-
-
-
-
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -100,7 +89,7 @@ class Opportunity extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -113,7 +102,7 @@ class Opportunity extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -124,7 +113,7 @@ class Opportunity extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function actions(Request $request)
