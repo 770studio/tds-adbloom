@@ -4,14 +4,13 @@
 namespace App\Services\TuneAPI;
 
 
-use App\Conversion;
-use App\Jobs\TuneAPIUpdateJob;
-use Illuminate\Support\Collection;
+use App\Models\Conversion;
+use Exception;
 use Illuminate\Support\Facades\Log;
+use Tune\NetworkApi;
 use Tune\Networks;
 use Tune\Tune;
 use Tune\Utils\Network;
-use Tune\Utils\Operator;
 
 //TODO rate limiter
 // Networks are limited to a maximum of 50 API calls every 10 seconds. If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
@@ -22,7 +21,7 @@ class TuneAPIService
     const LIMIT_PER_PAGE = 500;
 
     /**
-     * @var \Tune\NetworkApi
+     * @var NetworkApi
      */
     public $api;
     private $entityName;
@@ -55,7 +54,7 @@ class TuneAPIService
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function getResponse(Request $request): Response
     {

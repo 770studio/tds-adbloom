@@ -3,18 +3,19 @@
 namespace App\Console\Commands;
 
 use App\Jobs\TuneAPIRecursiveConversionUpdateJob;
-use App\Services\TuneAPI\TuneAPIService;
 use Carbon\CarbonImmutable;
+use Exception;
 use Illuminate\Console\Command;
 
-class ConversionsUpdateCommand extends Command
+
+class ConversionsUpdateCommand_DEPR extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'conversions:update';
+    protected $signature = 'conversions:update_DEPR';
 
     /**
      * The console command description.
@@ -37,7 +38,7 @@ class ConversionsUpdateCommand extends Command
      * Execute the console command.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle()
     {

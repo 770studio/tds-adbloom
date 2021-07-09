@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+use Tune\AdvertiserApi;
+use Tune\Networks;
+use Tune\Utils\Network;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->app->bind(AdvertiserApi::class, function () {
+            return new AdvertiserApi(
+                new Networks([
+                    new Network(
+                        config('services.tune_api.key'),
+                        config('services.tune_api.network_id')
+                    ), // Auto selected network
+                ]));
+        });
+
 
     }
 }
