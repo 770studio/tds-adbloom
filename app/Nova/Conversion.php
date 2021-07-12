@@ -3,7 +3,8 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Date;
+use Illuminate\Support\Str;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -63,65 +64,63 @@ class Conversion extends Resource
      */
     public function fields(Request $request)
     {
-        return [
-            ID::make(__('ID'), 'id')->sortable(),
-            Text::make(  'status')->sortable(),
-            Text::make(  'status_code')->hideFromIndex(),
-            DateTime::make('Created at' )->sortable(),
-            DateTime::make('Updated at')->sortable(),
-            Text::make('Affiliate id'),
-            Text::make('datetime')->sortable(),
-            Text::make('batch_date_utc')->hideFromIndex(),
-            Text::make('offer_id'),
-            Text::make('batch_timestamp')->hideFromIndex(),
-            Text::make('payout'),
-            Text::make('revenue'),
-            Text::make('ad_id')->hideFromIndex(),
-            Text::make('tune_event_id')->hideFromIndex(),
-            Text::make('advertiser_manager_id')->hideFromIndex(),
-            Text::make('advertiser_id')->hideFromIndex(),
-            Text::make('affiliate_manager_id')->hideFromIndex(),
-            Text::make('goal_id')->hideFromIndex(),
-            Text::make('creative_url_id')->hideFromIndex(),
-            Text::make('customer_id')->hideFromIndex(),
-            Text::make('source'),
-            Text::make('affiliate_info1')->hideFromIndex(),
-            Text::make('affiliate_info2')->hideFromIndex(),
-            Text::make('affiliate_info3')->hideFromIndex(),
-            Text::make('affiliate_info4')->hideFromIndex(),
-            Text::make('affiliate_info5')->hideFromIndex(),
-            Text::make('advertiser_info')->hideFromIndex(),
-            Text::make('session_datetime')->hideFromIndex(),
-            Text::make('refer')->hideFromIndex(),
-            Text::make('pixel_refer')->hideFromIndex(),
-            Text::make('ip'),
-            Text::make('session_ip')->hideFromIndex(),
-            Text::make('sale_amount'),
-            Text::make('user_agent')->hideFromIndex(),
-            Text::make('country_code'),
-            Text::make('event_city')->hideFromIndex(),
-            Text::make('event_region')->hideFromIndex(),
-            Text::make('browser_id')->hideFromIndex(),
-            Text::make('is_adjustment')->hideFromIndex(),
-            Text::make('ad_campaign_id')->hideFromIndex(),
-            Text::make('ad_campaign_creative_id')->hideFromIndex(),
-            Text::make('offer_file_id')->hideFromIndex(),
-            Text::make('payout_type')->hideFromIndex(),
-            Text::make('revenue_type')->hideFromIndex(),
-            Text::make('currency'),
-            Text::make('promo_code')->hideFromIndex(),
-            Text::make('adv_unique1')->hideFromIndex(),
-            Text::make('adv_unique2')->hideFromIndex(),
-            Text::make('adv_unique3')->hideFromIndex(),
-            Text::make('adv_unique4')->hideFromIndex(),
-            Text::make('adv_unique5')->hideFromIndex(),
-            Text::make('order_id')->hideFromIndex(),
-            Text::make('sku_id')->hideFromIndex(),
-            Text::make('product_category')->hideFromIndex(),
-            Text::make('app_version')->hideFromIndex(),
+
+        $fields = [];
+
+        foreach(\App\Models\Conversion::FIELDS as $field)
+        {
+            $field_name = Str::replaceFirst('.', ' ', $field);
+             switch($field) {
+                 case 'Stat.tune_event_id':
+                     $fields[] = ID::make('ID', $field_name)->sortable();
+                         break;
+                 //    index page sortable date
+                 case 'created_at':
+                 case 'updated_at':
+                 case 'Stat.date':
+                 case 'Stat.session_date':
+                 case 'Stat.datetime':
+                 case 'Stat.session_datetime':
+
+                    $fields[] =  DateTime::make('Updated at')->sortable();
+                         break;
+                 // index page sortable decimal
+                 case 'Stat.approved_payout':
+                 case 'Stat.approved_rate':
+                 case 'Stat.net_payout':
+                 case 'Stat.net_revenue':
+                 case 'Stat.net_sale_amount':
+                 case 'Stat.payout':
+                 case 'Stat.pending_payout':
+                 case 'Stat.pending_revenue':
+                 case 'Stat.pending_sale_amount':
+                 case 'Stat.rejected_rate':
+                 case 'Stat.revenue':
+                 case 'Stat.sale_amount':
 
 
-        ];
+                    $fields[] = Number::make(  'status')->sortable();
+
+                    break;
+                 // index page sortable other
+
+                 case 'Stat.id':
+                 case 'Stat.ip':
+                 case 'Stat.offer_id':
+                 case 'Stat.status':
+                 case 'Stat.status_code':
+                    $fields[] = Text::make(  'status')->sortable();
+
+                 break;
+
+
+                 default:
+                     $fields[] = Text::make(  'status')
+                         ->hideFromIndex();
+
+             }
+        }
+        return $fields;
     }
 
 

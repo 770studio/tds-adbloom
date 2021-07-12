@@ -45,6 +45,10 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
     {
         (new Response(
             $tuneAPIService->getConversions($this->fields, $this->page)
-        ))->parseCountPages();
+        ))
+            ->parseData()
+            ->each(function($record){
+                dd($record);
+            });
     }
 }

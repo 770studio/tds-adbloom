@@ -32,11 +32,11 @@ class Response
     {
         $data = [];
         collect($this->apiResult->response->data->data)
-            ->transform(function ($items, $key) use (&$data) {
+            ->transform(function ($items, $numkey) use (&$data) {
                 //return $item->{$entity};
                 foreach ($items as $UpperLevelKey => $item_Arr) {
                     foreach($item_Arr as $itemkey=>$val) {
-                       $data[$key][$UpperLevelKey . '.' . $itemkey] = $val;
+                       $data[$numkey][$UpperLevelKey . '_' . $itemkey] = $val;
                     }
                 }
 
