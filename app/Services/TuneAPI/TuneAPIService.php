@@ -19,8 +19,7 @@ use Tune\Utils\Operator;
 
 class TuneAPIService
 {
-    const UPDATE_STARTING_FROM_LAST_X_MONTHS = 3;
-    const LIMIT_PER_PAGE = 500;
+
 
     /**
      * @var NetworkApi

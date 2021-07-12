@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Console\Command;
 
 
-class ConversionsUpdateCommand_DEPR extends Command
+class ConversionsUpdateCommand_recursive extends Command
 {
     /**
      * The name and signature of the console command.
