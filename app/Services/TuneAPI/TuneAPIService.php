@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Log;
 use Tune\NetworkApi;
 use Tune\Networks;
 use Tune\Tune;
+use Tune\Utils\HttpQueryBuilder;
 use Tune\Utils\Network;
+use Tune\Utils\Operator;
 
 //TODO rate limiter
 // Networks are limited to a maximum of 50 API calls every 10 seconds. If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
@@ -25,21 +27,31 @@ class TuneAPIService
      */
     public $api;
     private $entityName;
-    private $entity;
 
-    public function __construct()
+    public function __construct(NetworkApi $api)
     {
-
-        $this->api = Tune::networkApi(new Networks([
-            new Network(
-                config('services.tune_api.key'),
-                config('services.tune_api.network_id')
-            ), // Auto selected network
-        ]));
+        $this->api = $api;
 
     }
 
 
+
+    public function getConversions(array $fields, int $page) : \stdClass
+    {
+       return $this->api->report()->getConversions(function (HttpQueryBuilder $builder) use ($fields, $page)
+       {
+            return $builder->setFields(
+            //array_slice(Conversion::FIELDS, 1,10)
+                 array_merge([Conversion::ID_FIELD], $fields)
+            )->addFilter('Stat.datetime',
+                [
+                    now()->subMonths(Conversion::UPDATE_STARTING_FROM_LAST_X_MONTHS)
+                        ->toDateString()
+                ]
+                , null, Operator::GREATER_THAN
+            )->setPage($page);
+        }, /* Request options */ []);
+    }
 
     public function setEntity($entityName): self
     {

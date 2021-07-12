@@ -2,11 +2,21 @@
 
 namespace App\Console\Commands;
 
+
+use App\Jobs\TuneAPIGetConversionPageJob;
+use App\Models\Conversion;
+use App\Services\TuneAPI\Response;
+use App\Services\TuneAPI\TuneAPIService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
-use Tune\AdvertiserApi;
+use Tune\NetworkApi;
+use Tune\Networks;
+use Tune\Tune;
 use Tune\Utils\HttpQueryBuilder;
+use Tune\Utils\Network;
 use Tune\Utils\Operator;
+use Tune\Utils\UseApiCalls;
 
 
 class ConversionsUpdateCommand extends Command
@@ -41,20 +51,26 @@ class ConversionsUpdateCommand extends Command
      * @return void
      * @throws Exception
      */
-    public function handle(AdvertiserApi $api)
+    public function handle (TuneAPIService $tuneAPIService)
     {
 
-        print_r($api->report()->getConversions(function (HttpQueryBuilder $builder) {
-            return $builder->setFields([
-                'Browser.id',
-                'Browser.display_name',
-                'OfferUrl.preview_url',
-                'Offer.name'
-            ])->addFilter('Stat.datetime', [
-                '2019-12-19 00:00:00',
-                '2020-12-19 00:00:00'
-            ], null, Operator::BETWEEN);
-        }, /* Request options */ []));
+        $pagesCount = (new Response(
+            $tuneAPIService->getConversions([], 1)
+        ))->parseCountPages();
+
+       collect(Conversion::FIELDS)
+           ->chunk(10)
+           ->each(function($fields) use ($pagesCount) {
+               for($page=1; $page<=$pagesCount; $page++)
+               {
+                   TuneAPIGetConversionPageJob::dispatch($page, $fields->toArray());
+               }
+
+       });
+
+
+
+        //dd(888888,$responce);
 
     }
 }

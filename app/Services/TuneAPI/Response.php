@@ -12,35 +12,57 @@ class Response
     private $pageCount;
     private $data;
     private $count;
+    private $apiResult;
 
     /**
      * @throws \Exception
      */
-    public function __construct(stdClass $apiResult, string $entity)
+    public function __construct(stdClass $apiResult)
     {
         if ($apiResult->response->errorMessage) throw new \Exception($apiResult->response->errorMessage);
-
-        $this->pageCount = $apiResult->response->data->pageCount;
-        $this->data = collect($apiResult->response->data->data)
-            ->transform(function ($item, $key) use ($entity) {
-                return $item->{$entity};
-            });
-
+        $this->apiResult = $apiResult;
 
     }
 
-    public function parseData() : Collection
+    public function getData() : Collection
     {
         return $this->data;
     }
+    public function parseData() : Collection
+    {
+        $data = [];
+        collect($this->apiResult->response->data->data)
+            ->transform(function ($items, $key) use (&$data) {
+                //return $item->{$entity};
+                foreach ($items as $UpperLevelKey => $item_Arr) {
+                    foreach($item_Arr as $itemkey=>$val) {
+                       $data[$key][$UpperLevelKey . '.' . $itemkey] = $val;
+                    }
+                }
 
-    public function parseCountPages() : int
+            });
+        $this->data = collect($data);
+        return $this->data;
+    }
+    public function getCountPages() : int
     {
         return $this->pageCount;
+
     }
-    public function parseCount() : int
+    public function parseCountPages() : int
+    {
+        $this->pageCount = $this->apiResult->response->data->pageCount;
+        return $this->pageCount;
+
+    }
+    public function getCount() : int
     {
         return $this->count;
+
+    }
+    public function parseCount()
+    {
+
     }
 
 
