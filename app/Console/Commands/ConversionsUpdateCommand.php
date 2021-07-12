@@ -59,7 +59,7 @@ class ConversionsUpdateCommand extends Command
         ))->parseCountPages();
 
        collect(Conversion::FIELDS)
-           ->chunk(10)
+           ->chunk(30)
            ->each(function($fields) use ($pagesCount) {
                for($page=1; $page<=$pagesCount; $page++)
                {

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Conversion;
 use App\Services\TuneAPI\Response;
 use App\Services\TuneAPI\TuneAPIService;
 use Illuminate\Bus\Queueable;
@@ -10,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class TuneAPIGetConversionPageJob implements ShouldQueue
 {
@@ -43,12 +45,35 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
      */
     public function handle(TuneAPIService $tuneAPIService)
     {
+
+        $created = $changed = 0;
         (new Response(
             $tuneAPIService->getConversions($this->fields, $this->page)
         ))
             ->parseData()
-            ->each(function($record){
-                dd($record);
+            ->each(function($record) use (&$created, &$changed) {
+                #TODO remove redundant log messages
+                Log::channel('queue')->debug('updateOrCreate Conversion:', [
+                        'tune_event_id' => $record["Stat_tune_event_id"]
+                    ]
+                );
+
+                $res = Conversion::updateOrCreate(
+                    ["Stat_tune_event_id" => $record["Stat_tune_event_id"]],
+                    $record
+                );
+
+                if ($res->wasRecentlyCreated) {
+                    // insert
+                    $created++;
+                } elseif ($res->wasChanged()) {
+                    // update
+                    $changed++;
+                }
             });
+
+        dump('changed/created', [$changed, $created]);
+        Log::channel('queue')->debug('changed/created:', [$changed, $created]);
+
     }
 }

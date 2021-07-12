@@ -18,6 +18,7 @@ class CreateConversionsTable extends Migration
             $table->string('Advertiser_ref_id', 50)->nullable();
             $table->string('AdvertiserManager_full_name', 100)->nullable();
             $table->string('Affiliate_company', 100)->nullable();
+            $table->string('Advertiser_company', 100)->nullable();
             $table->string('Affiliate_ref_id', 100)->nullable();
             $table->string('AffiliateManager_full_name', 100)->nullable();
             $table->string('Browser_display_name', 100)->nullable();
