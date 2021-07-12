@@ -65,24 +65,25 @@ class Conversion extends Resource
     public function fields(Request $request)
     {
 
-        $fields = [];
+        $fields[] = ID::make('ID', 'id')->sortable();
 
         foreach(\App\Models\Conversion::FIELDS as $field)
         {
-            $field_name = Str::replaceFirst('.', ' ', $field);
+            $field_name = Str::replaceFirst('.', '_', $field);
+            $human_field_name = Str::replace(['.','_'], ' ', $field);
              switch($field) {
                  case 'Stat.tune_event_id':
-                     $fields[] = ID::make('ID', $field_name)->sortable();
+                     $fields[] = Text::make($human_field_name, $field_name)->sortable();
                          break;
+
                  //    index page sortable date
-                 case 'created_at':
-                 case 'updated_at':
+
                  case 'Stat.date':
                  case 'Stat.session_date':
                  case 'Stat.datetime':
                  case 'Stat.session_datetime':
 
-                    $fields[] =  DateTime::make($field_name)->sortable();
+                    $fields[] =  DateTime::make($human_field_name,$field_name)->sortable();
                          break;
                  // index page sortable decimal
                  case 'Stat.approved_payout':
@@ -99,27 +100,36 @@ class Conversion extends Resource
                  case 'Stat.sale_amount':
 
 
-                    $fields[] = Number::make($field_name)->sortable();
+                    $fields[] = Number::make($human_field_name,$field_name)->sortable();
 
                     break;
                  // index page sortable other
-
+                 case 'Affiliate.company':
+                 case 'Advertiser.company':
+                 case 'Browser.display_name':
                  case 'Stat.id':
                  case 'Stat.ip':
                  case 'Stat.offer_id':
                  case 'Stat.status':
                  case 'Stat.status_code':
-                    $fields[] = Text::make($field_name)->sortable();
+                    $fields[] = Text::make($human_field_name, $field_name)->sortable();
 
                  break;
 
 
                  default:
-                     $fields[] = Text::make($field_name)
+                     $fields[] = Text::make($human_field_name,$field_name)
                          ->hideFromIndex();
 
              }
         }
+
+
+        $fields[] =  DateTime::make('Created', 'created_at')->sortable();
+        $fields[] =  DateTime::make('Updated', 'updated_at')->sortable();
+
+
+
         return $fields;
     }
 

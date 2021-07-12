@@ -14,7 +14,8 @@ class CreateConversionsTable extends Migration
     public function up()
     {
         Schema::create('conversions', function (Blueprint $table) {
-            $table->string('Stat_tune_event_id', 50)->comment('PRIMARY ID');
+
+            $table->id();
             $table->string('Advertiser_ref_id', 50)->nullable();
             $table->string('AdvertiserManager_full_name', 100)->nullable();
             $table->string('Affiliate_company', 100)->nullable();
