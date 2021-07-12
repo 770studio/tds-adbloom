@@ -82,7 +82,7 @@ class Conversion extends Resource
                  case 'Stat.datetime':
                  case 'Stat.session_datetime':
 
-                    $fields[] =  DateTime::make('Updated at')->sortable();
+                    $fields[] =  DateTime::make($field_name)->sortable();
                          break;
                  // index page sortable decimal
                  case 'Stat.approved_payout':
@@ -99,7 +99,7 @@ class Conversion extends Resource
                  case 'Stat.sale_amount':
 
 
-                    $fields[] = Number::make(  'status')->sortable();
+                    $fields[] = Number::make($field_name)->sortable();
 
                     break;
                  // index page sortable other
@@ -109,13 +109,13 @@ class Conversion extends Resource
                  case 'Stat.offer_id':
                  case 'Stat.status':
                  case 'Stat.status_code':
-                    $fields[] = Text::make(  'status')->sortable();
+                    $fields[] = Text::make($field_name)->sortable();
 
                  break;
 
 
                  default:
-                     $fields[] = Text::make(  'status')
+                     $fields[] = Text::make($field_name)
                          ->hideFromIndex();
 
              }
@@ -151,7 +151,7 @@ class Conversion extends Resource
     public function filters(Request $request)
     {
         return [
-            new Filters\DateTimeFilter('datetime'),
+            new Filters\DateTimeFilter(),
         ];
     }
 
