@@ -28,7 +28,9 @@ class Kernel extends ConsoleKernel
              ->environments(['production'])
              ->hourly();
 
-
+        $schedule->command('conversions:update')
+            ->environments(['staging'])
+            ->daily();
     }
 
     /**
