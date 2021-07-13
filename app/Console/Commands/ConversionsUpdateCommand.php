@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\TuneAPIGetConversionPageJob;
 use App\Models\Conversion;
+use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\Response;
 use App\Services\TuneAPI\TuneAPIService;
 use Carbon\Carbon;
@@ -54,7 +55,7 @@ class ConversionsUpdateCommand extends Command
     public function handle (TuneAPIService $tuneAPIService)
     {
 
-        $pagesCount = (new Response(
+        $pagesCount = (new ConversionsResponse(
             $tuneAPIService->getConversions([], 1)
         ))->parseCountPages();
 

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Conversion;
+use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\Response;
 use App\Services\TuneAPI\TuneAPIService;
 use Illuminate\Bus\Queueable;
@@ -11,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
@@ -63,7 +65,8 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
     public function handle(TuneAPIService $tuneAPIService)
     {
         $this->tuneAPIService = $tuneAPIService;
-
+        $this->jobItself();
+return;
 // Networks are limited to a maximum of 50 API calls every 10 seconds.
 // If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
 #TODO move rate limiter to middleware
@@ -87,8 +90,16 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
      */
     private function jobItself()
     {
+/*        DB::listen(function($query) {
+dump(
+    date("r") . ":" . $query->time . ":" . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL
+
+);
+        });*/
+
+
         $created = $changed = 0;
-        (new Response(
+        (new ConversionsResponse(
             $this->tuneAPIService->getConversions($this->fields, $this->page)
         ))
             ->parseData()
@@ -103,6 +114,7 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
                     ["Stat_tune_event_id" => $record["Stat_tune_event_id"]],
                     $record
                 );
+
 
                 if ($res->wasRecentlyCreated) {
                     // insert
