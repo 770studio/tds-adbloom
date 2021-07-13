@@ -56,7 +56,7 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
 
 // Networks are limited to a maximum of 50 API calls every 10 seconds.
 // If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
-
+#TODO move rate limiter to middleware
         Redis::throttle(
             config('services.tune_api.network_id')
         )->block(0)->allow(50)->every(10)->then(function () {
