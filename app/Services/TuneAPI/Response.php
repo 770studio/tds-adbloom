@@ -4,22 +4,23 @@
 namespace App\Services\TuneAPI;
 
 
+use Exception;
 use Illuminate\Support\Collection;
 use stdClass;
 
 class Response
 {
-    private $pageCount;
-    private $data;
-    private $count;
-    private $apiResult;
+    protected $pageCount;
+    protected $data;
+    protected $count;
+    protected $apiResult;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(stdClass $apiResult)
     {
-        if ($apiResult->response->errorMessage) throw new \Exception($apiResult->response->errorMessage);
+        if ($apiResult->response->errorMessage) throw new Exception($apiResult->response->errorMessage);
         $this->apiResult = $apiResult;
 
     }
@@ -28,43 +29,36 @@ class Response
     {
         return $this->data;
     }
+
     public function parseData() : Collection
     {
-        $data = [];
-        collect($this->apiResult->response->data->data)
-            ->transform(function ($items, $numkey) use (&$data) {
-                //return $item->{$entity};
-                foreach ($items as $UpperLevelKey => $item_Arr) {
-                    foreach($item_Arr as $itemkey=>$val) {
-                       $data[$numkey][$UpperLevelKey . '_' . $itemkey] = $val;
-                    }
-                }
-
-            });
-        $this->data = collect($data);
-        return $this->data;
+        //implemented on upper level
+        return collect([]);
     }
+
     public function getCountPages() : int
     {
         return $this->pageCount;
 
     }
+
     public function parseCountPages() : int
     {
         $this->pageCount = $this->apiResult->response->data->pageCount;
         return $this->pageCount;
 
     }
+
     public function getCount() : int
     {
         return $this->count;
 
     }
+
     public function parseCount()
     {
 
     }
-
 
 
 }
