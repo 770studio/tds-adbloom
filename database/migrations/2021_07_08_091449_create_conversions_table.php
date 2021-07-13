@@ -97,7 +97,7 @@ class CreateConversionsTable extends Migration
             $table->tinyInteger('Stat_count_approved')->nullable();
             $table->tinyInteger('Stat_count_pending')->nullable();
             $table->tinyInteger('Stat_count_rejected')->nullable();
-            $table->tinyInteger('Stat_creative_url_id')->nullable();
+            $table->string('Stat_creative_url_id', 100)->nullable();
             $table->tinyInteger('Stat_goal_id')->nullable();
             $table->tinyInteger('Stat_hour')->nullable();
             $table->tinyInteger('Stat_is_adjustment')->nullable();
@@ -135,7 +135,7 @@ class CreateConversionsTable extends Migration
             $table->string('Stat_offer_url_id', 50)->nullable();
             $table->string('Stat_payout_type', 50)->nullable();
             $table->string('Stat_pixel_refer', 100)->nullable();
-            $table->string('Stat_refer', 100)->nullable();
+            $table->string('Stat_refer', 255)->nullable();
             $table->string('Stat_region_code', 10)->nullable();
             $table->string('Stat_revenue_type', 10)->nullable();
             $table->string('Stat_session_ip', 50)->nullable();
