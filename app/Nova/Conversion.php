@@ -65,26 +65,33 @@ class Conversion extends Resource
     public function fields(Request $request)
     {
 
-
-        return [
-            ID::make('ID', 'id')->sortable(),
-            Text::make('Offer name', 'Offer_name')->sortable(),
-            Text::make('Stat Payout', 'Stat_payout')->sortable(),
-            Text::make('Stat Revenue', 'Stat_revenue')->sortable(),
-            Text::make('Goal Name', 'Goal_name')->sortable(),
-            Text::make('Stat Status', 'Stat_status')->sortable(),
-            DateTime::make('Updated', 'updated_at')->sortable(),
-
-        ];
-
         $fields[] = ID::make('ID', 'id')->sortable();
+
+
+
 
         foreach (\App\Models\Conversion::FIELDS as $field) {
             $field_name = Str::replaceFirst('.', '_', $field);
             $human_field_name = Str::replace(['.', '_'], ' ', $field);
             switch ($field) {
+
+                // show on index
+                case 'Offer.name':
+                case 'Affiliate.company':
+                case 'Stat.payout':
+                case 'Stat.revenue':
+                case 'Goal.name':
+                case 'Stat.status':
+                $fields[] = Text::make($human_field_name, $field_name)->sortable();
+                    break;
+
+                case 'updated_at':
+
+                    $fields[] = DateTime::make('Updated', 'updated_at')->sortable();
+                    break;
+
                 case 'Stat.tune_event_id':
-                    $fields[] = Text::make($human_field_name, $field_name)->sortable();
+                    $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();;
                          break;
 
                  //    index page sortable date
@@ -94,7 +101,7 @@ class Conversion extends Resource
                  case 'Stat.datetime':
                  case 'Stat.session_datetime':
 
-                    $fields[] =  DateTime::make($human_field_name,$field_name)->sortable();
+                    $fields[] =  DateTime::make($human_field_name,$field_name)->hideFromIndex();;
                          break;
                  // index page sortable decimal
                  case 'Stat.approved_payout':
@@ -102,28 +109,24 @@ class Conversion extends Resource
                  case 'Stat.net_payout':
                  case 'Stat.net_revenue':
                  case 'Stat.net_sale_amount':
-                 case 'Stat.payout':
                  case 'Stat.pending_payout':
                  case 'Stat.pending_revenue':
                  case 'Stat.pending_sale_amount':
                  case 'Stat.rejected_rate':
-                 case 'Stat.revenue':
                  case 'Stat.sale_amount':
 
 
-                    $fields[] = Number::make($human_field_name,$field_name)->sortable();
+                    $fields[] = Number::make($human_field_name,$field_name)->hideFromIndex();;
 
                     break;
                  // index page sortable other
-                 case 'Affiliate.company':
                  case 'Advertiser.company':
                  case 'Browser.display_name':
                  case 'Stat.id':
                  case 'Stat.ip':
                  case 'Stat.offer_id':
-                 case 'Stat.status':
                  case 'Stat.status_code':
-                    $fields[] = Text::make($human_field_name, $field_name)->sortable();
+                    $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();;
 
                  break;
 
@@ -136,8 +139,8 @@ class Conversion extends Resource
         }
 
 
-        $fields[] =  DateTime::make('Created', 'created_at')->sortable();
-        $fields[] =  DateTime::make('Updated', 'updated_at')->sortable();
+        //$fields[] =  DateTime::make('Created', 'created_at')->sortable();
+       // $fields[] =  DateTime::make('Updated', 'updated_at')->sortable();
 
 
 
