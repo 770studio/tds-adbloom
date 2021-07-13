@@ -76,6 +76,7 @@ class CreateConversionsTable extends Migration
             $table->string('RevenueGroup_id', 100)->nullable();
             $table->string('RevenueGroup_name', 100)->nullable();
             $table->string('Stat_ad_id', 100)->nullable();
+            $table->string('Stat_affiliate_manager_id', 100)->nullable();
             $table->string('Stat_advertiser_id', 100)->nullable();
             $table->string('Stat_advertiser_info', 100)->nullable();
             $table->string('Stat_advertiser_manager_id', 100)->nullable();
@@ -140,7 +141,7 @@ class CreateConversionsTable extends Migration
             $table->string('Stat_source', 50)->nullable();
             $table->string('Stat_status', 50)->nullable();
             $table->string('Stat_status_code', 10)->nullable();
-            $table->string('Stat_user_agent', 100)->nullable();
+            $table->string('Stat_user_agent', 255)->nullable();
             $table->string('Stat_week', 20)->nullable();
             $table->string('Stat_year', 10)->nullable();
             $table->timestamps();

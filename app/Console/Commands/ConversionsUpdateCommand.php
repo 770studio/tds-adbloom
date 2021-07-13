@@ -58,7 +58,6 @@ class ConversionsUpdateCommand extends Command
         $pagesCount = (new ConversionsResponse(
             $tuneAPIService->getConversions([], 1)
         ))->parseCountPages();
-
        collect(Conversion::FIELDS)
            ->chunk(30)
            ->each(function($fields) use ($pagesCount) {

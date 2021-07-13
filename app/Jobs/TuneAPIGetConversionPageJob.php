@@ -65,8 +65,7 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
     public function handle(TuneAPIService $tuneAPIService)
     {
         $this->tuneAPIService = $tuneAPIService;
-        $this->jobItself();
-return;
+
 // Networks are limited to a maximum of 50 API calls every 10 seconds.
 // If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
 #TODO move rate limiter to middleware
@@ -98,34 +97,25 @@ dump(
         });*/
 
 
-        $created = $changed = 0;
         (new ConversionsResponse(
             $this->tuneAPIService->getConversions($this->fields, $this->page)
         ))
             ->parseData()
             ->each(function($record) use (&$created, &$changed) {
                 #TODO remove redundant log messages
-                Log::channel('queue')->debug('updateOrCreate Conversion:', [
+/*                Log::channel('queue')->debug('updateOrCreate Conversion:', [
                         'tune_event_id' => $record["Stat_tune_event_id"]
                     ]
-                );
+                );*/
 
-                $res = Conversion::updateOrCreate(
+                Conversion::updateOrCreate(
                     ["Stat_tune_event_id" => $record["Stat_tune_event_id"]],
                     $record
                 );
 
 
-                if ($res->wasRecentlyCreated) {
-                    // insert
-                    $created++;
-                } elseif ($res->wasChanged()) {
-                    // update
-                    $changed++;
-                }
             });
 
-        dump('changed/created', [$changed, $created]);
-        Log::channel('queue')->debug('changed/created:', [$changed, $created]);
+        //Log::channel('queue')->debug('changed/created:', [$changed, $created]);
     }
 }
