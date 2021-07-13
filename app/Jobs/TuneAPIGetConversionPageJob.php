@@ -65,7 +65,7 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
             // Handle job...
         }, function () {
             // Could not obtain lock...
-             $this->release(5);
+             $this->release(10);
         });
 
 
