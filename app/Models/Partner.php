@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Partner extends BaseModel
 {
     use HasFactory;
+    protected $casts = [
+        'send_pending_status' => 'array'
+    ];
+
+    public function conversions()
+    {
+        return $this->hasMany('App\Models\Conversion', 'Stat_affiliate_id', 'external_id');
+    }
+
 }

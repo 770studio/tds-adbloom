@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\doPartnerPostBack;
 use Illuminate\Database\Eloquent\Model;
 
 class Conversion extends Model
@@ -12,4 +13,27 @@ class Conversion extends Model
     protected $guarded = [];
    // protected $primaryKey = self::ID_FIELD;
 
+    public function Partner()
+    {
+        return $this->belongsTo('App\Models\Partner',  'Stat_affiliate_id', 'external_id');
+    }
+    public function Opportunity()
+    {
+        return $this->belongsTo('App\Models\Opportunity',  'Stat_offer_id', 'external_id');
+    }
+
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        #TODO mb refactor to event
+        static::created(function ($conversion) {
+            if($conversion->Partner && $conversion->Opportunity)
+            doPartnerPostBack::dispatch($conversion);
+        });
+    }
 }

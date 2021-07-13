@@ -3,8 +3,11 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 
 class Partner extends Resource
@@ -59,6 +62,21 @@ class Partner extends Resource
             Text::make('External Id')
                 ->rules('required')
                 ->sortable(),
+
+            Boolean::make('Send Pending Postback', 'send_pending_postback'),
+
+            Number::make('Pending Timeout (days)', 'pending_timeout')->min(1)->max(30),
+
+            Text::make('Postback URL', 'pending_url'),
+
+
+            BooleanGroup::make('Send Pending Status', 'send_pending_status')->options([
+                'success' => 'success',
+                'reject' => 'reject',
+                'oq' => 'oq',
+                'dq' => 'dq'
+            ]),
+
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
 

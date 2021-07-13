@@ -17,5 +17,8 @@ class Opportunity extends BaseModel
     {
         return $this->belongsTo('App\Models\Client');
     }
-
+    public function conversions()
+    {
+        return $this->hasMany('App\Models\Conversion', 'Stat_offer_id', 'external_id');
+    }
 }
