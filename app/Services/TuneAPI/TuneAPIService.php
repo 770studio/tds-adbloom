@@ -7,11 +7,9 @@ namespace App\Services\TuneAPI;
 use App\Models\Conversion;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 use Tune\NetworkApi;
-use Tune\Networks;
-use Tune\Tune;
 use Tune\Utils\HttpQueryBuilder;
-use Tune\Utils\Network;
 use Tune\Utils\Operator;
 
 //TODO rate limiter
@@ -34,18 +32,17 @@ class TuneAPIService
     }
 
 
-
-    public function getConversions(array $fields, int $page) : \stdClass
+    public function getConversions(array $fields, int $page): stdClass
     {
-       return $this->api->report()->getConversions(function (HttpQueryBuilder $builder) use ($fields, $page)
-       {
+        return $this->api->report()->getConversions(function (HttpQueryBuilder $builder) use ($fields, $page) {
             return $builder->setFields(
             //array_slice(Conversion::FIELDS, 1,10)
-                 array_merge([Conversion::ID_FIELD], $fields)
+                array_merge([Conversion::ID_FIELD], $fields)
             )->addFilter('Stat.datetime',
                 [
-                    now()->subMonths(Conversion::UPDATE_STARTING_FROM_LAST_X_MONTHS)
-                        ->toDateString()
+                    now()->subMonths(
+                        config('services.tune_api.conversions_update_from_last_x_months')
+                    )->toDateString()
                 ]
                 , null, Operator::GREATER_THAN
             )->setPage($page);

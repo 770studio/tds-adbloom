@@ -32,6 +32,7 @@ return [
     'tune_api' => [
         'key' => env('TUNE_API_KEY'),
         'network_id' => env('TUNE_API_NETWORK_ID'),
+        'conversions_update_from_last_x_months' => env('TUNE_API_CONVERSIONS_UPDATE_STARTING_FROM_LAST_X_MONTHS'),
     ],
 
 ];

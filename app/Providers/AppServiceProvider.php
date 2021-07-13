@@ -2,13 +2,10 @@
 
 namespace App\Providers;
 
-use App\Interfaces\TuneAPI;
 use Illuminate\Support\ServiceProvider;
 use Tune\NetworkApi;
 use Tune\Networks;
-use Tune\Tune;
 use Tune\Utils\Network;
-use Tune\Utils\UseApiCalls;
 
 
 class AppServiceProvider extends ServiceProvider
