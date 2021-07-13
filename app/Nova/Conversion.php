@@ -82,7 +82,7 @@ class Conversion extends Resource
                 case 'Stat.revenue':
                 case 'Goal.name':
                 case 'Stat.status':
-                $fields[] = Text::make('Stat Status', 'Stat_status')->sortable();
+                $fields[] = Text::make($human_field_name, $field_name)->sortable();
                     break;
 
                 case 'updated_at':
