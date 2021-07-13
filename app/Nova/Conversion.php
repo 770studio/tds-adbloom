@@ -4,11 +4,10 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Conversion extends Resource
 {
@@ -56,24 +55,36 @@ class Conversion extends Resource
     public static $indexDefaultOrder = [
         'created_at' => 'desc'
     ];
+
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function fields(Request $request)
     {
 
+
+        return [
+            ID::make('ID', 'id')->sortable(),
+            Text::make('Offer name', 'Offer_name')->sortable(),
+            Text::make('Stat Payout', 'Stat_payout')->sortable(),
+            Text::make('Stat Revenue', 'Stat_revenue')->sortable(),
+            Text::make('Goal Name', 'Goal_name')->sortable(),
+            Text::make('Stat Status', 'Stat_status')->sortable(),
+            DateTime::make('Updated', 'updated_at')->sortable(),
+
+        ];
+
         $fields[] = ID::make('ID', 'id')->sortable();
 
-        foreach(\App\Models\Conversion::FIELDS as $field)
-        {
+        foreach (\App\Models\Conversion::FIELDS as $field) {
             $field_name = Str::replaceFirst('.', '_', $field);
-            $human_field_name = Str::replace(['.','_'], ' ', $field);
-             switch($field) {
-                 case 'Stat.tune_event_id':
-                     $fields[] = Text::make($human_field_name, $field_name)->sortable();
+            $human_field_name = Str::replace(['.', '_'], ' ', $field);
+            switch ($field) {
+                case 'Stat.tune_event_id':
+                    $fields[] = Text::make($human_field_name, $field_name)->sortable();
                          break;
 
                  //    index page sortable date
@@ -134,17 +145,10 @@ class Conversion extends Resource
     }
 
 
-
-
-
-
-
-
-
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -155,7 +159,7 @@ class Conversion extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -168,7 +172,7 @@ class Conversion extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -179,7 +183,7 @@ class Conversion extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function actions(Request $request)
