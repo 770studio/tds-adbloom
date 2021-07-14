@@ -15,6 +15,7 @@ class ClientController extends Controller
 
     public function trackOpportunity(Request $request, Client $client, string $surveyID, RedirectStatus $redirect_status)
     {
+        Log::channel('queue')->debug('incoming: status:' . $redirect_status->code);
 
         // dd( $request, $client, $surveyID, $redirect_status);
 
