@@ -67,7 +67,8 @@ class Client extends Resource
             Select::make('Status')->options(self::$model::STATUSES)
                 ->rules('required')->sortable(),
             Text::make('Email')->sortable()
-                ->rules('required', 'email', 'max:255', 'unique:clients'),
+                ->rules('required', 'email', 'max:255')
+                ->creationRules('unique:clients'),
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
