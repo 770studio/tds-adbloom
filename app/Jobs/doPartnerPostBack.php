@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Conversion;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,40 +39,58 @@ class doPartnerPostBack implements ShouldQueue
     public function handle()
     {
         if(!$this->conversion->Partner || !$this->conversion->Opportunity) return;
-        if(!$this->conversion->Partner->send_pending_postback ) return;
+
 
 
 
 //http://parner.com/?var1={eventId}&date={date}&var3={datetime}&var4={dateUpdated}&var5={datetimeUpdated}&var5={name}&var6={opportunityId}&var7={currency}&var8={payout}&var9={userPayout}&var10={points}&var11={status}&var12={token}
 
-        $status = $this->findOutStatus(
+        $macroStatus = $this->findOutStatus(
             $this->conversion->Stat_status . $this->conversion->Goal_name
         );
-
-        if(!@$this->conversion->Partner->send_pending_status[$status]) return;
-
         $replaces = [
             '{eventId}' =>  $this->conversion->Stat_tune_event_id,
             '{date}' =>  $this->conversion->created_at->toDateString(),
-            '{datetime}' =>  $this->conversion->created_at->toDateTimeString(),
-            '{dateUpdated}' =>  $this->conversion->updated_at->toDateString(),
-            '{datetimeUpdated}' =>  $this->conversion->updated_at->toDateTimeString(),
-            '{name}' =>  $this->conversion->Opportunity->name,
-            '{opportunityId}' =>  $this->conversion->Opportunity->id,
-            '{currency}' =>  $this->conversion->Stat_currency,
-            '{payout}' =>  $this->conversion->Stat_payout,
-            '{userPayout}' =>  1,
-            '{point}' =>  1,
-            '{token}' =>  'token',
-            '{status}' => $status
-        ,
+            '{datetime}' => $this->conversion->created_at->toDateTimeString(),
+            '{dateUpdated}' => $this->conversion->updated_at->toDateString(),
+            '{datetimeUpdated}' => $this->conversion->updated_at->toDateTimeString(),
+            '{name}' => $this->conversion->Opportunity->name,
+            '{opportunityId}' => $this->conversion->Opportunity->id,
+            '{currency}' => $this->conversion->Stat_currency,
+            '{payout}' => $this->conversion->Stat_payout,
+            '{userPayout}' => 1,
+            '{point}' => 1,
+            '{token}' => 'token',
+            '{status}' => $macroStatus
+            ,
         ];
+
+
+        if ($this->conversion->Partner->send_pending_postback && !$this->conversion->partner_postback_lastsent
+            && strtolower($this->conversion->Stat_status . $this->conversion->Goal_name) == 'approvedsuccess'
+        ) {
+            // send pending 1st time
+            if (!@$this->conversion->Partner->send_pending_status[$macroStatus]) return;
+            $replaces['{status}'] = 'pending';
+
+        } elseif (!$this->conversion->partner_postback_lastsent) {
+            // send one time
+
+        } elseif ($this->conversion->Partner->pending_timeout >= (new Carbon($this->conversion->created_at))->diff(now())->days) {
+            // send for the second time
+
+        } else {
+            return;
+        }
 
         $url = str_replace(
             array_keys($replaces), $replaces,
-             $this->conversion->Partner->pending_url
+            $this->conversion->Partner->pending_url
         );
 
+        doPostBackJob::dispatch(
+            $url
+        )->onQueue('postback_queue');
 
 
         /*        eventId = Stat tune event id
@@ -89,33 +108,28 @@ userPayout = FIXED FOR NOW
     token = HARD CODED*/
 
 
-        doPostBackJob::dispatch(
-            $url
-        )->onQueue('postback_queue');
     }
 
     /**
      * @throws Exception
      */
-    private function findOutStatus(string $Stat_status_compiled)
+    private function findOutStatus(string $Stat_status_compiled): string
     {
 
-        switch($Stat_status_compiled)
-        {
-            case 'approvedDefault':
+        switch (strtolower($Stat_status_compiled)) {
+            case 'approveddefault':
             case 'approved':
+            case 'approvedsuccess':
                 return 'success';
-            case 'approvedSuccess':
-                return 'pending';
-            case 'approvedReject':
-            case 'rejectedSuccess':
+            case 'approvedreject':
+            case 'rejectedsuccess':
                 return 'reject';
-            case 'approvedDQ':
+            case 'approveddq':
                 return 'dq';
-            case 'approvedOQ':
+            case 'approvedoq':
                 return 'oq';
-                default:
-                    throw new Exception('unexpected compiled status:' . $Stat_status_compiled);
+            default:
+                throw new Exception('unexpected compiled status:' . $Stat_status_compiled);
         }
     }
 }
