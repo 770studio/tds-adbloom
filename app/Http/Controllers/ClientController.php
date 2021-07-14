@@ -7,6 +7,7 @@ use App\Jobs\doPostBackJob;
 use App\Models\Client;
 use App\Models\RedirectStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
@@ -24,6 +25,7 @@ class ClientController extends Controller
                 case "reject":
                 case "oq":
                 case "dq":
+                    Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status->code);
                     doPostBackJob::dispatch(
                         "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status->code}&transaction_id={$request->clickid}"
                     );
@@ -32,6 +34,7 @@ class ClientController extends Controller
                     doPostBackJob::dispatch(
                         "https://trk.adbloom.co/aff_lsr?transaction_id={$request->clickid}"
                     );
+                    Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status->code);
                     break;
 
                 default:
