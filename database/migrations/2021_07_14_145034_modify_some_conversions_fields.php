@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyConversionsFields extends Migration
+class ModifySomeConversionsFields extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,12 @@ class ModifyConversionsFields extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('conversions', function (Blueprint $table) {
+            $table->text('Stat_refer')->nullable()->change();
+            $table->string('Stat_goal_id')->nullable()->change();
+
+
+        });
     }
 
     /**
@@ -23,11 +28,6 @@ class ModifyConversionsFields extends Migration
      */
     public function down()
     {
-        Schema::create('conversions', function (Blueprint $table) {
-            $table->text('Stat_refer')->nullable();
-            $table->string('Stat_goal_id')->nullable();
-
-
-        });
+        //
     }
 }
