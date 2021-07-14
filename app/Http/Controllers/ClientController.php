@@ -17,27 +17,31 @@ class ClientController extends Controller
 
         // dd( $request, $client, $surveyID, $redirect_status);
 
-        if (!$request->clickid) abort(404, 'clickid is required');
+        //if (!$request->clickid) abort(404, 'clickid is required');
 
-        switch ($redirect_status->code) {
-            case "reject":
-            case "oq":
-            case "dq":
-                doPostBackJob::dispatch(
-                    "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status->code}&transaction_id={$request->clickid}"
-                );
-                break;
-            case "success":
-                doPostBackJob::dispatch(
-                    "https://trk.adbloom.co/aff_lsr?transaction_id={$request->clickid}"
-                );
-                break;
+        if (!$request->clickid) {
+            switch ($redirect_status->code) {
+                case "reject":
+                case "oq":
+                case "dq":
+                    doPostBackJob::dispatch(
+                        "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status->code}&transaction_id={$request->clickid}"
+                    );
+                    break;
+                case "success":
+                    doPostBackJob::dispatch(
+                        "https://trk.adbloom.co/aff_lsr?transaction_id={$request->clickid}"
+                    );
+                    break;
 
-            default:
-                abort(404, 'undefined redirect status');
+                default:
+                    // abort(404, 'undefined redirect status');
 
+
+            }
 
         }
+
 
         /*      Вот постбэк для статуса success:
                 https://trk.adbloom.co/aff_lsr?transaction_id={clickID}
