@@ -85,24 +85,20 @@ class Conversion extends Resource
                 $fields[] = Text::make($human_field_name, $field_name)->sortable();
                     break;
 
-                case 'updated_at':
-
-                    $fields[] = DateTime::make('Updated', 'updated_at')->sortable();
-                    break;
 
                 case 'Stat.tune_event_id':
-                    $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();;
-                         break;
+                    $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();
+                    break;
 
                  //    index page sortable date
 
                  case 'Stat.date':
                  case 'Stat.session_date':
-                 case 'Stat.datetime':
-                 case 'Stat.session_datetime':
+                case 'Stat.datetime':
+                case 'Stat.session_datetime':
 
-                    $fields[] =  DateTime::make($human_field_name,$field_name)->hideFromIndex();;
-                         break;
+                    $fields[] = DateTime::make($human_field_name, $field_name)->hideFromIndex();
+                    break;
                  // index page sortable decimal
                  case 'Stat.approved_payout':
                  case 'Stat.approved_rate':
@@ -116,9 +112,9 @@ class Conversion extends Resource
                  case 'Stat.sale_amount':
 
 
-                    $fields[] = Number::make($human_field_name,$field_name)->hideFromIndex();;
+                     $fields[] = Number::make($human_field_name, $field_name)->hideFromIndex();
 
-                    break;
+                     break;
                  // index page sortable other
                  case 'Advertiser.company':
                  case 'Browser.display_name':
@@ -126,9 +122,9 @@ class Conversion extends Resource
                  case 'Stat.ip':
                  case 'Stat.offer_id':
                  case 'Stat.status_code':
-                    $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();;
+                $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();
 
-                 break;
+                break;
 
 
                  default:
@@ -140,7 +136,7 @@ class Conversion extends Resource
 
 
         //$fields[] =  DateTime::make('Created', 'created_at')->sortable();
-       // $fields[] =  DateTime::make('Updated', 'updated_at')->sortable();
+        $fields[] = DateTime::make('Updated', 'updated_at')->sortable();
 
 
 
