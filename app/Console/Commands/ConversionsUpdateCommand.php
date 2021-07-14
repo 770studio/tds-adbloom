@@ -6,18 +6,9 @@ namespace App\Console\Commands;
 use App\Jobs\TuneAPIGetConversionPageJob;
 use App\Models\Conversion;
 use App\Services\TuneAPI\ConversionsResponse;
-use App\Services\TuneAPI\Response;
 use App\Services\TuneAPI\TuneAPIService;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
-use Tune\NetworkApi;
-use Tune\Networks;
-use Tune\Tune;
-use Tune\Utils\HttpQueryBuilder;
-use Tune\Utils\Network;
-use Tune\Utils\Operator;
-use Tune\Utils\UseApiCalls;
 
 
 class ConversionsUpdateCommand extends Command
@@ -58,13 +49,11 @@ class ConversionsUpdateCommand extends Command
         $pagesCount = (new ConversionsResponse(
             $tuneAPIService->getConversions([], 1)
         ))->parseCountPages();
-       collect(Conversion::FIELDS)
-           ->chunk(30)
-           ->each(function($fields) use ($pagesCount) {
-               for($page=1; $page<=$pagesCount; $page++)
-               {
-                   TuneAPIGetConversionPageJob::dispatch($page, $fields->toArray());
-               }
+       collect(Conversion::FIELDS)// ->chunk(30)
+       ->each(function ($fields) use ($pagesCount) {
+           for ($page = 1; $page <= $pagesCount; $page++) {
+               TuneAPIGetConversionPageJob::dispatch($page, $fields->toArray());
+           }
 
        });
 
