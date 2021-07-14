@@ -32,8 +32,11 @@ class Conversion extends Model
     {
         #TODO mb refactor to event
         static::created(function ($conversion) {
-            if($conversion->Partner && $conversion->Opportunity)
-            doPartnerPostBack::dispatch($conversion);
+            if ($conversion->Partner && $conversion->Opportunity) {
+                doPartnerPostBack::dispatch($conversion)
+                    ->onQueue('postback_queue');
+
+            }
         });
     }
 }
