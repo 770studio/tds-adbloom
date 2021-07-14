@@ -93,7 +93,7 @@ class doPartnerPostBack implements ShouldQueue
         )->onQueue('postback_queue');
 
         //$this->conversion->increment('partner_postbacks');
-        $this->conversion->partner_postback_lastsent = now();
+        $this->conversion->partner_postback_lastsent = now()->toDateTimeString();
         $this->conversion->save();
 
         /*        eventId = Stat tune event id
