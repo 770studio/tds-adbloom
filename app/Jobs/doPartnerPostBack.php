@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class doPartnerPostBack implements ShouldQueue
 {
@@ -38,19 +39,21 @@ class doPartnerPostBack implements ShouldQueue
      */
     public function handle()
     {
-        if(!$this->conversion->Partner || !$this->conversion->Opportunity) return;
-
-
+        if (!$this->conversion->Partner || !$this->conversion->Opportunity) return;
 
 
 //http://parner.com/?var1={eventId}&date={date}&var3={datetime}&var4={dateUpdated}&var5={datetimeUpdated}&var5={name}&var6={opportunityId}&var7={currency}&var8={payout}&var9={userPayout}&var10={points}&var11={status}&var12={token}
 
-        $macroStatus = $this->findOutStatus(
-            $this->conversion->Stat_status . $this->conversion->Goal_name
-        );
+
+        $usecase = $this->conversion->Stat_status . $this->conversion->Goal_name;
+        if (!$macroStatus = $this->findOutStatus($usecase)) {
+            Log::channel('queue')->error('unexpected compiled status:' . $usecase, $this->conversion->toArray());
+            return;
+        }
+
         $replaces = [
-            '{eventId}' =>  $this->conversion->Stat_tune_event_id,
-            '{date}' =>  $this->conversion->created_at->toDateString(),
+            '{eventId}' => $this->conversion->Stat_tune_event_id,
+            '{date}' => $this->conversion->created_at->toDateString(),
             '{datetime}' => $this->conversion->created_at->toDateTimeString(),
             '{dateUpdated}' => $this->conversion->updated_at->toDateString(),
             '{datetimeUpdated}' => $this->conversion->updated_at->toDateTimeString(),
@@ -67,7 +70,7 @@ class doPartnerPostBack implements ShouldQueue
 
 
         if ($this->conversion->Partner->send_pending_postback && !$this->conversion->partner_postback_lastsent
-            && strtolower($this->conversion->Stat_status . $this->conversion->Goal_name) == 'approvedsuccess'
+            && strtolower($usecase) == 'approvedsuccess'
         ) {
             // send pending 1st time
             if (!@$this->conversion->Partner->send_pending_status[$macroStatus]) return;
@@ -132,7 +135,8 @@ userPayout = FIXED FOR NOW
             case 'approvedoq':
                 return 'oq';
             default:
-                throw new Exception('unexpected compiled status:' . $Stat_status_compiled);
+                return false;
+            // throw new Exception('unexpected compiled status:' . $Stat_status_compiled);
         }
     }
 }

@@ -182,6 +182,8 @@ return [
                 'maxProcesses' => 1,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
+                'tries' => 3,
+
             ],
         ],
         'staging' => [
@@ -192,6 +194,8 @@ return [
                 'maxProcesses' => 1,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
+                'tries' => 3,
+
             ],
             'supervisor-2' => [
                 'connection' => 'redis',
@@ -200,6 +204,8 @@ return [
                 'maxProcesses' => 5,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
+                'tries' => 1,
+
             ],
 
 
