@@ -8,7 +8,7 @@ class Opportunity extends BaseModel
 {
     use HasFactory;
 
-    const TYPES = ['offer', 'survey'];
+    const TYPES = ['offer'=>'offer', 'survey'=>'survey'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
