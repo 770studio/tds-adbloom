@@ -62,9 +62,10 @@ class Opportunity extends Resource
                 ->sortable(),
             Select::make('Type')->options(
                 self::$model::TYPES
-            )->resolveUsing(function () {
-                return $this->type ?? 'offer';
-            })->rules('required')
+            )//->resolveUsing(function () {
+               // return $this->type ?? 'offer';
+           // }) TODO this doesnt work
+                ->rules('required')
                 ->sortable(),
             BelongsTo::make('Client'),
             DateTime::make('Created at')->sortable()->exceptOnForms(),
