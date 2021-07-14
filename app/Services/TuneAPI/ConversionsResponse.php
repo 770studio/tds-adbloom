@@ -21,6 +21,8 @@ class ConversionsResponse extends Response
                 foreach ($items as $UpperLevelKey => $item_Arr) {
                     foreach ($item_Arr as $itemkey => $val) {
                         #TODO str macro toMysqlFieldname and ViseVersa
+
+                        #TODO refactor - takes much time , redundant operations
                         if(in_array($UpperLevelKey . '.' . $itemkey, Conversion::FIELDS))
                         $dbFieldName = $UpperLevelKey . '_' . $itemkey;
                         $dbFieldType = DB::connection()->getDoctrineColumn('conversions', $dbFieldName)->getType()->getName();

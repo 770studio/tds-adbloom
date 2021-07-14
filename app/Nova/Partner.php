@@ -65,12 +65,12 @@ class Partner extends Resource
 
             Boolean::make('Send Pending Postback', 'send_pending_postback'),
 
-            Number::make('Pending Timeout (days)', 'pending_timeout')->min(1)->max(30),
+            Number::make('Pending Postback Timeout (days)', 'pending_timeout')->min(1)->max(30),
 
             Text::make('Postback URL', 'pending_url'),
 
 
-            BooleanGroup::make('Send Pending Status', 'send_pending_status')->options([
+            BooleanGroup::make('Send Status Postback', 'send_pending_status')->options([
                 'success' => 'success',
                 'reject' => 'reject',
                 'oq' => 'oq',
