@@ -40,8 +40,15 @@ class doPartnerPostBack implements ShouldQueue
         if(!$this->conversion->Partner || !$this->conversion->Opportunity) return;
         if(!$this->conversion->Partner->send_pending_postback ) return;
 
+
+
 //http://parner.com/?var1={eventId}&date={date}&var3={datetime}&var4={dateUpdated}&var5={datetimeUpdated}&var5={name}&var6={opportunityId}&var7={currency}&var8={payout}&var9={userPayout}&var10={points}&var11={status}&var12={token}
 
+        $status = $this->findOutStatus(
+            $this->conversion->Stat_status . $this->conversion->Goal_name
+        );
+
+        if(!@$this->conversion->Partner->send_pending_status[$status]) return;
 
         $replaces = [
             '{eventId}' =>  $this->conversion->Stat_tune_event_id,
@@ -56,9 +63,7 @@ class doPartnerPostBack implements ShouldQueue
             '{userPayout}' =>  1,
             '{point}' =>  1,
             '{token}' =>  'token',
-            '{statu}' => $this->findOutStatus(
-                $this->conversion->Stat_status . $this->conversion->Goal_name
-            )
+            '{status}' => $status
         ,
         ];
 
