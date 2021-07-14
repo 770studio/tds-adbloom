@@ -33,6 +33,7 @@ class doPartnerPostBack implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws \Exception
      */
     public function handle()
     {
@@ -40,6 +41,31 @@ class doPartnerPostBack implements ShouldQueue
         if(!$this->conversion->Partner->send_pending_postback ) return;
 
 //http://parner.com/?var1={eventId}&date={date}&var3={datetime}&var4={dateUpdated}&var5={datetimeUpdated}&var5={name}&var6={opportunityId}&var7={currency}&var8={payout}&var9={userPayout}&var10={points}&var11={status}&var12={token}
+
+
+        $replaces = [
+            '{eventId}' =>  $this->conversion->Stat_tune_event_id,
+            '{date}' =>  $this->conversion->created_at->toDateString(),
+            '{datetime}' =>  $this->conversion->created_at->toDateTimeString(),
+            '{dateUpdated}' =>  $this->conversion->updated_at->toDateString(),
+            '{datetimeUpdated}' =>  $this->conversion->updated_at->toDateTimeString(),
+            '{name}' =>  $this->conversion->Opportunity->name,
+            '{opportunityId}' =>  $this->conversion->Opportunity->id,
+            '{currency}' =>  $this->conversion->Stat_currency,
+            '{payout}' =>  $this->conversion->Stat_payout,
+            '{userPayout}' =>  1,
+            '{point}' =>  1,
+            '{token}' =>  'token',
+            '{statu}' => $this->findOutStatus(
+                $this->conversion->Stat_status . $this->conversion->Goal_name
+            )
+        ,
+        ];
+
+        $url = str_replace(
+            array_keys($replaces), $replaces,
+             $this->conversion->Partner->pending_url
+        );
 
 
 
@@ -57,9 +83,34 @@ userPayout = FIXED FOR NOW
                                           status = depends or Partner settings
     token = HARD CODED*/
 
-        $url = $this->conversion->Partner->pending_url;
+
               doPostBackJob::dispatch(
                   $url
               );
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function findOutStatus(string $Stat_status_compiled)
+    {
+
+        switch($Stat_status_compiled)
+        {
+            case 'approvedDefault':
+            case 'approved':
+                return 'success';
+            case 'approvedSuccess':
+                return 'pending';
+            case 'approvedReject':
+            case 'rejectedSuccess':
+                return 'reject';
+            case 'approvedDQ':
+                return 'dq';
+            case 'approvedOQ':
+                return 'oq';
+                default:
+                   throw new \Exception('unexpected compiled status:' . $Stat_status_compiled);
+        }
     }
 }
