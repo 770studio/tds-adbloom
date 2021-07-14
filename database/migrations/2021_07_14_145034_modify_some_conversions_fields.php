@@ -13,7 +13,8 @@ class ModifySomeConversionsFields extends Migration
      */
     public function up()
     {
-        Schema::create('conversions', function (Blueprint $table) {
+
+        Schema::table('conversions', function (Blueprint $table) {
             $table->text('Stat_refer')->nullable()->change();
             $table->string('Stat_goal_id')->nullable()->change();
 
