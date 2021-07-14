@@ -186,10 +186,23 @@ return [
         ],
         'staging' => [
             'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
                 'maxProcesses' => 1,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
+            'supervisor-2' => [
+                'connection' => 'redis',
+                'queue' => ['postback_queue'],
+                'balance' => 'auto',
+                'maxProcesses' => 5,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+            ],
+
+
         ],
         'local' => [
             'supervisor-1' => [

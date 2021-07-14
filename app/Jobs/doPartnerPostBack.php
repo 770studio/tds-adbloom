@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Conversion;
+use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -33,7 +33,7 @@ class doPartnerPostBack implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle()
     {
@@ -89,13 +89,13 @@ userPayout = FIXED FOR NOW
     token = HARD CODED*/
 
 
-              doPostBackJob::dispatch(
-                  $url
-              );
+        doPostBackJob::dispatch(
+            $url
+        )->onQueue('postback_queue');
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function findOutStatus(string $Stat_status_compiled)
     {
@@ -115,7 +115,7 @@ userPayout = FIXED FOR NOW
             case 'approvedOQ':
                 return 'oq';
                 default:
-                   throw new \Exception('unexpected compiled status:' . $Stat_status_compiled);
+                    throw new Exception('unexpected compiled status:' . $Stat_status_compiled);
         }
     }
 }
