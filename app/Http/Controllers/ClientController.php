@@ -19,7 +19,7 @@ class ClientController extends Controller
 
         //if (!$request->clickid) abort(404, 'clickid is required');
 
-        if (!$request->clickid) {
+        if ($request->clickid) {
             switch ($redirect_status->code) {
                 case "reject":
                 case "oq":
