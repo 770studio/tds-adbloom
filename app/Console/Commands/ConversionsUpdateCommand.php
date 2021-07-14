@@ -49,17 +49,11 @@ class ConversionsUpdateCommand extends Command
         $pagesCount = (new ConversionsResponse(
             $tuneAPIService->getConversions([], 1)
         ))->parseCountPages();
-       collect(Conversion::FIELDS)// ->chunk(30)
-       ->each(function ($fields) use ($pagesCount) {
-           for ($page = 1; $page <= $pagesCount; $page++) {
-               TuneAPIGetConversionPageJob::dispatch($page, $fields->toArray());
-           }
 
-       });
+        for ($page = 1; $page <= $pagesCount; $page++) {
+            TuneAPIGetConversionPageJob::dispatch($page, Conversion::FIELDS);
+        }
 
-
-
-        //dd(888888,$responce);
 
     }
 }
