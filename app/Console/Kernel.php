@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('conversions:update')
             ->environments(['staging'])
-            ->daily();
+            ->everyTwoHours();
     }
 
     /**
