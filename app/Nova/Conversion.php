@@ -53,7 +53,7 @@ class Conversion extends Resource
      * @var array
      */
     public static $indexDefaultOrder = [
-        'Stat_datetime' => 'desc'
+        'created_at' => 'desc'
     ];
 
     /**
@@ -86,7 +86,7 @@ class Conversion extends Resource
                 case 'Stat.session_date':
                 case 'Stat.datetime':
                 case 'Stat.session_datetime':
-                    $fields[] = Text::make($human_field_name, $field_name)->sortable();
+                $fields[] = Text::make($human_field_name, $field_name)->sortable();
                     break;
 
 
