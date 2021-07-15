@@ -41,7 +41,7 @@ class SendPartnerSecondaryPostbackOnTTLExpire extends Command
      */
     public function handle()
     {
-        Conversion::with('Partner:id,pending_timeout')
+        Conversion::with('Partner:id,external_id,pending_timeout')
             ->whereHas('Partner')
             ->whereNotNull('pending_sent')
             ->where('partner_postbacks', '<', 2)
