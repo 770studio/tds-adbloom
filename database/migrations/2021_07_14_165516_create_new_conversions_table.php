@@ -45,7 +45,7 @@ class CreateNewConversionsTable extends Migration
             $table->string('Stat_datetime')->nullable();
             $table->string('Stat_id', 50)->nullable();
             $table->string('Stat_offer_id', 50)->nullable();
-            $table->string('Stat_source', 50)->nullable();
+            $table->string('Stat_source', 255)->nullable();
             $table->string('Stat_status', 50)->nullable();
             $table->tinyInteger('partner_postbacks')->default(0);
             $table->dateTime('partner_postback_lastsent')->nullable();

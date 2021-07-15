@@ -22,9 +22,11 @@ class ConversionsResponse extends Response
                 foreach ($items as $UpperLevelKey => $item_Arr) {
                     foreach ($item_Arr as $itemkey => $val) {
                         #TODO str macro toMysqlFieldname and ViseVersa
-                        if(in_array($UpperLevelKey . '.' . $itemkey, Conversion::FIELDS))
-                        $dbFieldName = $UpperLevelKey . '_' . $itemkey;
-                        $data[$numkey][$dbFieldName] = $this->cast($dbFieldName, $val);
+                        if (in_array($UpperLevelKey . '.' . $itemkey, Conversion::FIELDS)) {
+                            $dbFieldName = $UpperLevelKey . '_' . $itemkey;
+                            $data[$numkey][$dbFieldName] = $this->cast($dbFieldName, $val);
+                        }
+
 
                     }
                 }
