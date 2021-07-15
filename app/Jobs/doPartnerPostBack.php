@@ -51,7 +51,7 @@ class doPartnerPostBack implements ShouldQueue
             return;
         }
 
-        $replaces = [
+        $replaces = array_map('urlencode', [
             '{eventId}' => $this->conversion->Stat_tune_event_id,
             '{date}' => $this->conversion->created_at->toDateString(),
             '{datetime}' => $this->conversion->created_at->toDateTimeString(),
@@ -66,9 +66,7 @@ class doPartnerPostBack implements ShouldQueue
             '{token}' => 'token',
             '{status}' => $macroStatus
             ,
-        ];
-
-        array_map('urlencode', $replaces);
+        ]);
 
         if ($this->conversion->Partner->send_pending_postback && !$this->conversion->partner_postback_lastsent
             && strtolower($usecase) == 'approvedsuccess'
@@ -118,8 +116,8 @@ userPayout = FIXED FOR NOW
     }
 
     /**
+     * @return string | false
      * @throws Exception
-     * @returns string | false
      */
     private function findOutStatus(string $Stat_status_compiled)
     {
