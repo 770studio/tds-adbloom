@@ -18,15 +18,20 @@ class doPostBackJob implements ShouldQueue
      * @var string
      */
     private $url;
+    /**
+     * @var bool
+     */
+    private $pending;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $url)
+    public function __construct(string $url, bool $pending = false)
     {
         $this->url = $url;
+        $this->pending = $pending;
     }
 
     /**
@@ -40,7 +45,10 @@ class doPostBackJob implements ShouldQueue
             'debug' => true,
         ])->get($this->url);
 
-        Log::channel('queue')->debug('doPostBackJob:' . $this->url . PHP_EOL . $response->body());
+        Log::channel('queue')->debug($this->pending
+            ? 'doPendingPostBack:'
+            : 'doPostBack:'
+            . $this->url . PHP_EOL . $response->body());
 
 
     }

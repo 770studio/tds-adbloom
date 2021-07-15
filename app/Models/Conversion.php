@@ -5,6 +5,10 @@ namespace App\Models;
 use App\Jobs\doPartnerPostBack;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Conversion
+ * @package App\Models
+ */
 class Conversion extends Model
 {
     //const UPDATE_STARTING_FROM_LAST_X_MONTHS =  0.01;

@@ -3,14 +3,12 @@
 namespace App\Jobs;
 
 use App\Models\Conversion;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class doPartnerPostBack implements ShouldQueue
@@ -21,15 +19,21 @@ class doPartnerPostBack implements ShouldQueue
      * @var Conversion
      */
     private $conversion;
+    /**
+     * @var bool
+     */
+    private $secondary;
+
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Conversion $conversion)
+    public function __construct(Conversion $conversion, $secondary = false)
     {
         $this->conversion = $conversion;
+        $this->secondary = $secondary;
     }
 
     /**
@@ -47,7 +51,7 @@ class doPartnerPostBack implements ShouldQueue
 
 //http://parner.com/?var1={eventId}&date={date}&var3={datetime}&var4={dateUpdated}&var5={datetimeUpdated}&var5={name}&var6={opportunityId}&var7={currency}&var8={payout}&var9={userPayout}&var10={points}&var11={status}&var12={token}
 
-
+        $pending = false;
         $usecase = $this->conversion->Stat_status . $this->conversion->Goal_name;
         if (!$macroStatus = $this->findOutStatus($usecase)) {
             Log::channel('queue')->error('unexpected compiled status:' . $usecase, $this->conversion->toArray());
@@ -71,30 +75,25 @@ class doPartnerPostBack implements ShouldQueue
             ,
         ]);
 
-        if ($this->conversion->Partner->send_pending_postback && !$this->conversion->partner_postback_lastsent
+        if ($this->secondary) {
+            // send for the second time
+            Log::channel('queue')->error('send for the second time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
+
+        } elseif ($this->conversion->Partner->send_pending_postback && !$this->conversion->partner_postback_lastsent
             && strtolower($usecase) == 'approvedsuccess'
         ) {
             // send pending 1st time
+            $pending = true;
             if (!@$this->conversion->Partner->send_pending_status[$macroStatus]) return;
             $replaces['{status}'] = 'pending';
             Log::channel('queue')->error('send pending 1st time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
-
 
         } elseif (!$this->conversion->partner_postback_lastsent) {
             // send one time
             Log::channel('queue')->error('send one time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
 
-        } elseif ($this->conversion->Partner->pending_timeout >=
-            (new Carbon($this->conversion->created_at))
-                ->diffInHours(now()) / (App::environment('local', 'staging')
-                ? 1
-                : 24)// diff in hours or in days (for production)
-
-        ) {
-            // send for the second time
-            Log::channel('queue')->error('send for the second time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
-
         } else {
+            // not sending anything
             return;
         }
 
@@ -104,11 +103,13 @@ class doPartnerPostBack implements ShouldQueue
         );
 
         doPostBackJob::dispatch(
-            $url
+            $url, $pending
         )->onQueue('postback_queue');
 
         //$this->conversion->increment('partner_postbacks');
         $this->conversion->partner_postback_lastsent = now()->toDateTimeString();
+        $this->conversion->partner_postbacks += 1;
+        if ($pending) $this->conversion->pending_sent = now()->toDateTimeString();
         $this->conversion->save();
 
         /*        eventId = Stat tune event id

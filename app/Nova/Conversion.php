@@ -205,4 +205,9 @@ class Conversion extends Resource
 
         return $query;
     }
+
+    /*    protected function isPartnerPendingPBSent()
+        {
+            return
+        }*/
 }

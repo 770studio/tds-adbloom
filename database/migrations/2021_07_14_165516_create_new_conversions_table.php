@@ -48,6 +48,7 @@ class CreateNewConversionsTable extends Migration
             $table->string('Stat_source', 255)->nullable();
             $table->string('Stat_status', 50)->nullable();
             $table->tinyInteger('partner_postbacks')->default(0);
+            $table->dateTime('pending_sent')->nullable();
             $table->dateTime('partner_postback_lastsent')->nullable();
 
             $table->timestamps();
