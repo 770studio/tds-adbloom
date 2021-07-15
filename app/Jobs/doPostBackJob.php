@@ -45,9 +45,10 @@ class doPostBackJob implements ShouldQueue
             'debug' => true,
         ])->get($this->url);
 
-        Log::channel('queue')->debug($this->pending
+        Log::channel('queue')->debug(
+            ($this->pending
             ? 'doPendingPostBack:'
-            : 'doPostBack:'
+            : 'doPostBack:')
             . $this->url . PHP_EOL . $response->body());
 
 
