@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class doPartnerPostBack implements ShouldQueue
@@ -39,6 +40,8 @@ class doPartnerPostBack implements ShouldQueue
      */
     public function handle()
     {
+
+
         if (!$this->conversion->Partner || !$this->conversion->Opportunity) return;
 
 
@@ -81,7 +84,13 @@ class doPartnerPostBack implements ShouldQueue
             // send one time
             Log::channel('queue')->error('send one time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
 
-        } elseif ($this->conversion->Partner->pending_timeout >= (new Carbon($this->conversion->created_at))->diff(now())->days) {
+        } elseif ($this->conversion->Partner->pending_timeout >=
+            (new Carbon($this->conversion->created_at))
+                ->diffInHours(now()) / (App::environment('local', 'staging')
+                ? 1
+                : 24)// diff in hours or in days (for production)
+
+        ) {
             // send for the second time
             Log::channel('queue')->error('send for the second time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
 

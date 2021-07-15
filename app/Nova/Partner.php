@@ -65,7 +65,7 @@ class Partner extends Resource
 
             Boolean::make('Send Pending Postback', 'send_pending_postback'),
 
-            Number::make('Pending Postback Timeout (days)', 'pending_timeout')->min(1)->max(30),
+            Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
 
             Text::make('Postback URL', 'pending_url'),
 
