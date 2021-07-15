@@ -14,6 +14,7 @@ class Conversion extends Model
     // protected $primaryKey = self::ID_FIELD;
     protected $casts = [
         'partner_postback_lastsent' => 'datetime',
+        'Stat_datetime' => 'datetime',
     ];
 
     public function Partner()

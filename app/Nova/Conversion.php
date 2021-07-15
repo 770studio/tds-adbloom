@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Conversion extends Resource
 {
@@ -53,7 +54,7 @@ class Conversion extends Resource
      * @var array
      */
     public static $indexDefaultOrder = [
-        'created_at' => 'desc'
+        'Stat_datetime' => 'desc'
     ];
 
     /**
@@ -84,7 +85,6 @@ class Conversion extends Resource
                 case 'Stat.status':
                 case 'Stat.date':
                 case 'Stat.session_date':
-                case 'Stat.datetime':
                 case 'Stat.session_datetime':
                 $fields[] = Text::make($human_field_name, $field_name)->sortable();
                     break;
@@ -133,8 +133,10 @@ class Conversion extends Resource
 
         //$fields[] =  DateTime::make('Created', 'created_at')->sortable();
 
+        $fields[] = DateTime::make('Stat datetime', 'Stat_datetime')->sortable();
         $fields[] = DateTime::make('Updated', 'updated_at')->sortable();
         $fields[] = DateTime::make('Last Partner Postback', 'partner_postback_lastsent')->sortable();
+
 
 
 
@@ -186,5 +188,24 @@ class Conversion extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+
+    /**
+     * Build an "index" query for the given resource.
+     *
+     * @param NovaRequest $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if (empty($request->get('orderBy'))) {
+            $query->getQuery()->orders = [];
+
+            return $query->orderBy(key(static::$indexDefaultOrder), reset(static::$indexDefaultOrder));
+        }
+
+        return $query;
     }
 }
