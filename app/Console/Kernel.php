@@ -19,18 +19,19 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('conversions:update')
-             ->environments(['production'])
-             ->hourly();
+        // no work on prod for now
+        /*  $schedule->command('conversions:update')
+              ->environments(['production'])
+              ->hourly();*/
 
         $schedule->command('conversions:update')
             ->environments(['staging'])
-            ->everyTwoHours();
+            ->everyTwoMinutes();
     }
 
     /**
