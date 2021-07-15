@@ -74,16 +74,16 @@ class doPartnerPostBack implements ShouldQueue
             // send pending 1st time
             if (!@$this->conversion->Partner->send_pending_status[$macroStatus]) return;
             $replaces['{status}'] = 'pending';
-            Log::channel('queue')->error('send pending 1st time', ['usecase' => $usecase, 'c' => $this->conversion->toArray()]);
+            Log::channel('queue')->error('send pending 1st time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
 
 
         } elseif (!$this->conversion->partner_postback_lastsent) {
             // send one time
-            Log::channel('queue')->error('send one time', ['usecase' => $usecase, 'c' => $this->conversion->toArray()]);
+            Log::channel('queue')->error('send one time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
 
         } elseif ($this->conversion->Partner->pending_timeout >= (new Carbon($this->conversion->created_at))->diff(now())->days) {
             // send for the second time
-            Log::channel('queue')->error('send for the second time', ['usecase' => $usecase, 'c' => $this->conversion->toArray()]);
+            Log::channel('queue')->error('send for the second time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
 
         } else {
             return;
