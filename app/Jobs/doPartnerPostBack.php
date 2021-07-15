@@ -119,8 +119,9 @@ userPayout = FIXED FOR NOW
 
     /**
      * @throws Exception
+     * @returns string | false
      */
-    private function findOutStatus(string $Stat_status_compiled): string
+    private function findOutStatus(string $Stat_status_compiled)
     {
 
         switch (strtolower($Stat_status_compiled)) {
