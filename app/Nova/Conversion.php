@@ -94,11 +94,7 @@ class Conversion extends Resource
                     $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();
                     break;
 
-                    //    index page sortable date
 
-
-                    $fields[] = DateTime::make($human_field_name, $field_name)->hideFromIndex();
-                    break;
                  // index page sortable decimal
                  case 'Stat.approved_payout':
                  case 'Stat.approved_rate':
