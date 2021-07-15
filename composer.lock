@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72108481208287663a19cc330df1317c",
+    "content-hash": "3502b4ca9d0c85e702e93d26b68f54bc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -870,6 +870,51 @@
                 }
             ],
             "time": "2020-11-24T19:55:57+00:00"
+        },
+        {
+            "name": "ebess/nova-collapsible-sidebar",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ebess/nova-collapsible-sidebar.git",
+                "reference": "b973077b9a08722972636b3e1054e873ef800fb1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ebess/nova-collapsible-sidebar/zipball/b973077b9a08722972636b3e1054e873ef800fb1",
+                "reference": "b973077b9a08722972636b3e1054e873ef800fb1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ebess\\CollapsibleSidebar\\AssetServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ebess\\CollapsibleSidebar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A collapsible sidebar for Laravel Nova.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/ebess/nova-collapsible-sidebar/issues",
+                "source": "https://github.com/ebess/nova-collapsible-sidebar/tree/master"
+            },
+            "time": "2018-10-04T09:06:34+00:00"
         },
         {
             "name": "egulias/email-validator",

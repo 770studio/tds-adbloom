@@ -11,6 +11,7 @@
         "php": "^7.2.5|^8.0",
         "ext-json": "*",
         "bilaleren/tune-api": "^1.0",
+        "ebess/nova-collapsible-sidebar": "^0.1.2",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.3",

@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\DateTime;
@@ -69,8 +70,6 @@ class Conversion extends Resource
         $fields[] = ID::make('ID', 'id')->sortable();
 
 
-
-
         foreach (\App\Models\Conversion::FIELDS as $field) {
             $field_name = Str::replaceFirst('.', '_', $field);
             $human_field_name = Str::replace(['.', '_'], ' ', $field);
@@ -86,7 +85,7 @@ class Conversion extends Resource
                 case 'Stat.date':
                 case 'Stat.session_date':
                 case 'Stat.session_datetime':
-                $fields[] = Text::make($human_field_name, $field_name)->sortable();
+                    $fields[] = Text::make($human_field_name, $field_name)->sortable();
                     break;
 
 
@@ -95,39 +94,39 @@ class Conversion extends Resource
                     break;
 
 
-                 // index page sortable decimal
-                 case 'Stat.approved_payout':
-                 case 'Stat.approved_rate':
-                 case 'Stat.net_payout':
-                 case 'Stat.net_revenue':
-                 case 'Stat.net_sale_amount':
-                 case 'Stat.pending_payout':
-                 case 'Stat.pending_revenue':
-                 case 'Stat.pending_sale_amount':
-                 case 'Stat.rejected_rate':
-                 case 'Stat.sale_amount':
+                // index page sortable decimal
+                case 'Stat.approved_payout':
+                case 'Stat.approved_rate':
+                case 'Stat.net_payout':
+                case 'Stat.net_revenue':
+                case 'Stat.net_sale_amount':
+                case 'Stat.pending_payout':
+                case 'Stat.pending_revenue':
+                case 'Stat.pending_sale_amount':
+                case 'Stat.rejected_rate':
+                case 'Stat.sale_amount':
 
 
-                     $fields[] = Number::make($human_field_name, $field_name)->hideFromIndex();
+                    $fields[] = Number::make($human_field_name, $field_name)->hideFromIndex();
 
-                     break;
-                 // index page sortable other
-                 case 'Advertiser.company':
-                 case 'Browser.display_name':
-                 case 'Stat.id':
-                 case 'Stat.ip':
-                 case 'Stat.offer_id':
-                 case 'Stat.status_code':
-                $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();
+                    break;
+                // index page sortable other
+                case 'Advertiser.company':
+                case 'Browser.display_name':
+                case 'Stat.id':
+                case 'Stat.ip':
+                case 'Stat.offer_id':
+                case 'Stat.status_code':
+                    $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();
 
-                break;
+                    break;
 
 
-                 default:
-                     $fields[] = Text::make($human_field_name,$field_name)
-                         ->hideFromIndex();
+                default:
+                    $fields[] = Text::make($human_field_name,$field_name)
+                        ->hideFromIndex();
 
-             }
+            }
         }
 
 
@@ -136,8 +135,6 @@ class Conversion extends Resource
         $fields[] = DateTime::make('Stat datetime', 'Stat_datetime')->sortable();
         $fields[] = DateTime::make('Updated', 'updated_at')->sortable();
         $fields[] = DateTime::make('Last Partner Postback', 'partner_postback_lastsent')->sortable();
-
-
 
 
         return $fields;
@@ -195,10 +192,10 @@ class Conversion extends Resource
      * Build an "index" query for the given resource.
      *
      * @param NovaRequest $request
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @return Builder
      */
-    public static function indexQuery(NovaRequest $request, $query)
+    public static function indexQuery(NovaRequest $request, $query): Builder
     {
         if (empty($request->get('orderBy'))) {
             $query->getQuery()->orders = [];
