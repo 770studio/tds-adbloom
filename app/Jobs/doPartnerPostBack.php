@@ -62,12 +62,13 @@ class doPartnerPostBack implements ShouldQueue
             '{currency}' => $this->conversion->Stat_currency,
             '{payout}' => $this->conversion->Stat_payout,
             '{userPayout}' => 1,
-            '{point}' => 1,
+            '{points}' => 1,
             '{token}' => 'token',
             '{status}' => $macroStatus
             ,
         ];
 
+        array_map('urlencode', $replaces);
 
         if ($this->conversion->Partner->send_pending_postback && !$this->conversion->partner_postback_lastsent
             && strtolower($usecase) == 'approvedsuccess'

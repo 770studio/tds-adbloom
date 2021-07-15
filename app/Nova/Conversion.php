@@ -82,7 +82,11 @@ class Conversion extends Resource
                 case 'Stat.revenue':
                 case 'Goal.name':
                 case 'Stat.status':
-                $fields[] = Text::make($human_field_name, $field_name)->sortable();
+                case 'Stat.date':
+                case 'Stat.session_date':
+                case 'Stat.datetime':
+                case 'Stat.session_datetime':
+                    $fields[] = Text::make($human_field_name, $field_name)->sortable();
                     break;
 
 
@@ -90,12 +94,8 @@ class Conversion extends Resource
                     $fields[] = Text::make($human_field_name, $field_name)->hideFromIndex();
                     break;
 
-                 //    index page sortable date
+                    //    index page sortable date
 
-                 case 'Stat.date':
-                 case 'Stat.session_date':
-                case 'Stat.datetime':
-                case 'Stat.session_datetime':
 
                     $fields[] = DateTime::make($human_field_name, $field_name)->hideFromIndex();
                     break;
@@ -136,7 +136,9 @@ class Conversion extends Resource
 
 
         //$fields[] =  DateTime::make('Created', 'created_at')->sortable();
+
         $fields[] = DateTime::make('Updated', 'updated_at')->sortable();
+        $fields[] = DateTime::make('Last Partner Postback', 'partner_postback_lastsent')->sortable();
 
 
 
