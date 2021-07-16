@@ -93,11 +93,11 @@ class doPartnerPostBack implements ShouldQueue
             $pending = true;
             if (!@$this->conversion->Partner->send_pending_status[$macroStatus]) return;
             $replaces['{status}'] = 'pending';
-            Log::channel('queue')->error('send pending 1st time', $logData);
+            Log::channel('queue')->debug('send pending 1st time', $logData);
 
         } elseif (!$this->conversion->partner_postback_lastsent) {
             // send one time
-            Log::channel('queue')->error('send one time', $logData);
+            Log::channel('queue')->debug('send one time', $logData);
 
         } else {
             // not sending anything
