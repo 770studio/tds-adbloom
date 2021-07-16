@@ -45,9 +45,10 @@ class SendPartnerSecondaryPostbackOnTTLExpire extends Command
             ->whereHas('Partner')
             ->whereNotNull('pending_sent')
             ->where('partner_postbacks', '<', 2)
+            ->limit(1000)
             ->each(function ($conversion) {
                 if (
-                    $conversion->Partner->pending_timeout >=
+                    $conversion->Partner->pending_timeout <=
                     (new Carbon($conversion->pending_sent))
                         ->diffInHours(now()) / (App::environment('local', 'staging')
                         ? 1
