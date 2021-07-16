@@ -66,6 +66,7 @@ class doPartnerPostBack implements ShouldQueue
             '{datetimeUpdated}' => $this->conversion->updated_at->toDateTimeString(),
             '{name}' => $this->conversion->Opportunity->name,
             '{opportunityId}' => $this->conversion->Opportunity->id,
+            '{externalId}' => $this->conversion->Opportunity->external_id,
             '{currency}' => $this->conversion->Stat_currency,
             '{payout}' => $this->conversion->Stat_payout,
             '{userPayout}' => 1,
