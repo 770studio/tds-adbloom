@@ -75,9 +75,16 @@ class doPartnerPostBack implements ShouldQueue
             ,
         ]);
 
+        $logData = [
+            'usecase' => $usecase,
+            'macro Status' => $macroStatus,
+            'conversion' => $this->conversion->only('Stat_tune_event_id', 'Stat_affiliate_id', 'Stat_datetime'),
+            'partner' => $this->conversion->Partner->toArray(),
+        ];
+
         if ($this->secondary) {
             // send for the second time
-            Log::channel('queue')->error('send for the second time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
+            Log::channel('queue')->debug('send for the second time', $logData);
 
         } elseif ($this->conversion->Partner->send_pending_postback && !$this->conversion->partner_postback_lastsent
             && strtolower($usecase) == 'approvedsuccess'
@@ -86,11 +93,11 @@ class doPartnerPostBack implements ShouldQueue
             $pending = true;
             if (!@$this->conversion->Partner->send_pending_status[$macroStatus]) return;
             $replaces['{status}'] = 'pending';
-            Log::channel('queue')->error('send pending 1st time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
+            Log::channel('queue')->error('send pending 1st time', $logData);
 
         } elseif (!$this->conversion->partner_postback_lastsent) {
             // send one time
-            Log::channel('queue')->error('send one time', ['usecase' => $usecase, 'macro' => $macroStatus, 'c' => $this->conversion->toArray()]);
+            Log::channel('queue')->error('send one time', $logData);
 
         } else {
             // not sending anything
