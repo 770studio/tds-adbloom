@@ -36,6 +36,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('partner:send_pb2')
             ->environments(['staging'])
             ->everyTwoMinutes();
+
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
     }
 
     /**
