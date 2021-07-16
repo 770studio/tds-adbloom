@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
@@ -68,7 +69,9 @@ class Partner extends Resource
             Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
 
             Text::make('Postback URL', 'pending_url'),
-
+            Heading::make(
+                view('partner_url_possible_macros')->render()
+            )->asHtml(),
 
             BooleanGroup::make('Send Status Postback', 'send_pending_status')->options([
                 'success' => 'success',

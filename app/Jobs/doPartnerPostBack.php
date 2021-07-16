@@ -66,14 +66,21 @@ class doPartnerPostBack implements ShouldQueue
             '{datetimeUpdated}' => $this->conversion->updated_at->toDateTimeString(),
             '{name}' => $this->conversion->Opportunity->name,
             '{opportunityId}' => $this->conversion->Opportunity->id,
-            '{externalId}' => $this->conversion->Opportunity->external_id,
             '{currency}' => $this->conversion->Stat_currency,
             '{payout}' => $this->conversion->Stat_payout,
+            '{externalId}' => $this->conversion->Opportunity->external_id,
+            '{partnerUniqie1}' => $this->conversion->ConversionsMobile_affiliate_unique1,
+            '{partnerUniqie2}' => $this->conversion->ConversionsMobile_affiliate_unique2,
+            '{partnerUniqie3}' => $this->conversion->ConversionsMobile_affiliate_unique3,
+            '{partnerUniqie4}' => $this->conversion->ConversionsMobile_affiliate_unique4,
+            '{partnerUniqie5}' => $this->conversion->ConversionsMobile_affiliate_unique5,
+            '{parnterClickId}' => $this->conversion->ConversionsMobile_affiliate_click_id,
+            '{parnterSub2}' => $this->conversion->ConversionsMobile_adv_sub2,
             '{userPayout}' => 1,
             '{points}' => 1,
             '{token}' => 'token',
             '{status}' => $macroStatus
-            ,
+
         ]);
 
         $logData = [
