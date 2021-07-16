@@ -6,6 +6,7 @@ namespace App\Services\TuneAPI;
 
 use App\Models\Conversion;
 use Exception;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 use Tune\NetworkApi;
@@ -38,9 +39,15 @@ class TuneAPIService
                 array_merge([Conversion::ID_FIELD], $fields)
             )->addFilter('Stat.datetime',
                 [
-                    now()->subMonths(
-                        config('services.tune_api.conversions_update_from_last_x_months')
-                    )->toDateString()
+                    (App::environment('local', 'staging')
+                        ? now()->subDays(
+                            config('services.tune_api.conversions_update_from_last_x_months')
+                        )->toDateString()
+                        : now()->subMonths(
+                            config('services.tune_api.conversions_update_from_last_x_months')
+                        )->toDateString()
+                    )
+
                 ]
                 , null, Operator::GREATER_THAN
             )->setPage($page);
