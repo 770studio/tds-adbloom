@@ -13,7 +13,7 @@ class ClientController extends Controller
 {
     const DEFAULT_REDIRECT_DOMAIN = 'https://widget.adbloom.co';
 
-    public function trackOpportunity(Request $request, Client $client,  RedirectStatus $redirect_status)
+    public function trackOpportunity(Request $request, Client $client, string $surveyID, RedirectStatus $redirect_status)
     {
         Log::channel('queue')->debug('incoming: status:' . $redirect_status->code);
 
