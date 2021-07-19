@@ -58,7 +58,7 @@ class doPartnerPostBack implements ShouldQueue
             return;
         }
 
-        $replaces = array_map('urlencode', [
+        $replaces = array_map('rawurlencode', [
             '{eventId}' => $this->conversion->Stat_tune_event_id,
             '{date}' => $this->conversion->created_at->toDateString(),
             '{datetime}' => $this->conversion->created_at->toDateTimeString(),
