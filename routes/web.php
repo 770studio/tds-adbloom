@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Models\Client;
+use App\Models\RedirectStatus;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 
 
 //{clientID}/{surveyID}/success/?clickid=ABC1
-Route::get('/redirect/{client:short_id}/{surveyID}/{redirect_status:code}', [ClientController::class, 'trackOpportunity']);
+Route::get('/redirect/{client:short_id}/{redirect_status}', [ClientController::class, 'trackOpportunity']);
 
-/*Route::get('/track_survey/{client:short_id}/{surveyID}/{redirect_status:code}', function (Client $client, $surveyID, RedirectStatus $redirect_status){
+/*Route::get('/redirect/{client:short_id}/{redirect_status:code}', function (Client $client, $surveyID, RedirectStatus $redirect_status){
     dd($client, $surveyID, $redirect_status);
 });*/
 

@@ -13,29 +13,35 @@ class ClientController extends Controller
 {
     const DEFAULT_REDIRECT_DOMAIN = 'https://widget.adbloom.co';
 
-    public function trackOpportunity(Request $request, Client $client, string $surveyID, RedirectStatus $redirect_status)
+    public function trackOpportunity(Request $request, Client $client, string $redirect_status_str)
     {
-        Log::channel('queue')->debug('incoming: status:' . $redirect_status->code);
+       //  dd($client, $redirect_status_str,  );
+
+        if(!$redirect_status = RedirectStatus::fromStr($redirect_status_str) )  {
+            Log::channel('queue')->error('unexpected incoming status:' . $redirect_status_str, ['ip' => $request->getClientIp() ]);
+        }
+        else Log::channel('queue')->debug('incoming: status:' . $redirect_status_str);
+
 
         // dd( $request, $client, $surveyID, $redirect_status);
 
         //if (!$request->clickid) abort(404, 'clickid is required');
 
         if ($request->clickid) {
-            switch (strtolower($redirect_status->code)) {
-                case "reject":
-                case "oq":
-                case "dq":
+            switch ($redirect_status) {
+                case RedirectStatus::reject:
+                case RedirectStatus::oq:
+                case RedirectStatus::dq:
                     Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status->code);
                 doPostBackJob::dispatch(
-                    "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status->code}&transaction_id={$request->clickid}"
+                    "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status}&transaction_id={$request->clickid}"
                 )->onQueue('postback_queue');
                     break;
-                case "success":
+                case RedirectStatus::success:
                     doPostBackJob::dispatch(
                         "https://trk.adbloom.co/aff_lsr?transaction_id={$request->clickid}"
                     )->onQueue('postback_queue');
-                    Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status->code);
+                    Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status);
                     break;
 
                 default:
@@ -63,7 +69,7 @@ class ClientController extends Controller
 
         return RedirectHelper::opportunity(
             $client->redirect_to_domain ?? self::DEFAULT_REDIRECT_DOMAIN
-            , $redirect_status->code
+            , $redirect_status_str
         );
 
     }
