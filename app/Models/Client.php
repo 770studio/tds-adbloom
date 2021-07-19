@@ -20,9 +20,9 @@ class Client extends BaseModel
         return $this->hasMany('App\Models\Opportunity');
     }
 
-    public function redirectStatuses()
+    public function redirectStatuses($code)
     {
-        return RedirectStatus::all();
+        return RedirectStatus::where('code', $code)->first();
     }
     /**
      * Get the route key for the model.
