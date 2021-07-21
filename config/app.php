@@ -2,6 +2,7 @@
 
 use App\Helpers\RedirectHelper;
 use App\Helpers\ShortIdGeneratorHelper;
+use App\Helpers\StoreImageHelper;
 
 return [
 
@@ -233,6 +234,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'ShortIdGeneratorHelper' => ShortIdGeneratorHelper::class,
         'RedirectHelper' => RedirectHelper::class,
+        'StoreImageHelper' => StoreImageHelper::class,
 
     ],
 

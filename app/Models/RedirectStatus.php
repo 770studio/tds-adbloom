@@ -5,9 +5,10 @@ namespace App\Models;
 
 
 
+use Illuminate\Contracts\Support\Arrayable;
 use ReflectionClass;
 
-class RedirectStatus //extends Model
+class RedirectStatus implements Arrayable //extends Model
 {
 
     const success = 'success';
@@ -40,5 +41,10 @@ class RedirectStatus //extends Model
             ? $redirect_status_str
             : false;
 
+    }
+
+    public function toArray()
+    {
+        return self::all();
     }
 }

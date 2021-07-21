@@ -21,4 +21,13 @@ class Opportunity extends BaseModel
     {
         return $this->hasMany('App\Models\Conversion', 'Stat_offer_id', 'external_id');
     }
+
+    /**
+     * Get all of the opportunity's tags.
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
 }
