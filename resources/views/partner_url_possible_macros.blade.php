@@ -21,6 +21,9 @@
 <p>{partnerUniqie5} - </p>
 <p>{parnterClickId} - </p>
 <p>{parnterSub2} - </p>
+<p>{parnterSub3} - </p>
+<p>{parnterSub4} - </p>
+<p>{parnterSub5} - </p>
 
 
 
