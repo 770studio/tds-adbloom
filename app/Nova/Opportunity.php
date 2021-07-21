@@ -107,7 +107,7 @@ class Opportunity extends Resource
                 })->prunable(),
 
             Textarea::make('Description'),
-            Number::make('Payout '),
+            Number::make('Payout ')->step(0.01),
             Select::make('Currency')->options(
                 ['USD']
             ),
