@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('link')->nullable();
             $table->text('description')->nullable();
-            $table->float('payout', 15,5)->default(0);
+            $table->decimal('payout', 15,5)->default(0);
             $table->enum('currency', ['USD'])->default('USD'); //#TODO move to config
             $table->unsignedInteger('timeToComplete')->default(0);
         });
