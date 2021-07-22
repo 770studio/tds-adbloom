@@ -33,9 +33,11 @@ class Kernel extends ConsoleKernel
             ->environments(['staging'])
             ->everyTwoMinutes();
 
-        $schedule->command('partner:send_pb2')
-            ->environments(['staging'])
-            ->everyTwoMinutes();
+        $schedule->command('conversions:update')
+            ->environments(['production'])
+            ->hourly();
+
+        $schedule->command('partner:send_pb2')->everyTwoMinutes();
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
