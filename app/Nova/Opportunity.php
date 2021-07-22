@@ -106,7 +106,7 @@ class Opportunity extends Resource
                         : null;
                 })*/
 
-
+            Text::make('Url', 'link'),
             Textarea::make('Description'),
             Number::make('Payout')->step(0.01)->default(0.00),
             Select::make('Currency')->options(
