@@ -24,5 +24,13 @@ class Partner extends BaseModel
         return $this->hasMany('App\Models\Conversion', 'Stat_affiliate_id', 'external_id');
     }
 
+    /**
+     * Get all of the partner's tags.
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
 
 }

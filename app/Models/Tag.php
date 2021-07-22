@@ -17,4 +17,13 @@ class Tag extends Model
     {
         return $this->morphedByMany(Opportunity::class, 'taggable');
     }
+
+    /**
+     * Get all of the partners that are assigned this tag.
+     */
+
+    public function partners()
+    {
+        return $this->morphedByMany(Partner::class, 'taggable');
+    }
 }
