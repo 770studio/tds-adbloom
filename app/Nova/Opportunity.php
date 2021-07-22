@@ -76,7 +76,7 @@ class Opportunity extends Resource
                 ->sortable(),
 
             NovaDependencyContainer::make([
-                Text::make('Time to Complete', 'timeToComplete')
+                Text::make('Time to Complete', 'timeToComplete')->default(0)
             ])->dependsOn('type', 'survey'),
 
             BelongsTo::make('Client'),
@@ -85,7 +85,7 @@ class Opportunity extends Resource
             Image::make('Image')
                 ->disk('creatives')
                 ->storeAs(function (Request $request) {
-                    return StoreImageHelper::getCreativeAssetUniqueName($this->resource->id ?? 0, $request->image);
+                    return StoreImageHelper::getCreativeAssetUniqueName($request->image);
                 })->prunable(),
             /*    ->storeAs(function (Request $request) {
                     $class = get_class($this->resource);
@@ -108,10 +108,10 @@ class Opportunity extends Resource
 
 
             Textarea::make('Description'),
-            Number::make('Payout')->step(0.01),
+            Number::make('Payout')->step(0.01)->default(0.00),
             Select::make('Currency')->options(
                 ['USD']
-            ),
+            )->default('USD'),
 
             MorphToMany::make('Tags'),
 
