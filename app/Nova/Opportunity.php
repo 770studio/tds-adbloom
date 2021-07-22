@@ -86,7 +86,13 @@ class Opportunity extends Resource
                 ->disk('creatives')
                 ->storeAs(function (Request $request) {
                     return StoreImageHelper::getCreativeAssetUniqueName($request->image);
-                })->prunable(),
+                })
+                ->prunable()
+                ->rules('dimensions:min_width=640,min_height=360,max_width=640,max_height=360')
+                ->help('Dimensions allowed: 640x360'),
+            Text::make('CDN IMAGE URL', function () {
+                return "<a href='" . StoreImageHelper::getOpportunityAssetCDNUrl($this->resource) . "'>CDN</a>";
+            })->asHtml(),
             /*    ->storeAs(function (Request $request) {
                     $class = get_class($this->resource);
 
