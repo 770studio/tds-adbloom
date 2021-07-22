@@ -2,20 +2,17 @@
 
 namespace App\Nova;
 
+use App\Helpers\StoreImageHelper;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\MorphMany;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
-use App\Helpers\StoreImageHelper;
 use Laravel\Nova\Fields\Textarea;
 
 class Opportunity extends Resource
@@ -52,6 +49,7 @@ class Opportunity extends Resource
     public static $indexDefaultOrder = [
         'created_at' => 'desc'
     ];
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -72,9 +70,9 @@ class Opportunity extends Resource
             Select::make('Type')->options(
                 self::$model::TYPES
             )//->resolveUsing(function () {
-               // return $this->type ?? 'offer';
-           // }) TODO this doesnt work
-                ->rules('required')
+            // return $this->type ?? 'offer';
+            // }) TODO this doesnt work
+            ->rules('required')
                 ->sortable(),
 
             NovaDependencyContainer::make([
@@ -86,8 +84,10 @@ class Opportunity extends Resource
 
             Image::make('Image')
                 ->disk('creatives')
-                ->path($this->resource->id)
                 ->storeAs(function (Request $request) {
+                    return StoreImageHelper::getCreativeAssetUniqueName($this->resource->id ?? 0, $request->image);
+                })->prunable(),
+            /*    ->storeAs(function (Request $request) {
                     $class = get_class($this->resource);
 
                     $class::saving(function ($model) use ($request) {
@@ -104,7 +104,8 @@ class Opportunity extends Resource
                     return $value
                         ? Storage::disk($disk)->url($this->resource->id . DIRECTORY_SEPARATOR. $value)
                         : null;
-                })->prunable(),
+                })*/
+
 
             Textarea::make('Description'),
             Number::make('Payout')->step(0.01),

@@ -1776,7 +1776,7 @@
             "dist": {
                 "type": "path",
                 "url": "./nova",
-                "reference": "abff19f2b016635883a26107f4ff910d200a5c10"
+                "reference": "f9ed71d78bb03d8ccbd1582f42153daae79db53d"
             },
             "require": {
                 "brick/money": "^0.5.0",
@@ -9072,5 +9072,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
