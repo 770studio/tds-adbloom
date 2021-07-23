@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Jobs\Middleware\TuneAPIRateLimited;
 use App\Models\Conversion;
 use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\TuneAPIService;
@@ -12,24 +13,24 @@ use Illuminate\Contracts\Redis\LimiterTimeoutException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Redis;
 
 
 class TuneAPIGetConversionPageJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
      * The number of times the job may be attempted.
      *
      * @var int
      */
-    public $tries = 5;
+    public $tries = 3;
     /**
      * The maximum number of unhandled exceptions to allow before failing.
      *
      * @var int
      */
-    public $maxExceptions = 1;
+    public $maxExceptions = 3;
     /**
      * @var array
      */
@@ -58,55 +59,17 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     * @throws LimiterTimeoutException
+     * @throws LimiterTimeoutException|Exception
      */
     public function handle(TuneAPIService $tuneAPIService)
     {
-        $this->tuneAPIService = $tuneAPIService;
-        //return $this->jobItself();
-
-// Networks are limited to a maximum of 50 API calls every 10 seconds.
-// If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
-#TODO move rate limiter to middleware
-        Redis::throttle(
-            config('services.tune_api.network_id')
-        )->block(0)->allow(50)->every(10)->then(function () {
-            //info('Lock obtained...');
-            $this->jobItself();
-            // Handle job...
-        }, function () {
-            // Could not obtain lock...
-             $this->release(5);
-        });
-
-
-
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function jobItself()
-    {
-/*        DB::listen(function($query) {
-dump(
-    date("r") . ":" . $query->time . ":" . $query->sql . ' [' . implode(', ', $query->bindings) . ']' . PHP_EOL
-
-);
-        });*/
 
 
         (new ConversionsResponse(
-            $this->tuneAPIService->getConversions($this->fields, $this->page)
+            $tuneAPIService->getConversions($this->fields, $this->page)
         ))
             ->parseData()
-            ->each(function($record) use (&$created, &$changed) {
-                #TODO remove redundant log messages
-/*                Log::channel('queue')->debug('updateOrCreate Conversion:', [
-                        'tune_event_id' => $record["Stat_tune_event_id"]
-                    ]
-                );*/
-
+            ->each(function ($record) use (&$created, &$changed) {
                 Conversion::updateOrCreate(
                     ["Stat_tune_event_id" => $record["Stat_tune_event_id"]],
                     $record
@@ -115,7 +78,7 @@ dump(
 
             });
 
-        //Log::channel('queue')->debug('changed/created:', [$changed, $created]);
+
     }
 
 
@@ -137,5 +100,15 @@ dump(
     public function backoff()
     {
         return 60;
+    }
+
+    /**
+     * Get the middleware the job should pass through.
+     *
+     * @return array
+     */
+    public function middleware()
+    {
+        return [new TuneAPIRateLimited];
     }
 }
