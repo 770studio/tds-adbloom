@@ -4,16 +4,14 @@ namespace App\Jobs;
 
 use App\Models\Conversion;
 use App\Services\TuneAPI\ConversionsResponse;
-use App\Services\TuneAPI\Response;
 use App\Services\TuneAPI\TuneAPIService;
+use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Redis\LimiterTimeoutException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 
@@ -60,12 +58,12 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Redis\LimiterTimeoutException
+     * @throws LimiterTimeoutException
      */
     public function handle(TuneAPIService $tuneAPIService)
     {
         $this->tuneAPIService = $tuneAPIService;
-        return $this->jobItself();
+        //return $this->jobItself();
 
 // Networks are limited to a maximum of 50 API calls every 10 seconds.
 // If you exceed the rate limit, your API call returns the following error: "API usage exceeded rate limit. Configured: 50/10s window; Your usage: " followed by the number of API calls you've attempted in that 10 second window.
@@ -86,7 +84,7 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function jobItself()
     {
@@ -121,7 +119,6 @@ dump(
     }
 
 
-
     /**
      * Get the tags that should be assigned to the job.
      *
@@ -130,5 +127,15 @@ dump(
     public function tags()
     {
         return ['TuneAPIGetConversionPageJob_page#' . $this->page];
+    }
+
+    /**
+     * Calculate the number of seconds to wait before retrying the job.
+     *
+     * @return int
+     */
+    public function backoff()
+    {
+        return 60;
     }
 }
