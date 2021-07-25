@@ -5,7 +5,9 @@ namespace App\Services\TuneAPI;
 
 
 use App\Models\Conversion;
+use App\Services\Response;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -50,12 +52,21 @@ class ConversionsResponse extends Response
     #TODO move somewhere
     private function getDBFieldType($dbFieldName)
     {
-        if(!isset(self::$dbFieldTypes[$dbFieldName]))
-        {
+        if (!isset(self::$dbFieldTypes[$dbFieldName])) {
             self::$dbFieldTypes[$dbFieldName] = DB::connection()->getDoctrineColumn('conversions', $dbFieldName)->getType()->getName();
         }
 
         return self::$dbFieldTypes[$dbFieldName];
 
     }
+
+    /**
+     * @throws Exception
+     */
+    protected function validate()
+    {
+        if ($this->apiResult->response->errorMessage) throw new Exception($this->apiResult->response->errorMessage);
+
+    }
+
 }

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Interfaces\YoursurveysAPIServiceIF;
+use App\Services\YoursurveysReadmeIoAPI\YoursurveysAPIService;
 use Illuminate\Support\ServiceProvider;
 use Tune\NetworkApi;
 use Tune\Networks;
@@ -39,6 +41,20 @@ class AppServiceProvider extends ServiceProvider
 
         });
 
+        $this->app->bind(YoursurveysAPIServiceIF::class, function () {
+            if (app()->runningInConsole()) {
+                // 0 => "artisan"
+                // 1 => "yoursurveys:update"
+                // 2 => ...
+                switch (optional($_SERVER['argv'])[1]) {
+                    case 'yoursurveys:update':
+                        unset($_SERVER['argv'][0], $_SERVER['argv'][1]);
+                        return new YoursurveysAPIService(...$_SERVER['argv']);
+                }
+
+            }
+
+        });
 
     }
 }

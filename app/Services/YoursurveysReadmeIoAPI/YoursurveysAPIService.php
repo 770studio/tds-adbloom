@@ -4,9 +4,10 @@
 namespace App\Services\YoursurveysReadmeIoAPI;
 
 
+use App\Interfaces\YoursurveysAPIServiceIF;
 use Illuminate\Support\Facades\Http;
 
-class YoursurveysAPIService
+class YoursurveysAPIService implements YoursurveysAPIServiceIF
 {
     public $params = [];
     private $secret;
@@ -23,7 +24,7 @@ class YoursurveysAPIService
         ];
     }
 
-    public function BasicAPICall()
+    public function BasicAPICall(): object
     {
 
         $params = http_build_query(
@@ -38,14 +39,8 @@ class YoursurveysAPIService
             'X-YourSurveys-Api-Key' => $this->secret,
         ])->get($url);
 
-        dd($response->body());
+        return $response->object();
 
-        $context = stream_context_create($opts);
-        /* Sends an http request to www.your-surveys.com/supppliers/surveys with additional headers shown above */
-        $fp = fopen($url, 'r', false, $context);
-# Output all data from the response
-        fpassthru($fp);
-        fclose($fp);
 
     }
 }

@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\App;
 
 class Kernel extends ConsoleKernel
 {
@@ -29,16 +30,24 @@ class Kernel extends ConsoleKernel
               ->environments(['production'])
               ->hourly();*/
 
-        $schedule->command('conversions:update')
-            ->environments(['staging'])
-            ->everyTwoMinutes();
+        if (App::environment('local')) {
+            return;
+        }
 
-        $schedule->command('conversions:update')
-            ->environments(['production'])
-            ->hourly();
+        if (App::environment('staging')) {
+            $schedule->command('conversions:update')->everyTwoMinutes();
+            $schedule->command('yoursurveys:update 500 CA')->everyFourHours();
+            $schedule->command('yoursurveys:update 500 US')->everyFourHours();
+        }
+
+        if (App::environment('production')) {
+            $schedule->command('conversions:update')->everyTwoMinutes();
+            $schedule->command('yoursurveys:update 1000 CA')->hourly();
+            $schedule->command('yoursurveys:update 1000 US')->hourly();
+        }
+
 
         $schedule->command('partner:send_pb2')->everyTwoMinutes();
-
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
     }

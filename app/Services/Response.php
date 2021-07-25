@@ -1,14 +1,15 @@
 <?php
 
 
-namespace App\Services\TuneAPI;
+namespace App\Services;
 
 
+use App\Interfaces\ResponseIF;
 use Exception;
 use Illuminate\Support\Collection;
 use stdClass;
 
-class Response
+class Response implements ResponseIF
 {
     protected $pageCount;
     protected $data;
@@ -20,9 +21,8 @@ class Response
      */
     public function __construct(stdClass $apiResult)
     {
-        if ($apiResult->response->errorMessage) throw new Exception($apiResult->response->errorMessage);
         $this->apiResult = $apiResult;
-
+        $this->validate();
     }
 
     public function getData() : Collection
@@ -56,6 +56,11 @@ class Response
     }
 
     public function parseCount()
+    {
+
+    }
+
+    public function validate()
     {
 
     }
