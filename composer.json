@@ -21,6 +21,7 @@
         "laravel/horizon": "^5.7",
         "laravel/nova": "*",
         "laravel/tinker": "^2.5",
+        "naoray/nova-json": "^1.3",
         "predis/predis": "^1.1"
     },
     "require-dev": {
