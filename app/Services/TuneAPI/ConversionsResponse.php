@@ -63,7 +63,7 @@ class ConversionsResponse extends Response
     /**
      * @throws Exception
      */
-    protected function validate()
+    public function validate()
     {
         if ($this->apiResult->response->errorMessage) throw new Exception($this->apiResult->response->errorMessage);
 
