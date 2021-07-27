@@ -32,7 +32,7 @@ class ClientController extends Controller
                 case RedirectStatus::reject:
                 case RedirectStatus::oq:
                 case RedirectStatus::dq:
-                    Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status->code);
+                    Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status);
                 doPostBackJob::dispatch(
                     "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status}&transaction_id={$request->clickid}"
                 )->onQueue('postback_queue');
