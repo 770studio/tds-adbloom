@@ -158,10 +158,10 @@ userPayout = FIXED FOR NOW
             case 'approveddefault':
             case 'approved':
             case 'approvedsuccess':
-                return 'success';
+                return 'approved';
             case 'approvedreject':
             case 'rejectedsuccess':
-                return 'reject';
+            return 'rejected';
             case 'approveddq':
                 return 'dq';
             case 'approvedoq':
