@@ -14,7 +14,7 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::unprepared('ALTER TABLE `opportunities` CONVERT TO CHARACTER SET utf8mb4');
+        DB::unprepared('alter table `opportunities` convert to character set utf8mb4 collate utf8mb4_general_ci');
 
         Schema::table('opportunities', function (Blueprint $table) {
             $table->string('image')->nullable();
