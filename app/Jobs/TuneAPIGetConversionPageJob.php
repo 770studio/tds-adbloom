@@ -13,9 +13,10 @@ use Illuminate\Contracts\Redis\LimiterTimeoutException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 
-class TuneAPIGetConversionPageJob implements ShouldQueue
+class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -110,5 +111,15 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
     public function middleware()
     {
         return [new TuneAPIRateLimited];
+    }
+
+    /**
+     * The unique ID of the job.
+     *
+     * @return string
+     */
+    public function uniqueId()
+    {
+        return (string)$this->page;
     }
 }
