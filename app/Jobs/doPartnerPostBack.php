@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Conversion;
+use App\Models\RedirectStatus;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -158,14 +159,14 @@ userPayout = FIXED FOR NOW
             case 'approveddefault':
             case 'approved':
             case 'approvedsuccess':
-                return 'approved';
+                return RedirectStatus::success;
             case 'approvedreject':
             case 'rejectedsuccess':
-            return 'rejected';
+                return RedirectStatus::reject;
             case 'approveddq':
-                return 'dq';
+                return RedirectStatus::dq;
             case 'approvedoq':
-                return 'oq';
+                return RedirectStatus::oq;
             default:
                 return false;
             // throw new Exception('unexpected compiled status:' . $Stat_status_compiled);

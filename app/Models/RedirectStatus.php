@@ -11,10 +11,10 @@ use ReflectionClass;
 class RedirectStatus implements Arrayable //extends Model
 {
 
-    const success = 'success';
+    const success = 'approved';
     const oq = 'oq';
     const dq = 'dq';
-    const reject = 'reject';
+    const reject = 'rejected';
 
 
     /*    public function getRouteKeyName()
@@ -47,4 +47,13 @@ class RedirectStatus implements Arrayable //extends Model
     {
         return self::all();
     }
+
+    public static function indexes()
+    {
+        return array_keys(
+            self::all()
+        );
+    }
+
+
 }

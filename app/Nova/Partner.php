@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Models\RedirectStatus;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BooleanGroup;
@@ -74,12 +75,9 @@ class Partner extends Resource
                 view('partner_url_possible_macros')->render()
             )->asHtml(),
 
-            BooleanGroup::make('Send Status Postback', 'send_pending_status')->options([
-                'success' => 'success',
-                'reject' => 'reject',
-                'oq' => 'oq',
-                'dq' => 'dq'
-            ]),
+            BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
+                RedirectStatus::indexes()
+            ),
             MorphToMany::make('Tags'),
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
