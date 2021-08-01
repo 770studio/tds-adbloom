@@ -195,6 +195,7 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'tries' => 3,
+                'backoff' => 30,
 
             ],
             'supervisor-stage2' => [
