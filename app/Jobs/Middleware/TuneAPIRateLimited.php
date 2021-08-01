@@ -25,7 +25,7 @@ class TuneAPIRateLimited
     {
         Redis::throttle(
             config('services.tune_api.network_id')
-        )->block(10)->allow(20)->every(10)
+        )->block(10)->allow(15)->every(10)
             ->then(function () use ($job, $next) {
                 // Lock obtained...
 
