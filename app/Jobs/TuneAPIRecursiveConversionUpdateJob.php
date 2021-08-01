@@ -6,6 +6,7 @@ use App\Models\Conversion;
 use App\Services\TuneAPI\Request;
 use App\Services\TuneAPI\TuneAPIService;
 use Carbon\CarbonImmutable;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Tune\Utils\Operator;
 
-class TuneAPIRecursiveConversionUpdateJob implements ShouldQueue
+class TuneAPIRecursiveConversionUpdateJob_DEPR implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -44,7 +45,7 @@ class TuneAPIRecursiveConversionUpdateJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(TuneAPIService $tuneAPIService, Request $request)
     {

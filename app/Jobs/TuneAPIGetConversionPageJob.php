@@ -96,7 +96,11 @@ class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
      */
     public function tags()
     {
-        return ['TuneAPIGetConversionPageJob_page#' . $this->page];
+        return [
+            'TuneAPIGetConversionPageJob_page#' . $this->page,
+            'TuneAPIGetConversionPageJob_' . app()->environment(),
+            app()->environment()
+        ];
     }
 
     /**
