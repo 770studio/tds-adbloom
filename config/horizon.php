@@ -195,8 +195,9 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'tries' => 3,
-                'maxExceptions' => 3,
+                'maxExceptions' => 1,
                 'backoff' => 30,
+                'retry_after' => 70,
 
             ],
             'supervisor-stage2' => [
