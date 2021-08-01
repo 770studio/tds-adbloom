@@ -165,7 +165,7 @@ return [
     */
 
     'defaults' => [
-        'supervisor-1' => [
+        'supervisor-prod1' => [
             'connection' => 'redis',
             'queue' => ['default'],
             'balance' => 'auto',
