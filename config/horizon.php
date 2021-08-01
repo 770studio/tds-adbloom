@@ -165,7 +165,15 @@ return [
     */
 
     'defaults' => [
-
+/*        'supervisor-1' => [
+            'connection' => 'redis',
+            'queue' => ['not_today'],
+            'balance' => 'auto',
+            'maxProcesses' => 0,
+            'memory' => 128,
+            'tries' => 1,
+            'nice' => 0,
+        ],*/
     ],
 
     'environments' => [
@@ -178,6 +186,7 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'tries' => 3,
+                'backoff' => 30,
 
             ],
             'supervisor-prod2' => [
@@ -188,6 +197,7 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'tries' => 3,
+                'backoff' => 30,
 
             ]
         ],
@@ -201,6 +211,7 @@ return [
                 'balanceCooldown' => 3,
                 'tries' => 3,
                 'maxExceptions' => 1,
+                'backoff' => 30,
 
             ],
             'supervisor-stage2' => [
@@ -211,13 +222,16 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'tries' => 1,
+                'backoff' => 30,
 
             ],
 
 
         ],
         'local' => [
-
+            /*           'supervisor-1' => [
+                           'maxProcesses' => 1,
+                       ],*/
         ],
     ],
 ];
