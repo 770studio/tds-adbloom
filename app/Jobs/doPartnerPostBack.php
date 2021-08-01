@@ -161,7 +161,7 @@ userPayout = FIXED FOR NOW
                 return 'approved';
             case 'approvedreject':
             case 'rejectedsuccess':
-            return 'rejected';
+                return 'rejected';
             case 'approveddq':
                 return 'dq';
             case 'approvedoq':
@@ -171,4 +171,21 @@ userPayout = FIXED FOR NOW
             // throw new Exception('unexpected compiled status:' . $Stat_status_compiled);
         }
     }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return [
+            sprintf('doPartnerPostBack parnerId:%s conversionId:%s %s',
+                $this->conversion->Partner->getKey(),
+                $this->conversion->getKey(), app()->environment()
+            ),
+            app()->environment(),
+        ];
+    }
+
 }

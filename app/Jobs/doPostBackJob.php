@@ -47,10 +47,27 @@ class doPostBackJob implements ShouldQueue
 
         Log::channel('queue')->debug(
             ($this->pending
-            ? 'doPendingPostBack:'
-            : 'doPostBack:')
+                ? 'doPendingPostBack:'
+                : 'doPostBack:')
             . $this->url . PHP_EOL . $response->body());
 
 
+    }
+
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return [
+            sprintf('doPostBackJob url:%s pending:%s %s',
+                $this->url,
+                $this->pending ? 'true' : 'false', app()->environment()
+            ),
+            app()->environment(),
+        ];
     }
 }

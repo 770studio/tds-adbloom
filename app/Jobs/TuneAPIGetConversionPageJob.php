@@ -89,7 +89,11 @@ class TuneAPIGetConversionPageJob implements ShouldQueue
      */
     public function tags()
     {
-        return ['TuneAPIGetConversionPageJob_page#' . $this->page];
+        return [
+            'TuneAPIGetConversionPageJob_page#' . $this->page,
+            'TuneAPIGetConversionPageJob_' . app()->environment(),
+            app()->environment()
+        ];
     }
 
     /**
