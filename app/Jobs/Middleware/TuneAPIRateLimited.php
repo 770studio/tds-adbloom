@@ -33,7 +33,7 @@ class TuneAPIRateLimited
             }, function () use ($job) {
                 // Could not obtain lock...
 
-                $job->release(30);
+                $job->release(60);
             });
     }
 }
