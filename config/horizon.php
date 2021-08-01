@@ -191,7 +191,7 @@ return [
                 'tries' => 3,
                 'maxExceptions' => 1,
                 'backoff' => 30,
-                'maxJobs' => 3,
+                'maxJobs' => 180, // per min
 
             ],
             'supervisor-stage2' => [
