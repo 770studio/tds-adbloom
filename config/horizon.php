@@ -167,9 +167,9 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default'],
+            'queue' => ['not_today'],
             'balance' => 'auto',
-            'maxProcesses' => 1,
+            'maxProcesses' => 0,
             'memory' => 128,
             'tries' => 1,
             'nice' => 0,
