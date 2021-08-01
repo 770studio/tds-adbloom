@@ -165,7 +165,7 @@ return [
     */
 
     'defaults' => [
-        'supervisor-prod1' => [
+        'supervisor-1' => [
             'connection' => 'redis',
             'queue' => ['default'],
             'balance' => 'auto',
@@ -178,7 +178,7 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor-prod1' => [
+            'supervisor-1' => [
                 'maxProcesses' => 1,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
