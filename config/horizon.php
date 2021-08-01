@@ -178,7 +178,7 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
+            'supervisor-prod1' => [
                 'maxProcesses' => 1,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
@@ -187,7 +187,7 @@ return [
             ],
         ],
         'staging' => [
-            'supervisor-1' => [
+            'supervisor-stage1' => [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'auto',
@@ -197,7 +197,7 @@ return [
                 'tries' => 3,
 
             ],
-            'supervisor-2' => [
+            'supervisor-stage2' => [
                 'connection' => 'redis',
                 'queue' => ['postback_queue'],
                 'balance' => 'auto',
