@@ -195,6 +195,7 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'tries' => 3,
+                'maxExceptions' => 3,
                 'backoff' => 30,
 
             ],
