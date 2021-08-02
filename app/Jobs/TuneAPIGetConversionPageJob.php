@@ -8,12 +8,12 @@ use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Redis\LimiterTimeoutException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 
 class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
@@ -31,7 +31,7 @@ class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
      *
      * @var int
      */
-    public $maxExceptions = 3;
+    public $maxExceptions = 1;
     /**
      * @var array
      */
@@ -96,7 +96,11 @@ class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
      */
     public function tags()
     {
-        return ['TuneAPIGetConversionPageJob_page#' . $this->page];
+        return [
+            'TuneAPIGetConversionPageJob_page#' . $this->page,
+            'TuneAPIGetConversionPageJob_' . app()->environment(),
+            app()->environment()
+        ];
     }
 
     /**

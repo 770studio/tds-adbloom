@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Conversion;
 use App\Services\TuneAPI\TuneAPIService;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class TuneAPIUpdateJob implements ShouldQueue
+class TuneAPIUpdateJob_DEPR implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -38,7 +39,7 @@ class TuneAPIUpdateJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(TuneAPIService $tuneAPIService)
     {

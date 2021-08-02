@@ -165,29 +165,23 @@ return [
     */
 
     'defaults' => [
-        'supervisor-1' => [
+/*        'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default'],
+            'queue' => ['not_today'],
             'balance' => 'auto',
-            'maxProcesses' => 1,
+            'maxProcesses' => 0,
             'memory' => 128,
             'tries' => 1,
             'nice' => 0,
-        ],
+        ],*/
     ],
 
     'environments' => [
         'production' => [
-            'supervisor-1' => [
-                'maxProcesses' => 1,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
-                'tries' => 3,
 
-            ],
         ],
         'staging' => [
-            'supervisor-1' => [
+            'supervisor-stage1' => [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'auto',
@@ -195,9 +189,12 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'tries' => 3,
+                'maxExceptions' => 1,
+                'backoff' => 30,
+                'maxJobs' => 180, // per min
 
             ],
-            'supervisor-2' => [
+            'supervisor-stage2' => [
                 'connection' => 'redis',
                 'queue' => ['postback_queue'],
                 'balance' => 'auto',
@@ -205,15 +202,16 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
                 'tries' => 1,
+                'backoff' => 30,
 
             ],
 
 
         ],
         'local' => [
-            'supervisor-1' => [
-                'maxProcesses' => 1,
-            ],
+            /*           'supervisor-1' => [
+                           'maxProcesses' => 1,
+                       ],*/
         ],
     ],
 ];
