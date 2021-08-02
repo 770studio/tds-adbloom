@@ -23,6 +23,8 @@ class RedirectStatus implements Arrayable //extends Model
         }*/
 
 
+
+
     public static function all()
     {
         $oClass = new ReflectionClass(__CLASS__);

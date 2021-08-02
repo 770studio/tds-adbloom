@@ -6,6 +6,7 @@ use App\Helpers\RedirectHelper;
 use App\Jobs\doPostBackJob;
 use App\Models\Client;
 use App\Models\RedirectStatus;
+use App\Models\RedirectStatus_Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -17,10 +18,10 @@ class ClientController extends Controller
     {
        //  dd($client, $redirect_status_str,  );
 
-        if(!$redirect_status = RedirectStatus::fromStr($redirect_status_str) )  {
+        if(!$redirect_status = RedirectStatus_Client::fromStr($redirect_status_str) )  {
             Log::channel('queue')->error('unexpected incoming status:' . $redirect_status_str, ['ip' => $request->getClientIp() ]);
         }
-        else Log::channel('queue')->debug('incoming: status:' . $redirect_status_str);
+        else Log::channel('queue')->debug('incoming status:' . $redirect_status_str);
 
 
         // dd( $request, $client, $surveyID, $redirect_status);
@@ -29,15 +30,15 @@ class ClientController extends Controller
 
         if ($request->clickid) {
             switch ($redirect_status) {
-                case RedirectStatus::reject:
-                case RedirectStatus::oq:
-                case RedirectStatus::dq:
+                case RedirectStatus_Client::reject:
+                case RedirectStatus_Client::oq:
+                case RedirectStatus_Client::dq:
                     Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status);
                 doPostBackJob::dispatch(
                     "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status}&transaction_id={$request->clickid}"
                 )->onQueue('postback_queue');
                     break;
-                case RedirectStatus::success:
+                case RedirectStatus_Client::success:
                     doPostBackJob::dispatch(
                         "https://trk.adbloom.co/aff_lsr?transaction_id={$request->clickid}"
                     )->onQueue('postback_queue');
