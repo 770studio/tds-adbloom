@@ -31,7 +31,7 @@ class RedirectStatus implements Arrayable //extends Model
 
     public static function exists($status) : bool
     {
-        return in_array($status, self::all());
+        return in_array($status, self::indexes());
     }
 
     public static function fromStr($redirect_status_str)
