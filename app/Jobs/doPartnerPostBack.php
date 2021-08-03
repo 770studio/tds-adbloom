@@ -45,7 +45,7 @@ class doPartnerPostBack implements ShouldQueue
      */
     public function handle()
     {
-
+        Log::channel('queue')->error('doPartnerPostBack start executing', ['conversion id' => $this->conversion->id, 'tune id' => $this->conversion->Stat_tune_event_id]);
 
         if (!$this->conversion->Partner || !$this->conversion->Opportunity) return;
 
