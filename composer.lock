@@ -4,107 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "345d821607265b0e51ab866664b6a73e",
+    "content-hash": "c2858c075001ac07004d0e9513063b98",
     "packages": [
-        {
-            "name": "64robots/nova-fields",
-            "version": "0.21.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/64robots/nova-fields.git",
-                "reference": "b8150c8c5bb53d484bb64b10128e9e62e96ffd36"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/64robots/nova-fields/zipball/b8150c8c5bb53d484bb64b10128e9e62e96ffd36",
-                "reference": "b8150c8c5bb53d484bb64b10128e9e62e96ffd36",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "R64\\NovaFields\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "R64\\NovaFields\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/64robots/nova-fields/issues",
-                "source": "https://github.com/64robots/nova-fields/tree/0.21.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/beliolfa",
-                    "type": "github"
-                }
-            ],
-            "time": "2021-04-08T13:26:22+00:00"
-        },
-        {
-            "name": "armincms/json",
-            "version": "0.5.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/armincms/json.git",
-                "reference": "fd3544f88bbf5dd9d21952861ca6297bec7d6d51"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/armincms/json/zipball/fd3544f88bbf5dd9d21952861ca6297bec7d6d51",
-                "reference": "fd3544f88bbf5dd9d21952861ca6297bec7d6d51",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": []
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Armincms\\Json\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "armincms",
-                "array",
-                "collection",
-                "field",
-                "json",
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/armincms/json/issues",
-                "source": "https://github.com/armincms/json/tree/master"
-            },
-            "time": "2020-03-12T08:52:25+00:00"
-        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.0.3",
@@ -1956,78 +1857,6 @@
             "transport-options": {
                 "relative": true
             }
-        },
-        {
-            "name": "laravel/scout",
-            "version": "v9.2.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/scout.git",
-                "reference": "5d62c83ea11b98f1f89ee78bdb82d7b8a1791e67"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/scout/zipball/5d62c83ea11b98f1f89ee78bdb82d7b8a1791e67",
-                "reference": "5d62c83ea11b98f1f89ee78bdb82d7b8a1791e67",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/bus": "^8.0",
-                "illuminate/contracts": "^8.0",
-                "illuminate/database": "^8.0",
-                "illuminate/http": "^8.0",
-                "illuminate/pagination": "^8.0",
-                "illuminate/queue": "^8.0",
-                "illuminate/support": "^8.0",
-                "php": "^7.3|^8.0"
-            },
-            "require-dev": {
-                "meilisearch/meilisearch-php": "^0.17",
-                "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^6.17",
-                "phpunit/phpunit": "^9.3"
-            },
-            "suggest": {
-                "algolia/algoliasearch-client-php": "Required to use the Algolia engine (^2.2).",
-                "meilisearch/meilisearch-php": "Required to use the MeiliSearch engine (^0.17)."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "9.x-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Laravel\\Scout\\ScoutServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laravel\\Scout\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "Laravel Scout provides a driver based solution to searching your Eloquent models.",
-            "keywords": [
-                "algolia",
-                "laravel",
-                "search"
-            ],
-            "support": {
-                "issues": "https://github.com/laravel/scout/issues",
-                "source": "https://github.com/laravel/scout"
-            },
-            "time": "2021-07-13T16:13:35+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -7361,35 +7190,35 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v4.3.0",
+            "version": "v5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "7c125dc2463f3e144ddc7e05e63077109508c94e"
+                "reference": "0122ac6b03c75279ef78d1c0ad49725dfc52a8d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/7c125dc2463f3e144ddc7e05e63077109508c94e",
-                "reference": "7c125dc2463f3e144ddc7e05e63077109508c94e",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/0122ac6b03c75279ef78d1c0ad49725dfc52a8d2",
+                "reference": "0122ac6b03c75279ef78d1c0ad49725dfc52a8d2",
                 "shasum": ""
             },
             "require": {
                 "facade/ignition-contracts": "^1.0",
-                "filp/whoops": "^2.4",
-                "php": "^7.2.5 || ^8.0",
+                "filp/whoops": "^2.7.2",
+                "php": "^7.3 || ^8.0",
                 "symfony/console": "^5.0"
             },
             "require-dev": {
-                "facade/ignition": "^2.0",
-                "fideloper/proxy": "^4.2",
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "fruitcake/laravel-cors": "^1.0",
-                "laravel/framework": "^7.0",
-                "laravel/tinker": "^2.0",
-                "nunomaduro/larastan": "^0.6",
-                "orchestra/testbench": "^5.0",
-                "phpstan/phpstan": "^0.12.3",
-                "phpunit/phpunit": "^8.5.1 || ^9.0"
+                "brianium/paratest": "^6.1",
+                "fideloper/proxy": "^4.4.1",
+                "friendsofphp/php-cs-fixer": "^2.17.3",
+                "fruitcake/laravel-cors": "^2.0.3",
+                "laravel/framework": "^8.0 || ^9.0",
+                "nunomaduro/larastan": "^0.6.2",
+                "nunomaduro/mock-final-classes": "^1.0",
+                "orchestra/testbench": "^6.0 || ^7.0",
+                "phpstan/phpstan": "^0.12.64",
+                "phpunit/phpunit": "^9.5.0"
             },
             "type": "library",
             "extra": {
@@ -7445,7 +7274,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-10-29T15:12:23+00:00"
+            "time": "2021-07-26T20:39:06+00:00"
         },
         {
             "name": "phar-io/manifest",
