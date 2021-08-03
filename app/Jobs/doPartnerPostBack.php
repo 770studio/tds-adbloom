@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Conversion;
-use App\Models\RedirectStatus;
+use App\Models\RedirectStatus_Client;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -112,7 +112,10 @@ class doPartnerPostBack implements ShouldQueue
         ) {
             // send pending 1st time
             $pending = true;
-            if (!@$this->conversion->Partner->send_pending_status[$macroStatus]) return;
+            if (!@$this->conversion->Partner->send_pending_status[$macroStatus]) {
+                Log::channel('queue')->debug('doPartnerPostBack macroStatus is not in partner`s list', $logData);
+                return;
+            }
             $replaces['{status}'] = 'pending';
             Log::channel('queue')->debug('send pending 1st time', $logData);
 
@@ -168,14 +171,14 @@ userPayout = FIXED FOR NOW
             case 'approveddefault':
             case 'approved':
             case 'approvedsuccess':
-                return RedirectStatus::success;
+            return RedirectStatus_Client::success;
             case 'approvedreject':
             case 'rejectedsuccess':
-                return RedirectStatus::reject;
+            return RedirectStatus_Client::reject;
             case 'approveddq':
-                return RedirectStatus::dq;
+                return RedirectStatus_Client::dq;
             case 'approvedoq':
-                return RedirectStatus::oq;
+                return RedirectStatus_Client::oq;
             default:
                 return false;
             // throw new Exception('unexpected compiled status:' . $Stat_status_compiled);
