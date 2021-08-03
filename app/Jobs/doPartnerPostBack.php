@@ -45,19 +45,28 @@ class doPartnerPostBack implements ShouldQueue
      */
     public function handle()
     {
-        Log::channel('queue')->error('doPartnerPostBack start executing', ['conversion id' => $this->conversion->id, 'tune id' => $this->conversion->Stat_tune_event_id]);
+        Log::channel('queue')->debug('doPartnerPostBack start executing', ['conversion id' => $this->conversion->id, 'tune id' => $this->conversion->Stat_tune_event_id]);
 
-        if (!$this->conversion->Partner || !$this->conversion->Opportunity) return;
+        if (!$this->conversion->Partner) {
+            Log::channel('queue')->debug('doPartnerPostBack no Partner found');
+
+        }
+        if (!$this->conversion->Opportunity) {
+            Log::channel('queue')->debug('doPartnerPostBack no Opportunity found');
+        }
 
 
 //http://parner.com/?var1={eventId}&date={date}&var3={datetime}&var4={dateUpdated}&var5={datetimeUpdated}&var5={name}&var6={opportunityId}&var7={currency}&var8={payout}&var9={userPayout}&var10={points}&var11={status}&var12={token}
 
         $pending = false;
         $usecase = $this->conversion->Stat_status . $this->conversion->Goal_name;
+        Log::channel('queue')->debug('doPartnerPostBack usecase:' . $usecase);
+
         if (!$macroStatus = $this->findOutStatus($usecase)) {
             Log::channel('queue')->error('unexpected compiled status:' . $usecase, $this->conversion->toArray());
             return;
         }
+        Log::channel('queue')->debug('doPartnerPostBack macroStatus:' . $macroStatus);
 
         $replaces = array_map('rawurlencode', [
             '{eventId}' => $this->conversion->Stat_tune_event_id,
