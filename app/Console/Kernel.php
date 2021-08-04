@@ -38,6 +38,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('conversions:update')->everyTwoMinutes();
             $schedule->command('yoursurveys:update 500 CA')->everyFourHours();
             $schedule->command('yoursurveys:update 500 US')->everyFourHours();
+            $schedule->command('telescope:prune')->daily();
         }
 
         if (App::environment('production')) {

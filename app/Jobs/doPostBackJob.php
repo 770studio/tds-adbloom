@@ -17,11 +17,11 @@ class doPostBackJob implements ShouldQueue
     /**
      * @var string
      */
-    private $url;
+    public $url;
     /**
      * @var bool
      */
-    private $pending;
+    public $pending;
 
     /**
      * Create a new job instance.
