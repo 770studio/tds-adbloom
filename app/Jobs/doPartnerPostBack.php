@@ -9,6 +9,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
@@ -125,6 +126,7 @@ class doPartnerPostBack implements ShouldQueue
 
         } else {
             // not sending anything
+            Log::channel('queue')->debug('nothing to send', $logData);
             return;
         }
 
@@ -199,6 +201,17 @@ userPayout = FIXED FOR NOW
             ),
             app()->environment(),
         ];
+    }
+
+
+    /**
+     * Get the middleware the job should pass through.
+     *
+     * @return array
+     */
+    public function middleware()
+    {
+        return [new WithoutOverlapping($this->conversion->id)];
     }
 
 }
