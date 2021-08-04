@@ -215,10 +215,14 @@ userPayout = FIXED FOR NOW
     public function tags()
     {
         return [
-            sprintf('doPartnerPostBack parnerId:%s conversionId:%s %s',
-                $this->conversion->Partner->getKey(),
-                $this->conversion->getKey(), app()->environment()
-            ),
+            /*            sprintf('doPartnerPostBack parnerId:%s conversionId:%s %s',
+                            $this->conversion->Partner->getKey(),
+                            $this->conversion->getKey(), app()->environment()
+                        ),*/
+            $this->conversion->Stat_tune_event_id,
+            'conversion:' . $this->conversion->id,
+            $this->conversion->Partner->external_id,
+            $this->conversion->Partner->name,
             app()->environment(),
         ];
     }
