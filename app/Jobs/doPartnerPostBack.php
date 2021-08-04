@@ -6,6 +6,7 @@ use App\Models\Conversion;
 use App\Models\RedirectStatus_Client;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,10 +14,22 @@ use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class doPartnerPostBack implements ShouldQueue
+class doPartnerPostBack implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+    /**
+     * The maximum number of unhandled exceptions to allow before failing.
+     *
+     * @var int
+     */
+    public $maxExceptions = 2;
     /**
      * @var Conversion
      */
@@ -46,7 +59,6 @@ class doPartnerPostBack implements ShouldQueue
      */
     public function handle()
     {
-        Log::channel('queue')->debug('doPartnerPostBack start executing', ['conversion id' => $this->conversion->id, 'tune id' => $this->conversion->Stat_tune_event_id]);
 
         if (!$this->conversion->Partner) {
             Log::channel('queue')->debug('doPartnerPostBack no Partner found');
@@ -56,6 +68,14 @@ class doPartnerPostBack implements ShouldQueue
             Log::channel('queue')->debug('doPartnerPostBack no Opportunity found');
         }
 
+        Log::channel('queue')->debug('doPartnerPostBack start executing',
+            ['conversion id' => $this->conversion->id,
+                'tune id' => $this->conversion->Stat_tune_event_id,
+                'partner name' => $this->conversion->Partner->name,
+                'partner external_id' => $this->conversion->Partner->external_id,
+                'opportunity name' => $this->conversion->Opportunity->name,
+                'opportunity external_id' => $this->conversion->Opportunity->external_id,
+            ]);
 
 //http://parner.com/?var1={eventId}&date={date}&var3={datetime}&var4={dateUpdated}&var5={datetimeUpdated}&var5={name}&var6={opportunityId}&var7={currency}&var8={payout}&var9={userPayout}&var10={points}&var11={status}&var12={token}
 
@@ -212,6 +232,27 @@ userPayout = FIXED FOR NOW
     public function middleware()
     {
         return [new WithoutOverlapping($this->conversion->id)];
+    }
+
+    /**
+     * The unique ID of the job.
+     *
+     * @return string
+     */
+    public function uniqueId()
+    {
+        return (string)$this->conversion->id;
+    }
+
+
+    /**
+     * Calculate the number of seconds to wait before retrying the job.
+     *
+     * @return int
+     */
+    public function backoff()
+    {
+        return 30;
     }
 
 }
