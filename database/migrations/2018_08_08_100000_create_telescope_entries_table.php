@@ -61,7 +61,7 @@ class CreateTelescopeEntriesTable extends Migration
 
         $this->schema->create('telescope_entries_tags', function (Blueprint $table) {
             $table->uuid('entry_uuid');
-            $table->text('tag');
+            $table->text('tag')->nullable();
 
             $table->index(['entry_uuid', DB::raw('tag(255)')]);
             $table->index([DB::raw('tag(255)')]);

@@ -113,7 +113,7 @@ class Opportunity extends Resource
                 })*/
 
             Text::make('Url', 'link'),
-            Textarea::make('Description'),
+            Textarea::make('Description')->alwaysShow(),
             Number::make('Payout')->step(0.01)->default(0.00),
             Select::make('Currency')->options(
                 ['USD']
