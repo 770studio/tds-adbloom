@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Events\PartnerUpdatedEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -14,6 +15,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Partner extends BaseModel
 {
     use HasFactory;
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'saved' => PartnerUpdatedEvent::class,
+        //  'updated' => PartnerUpdatedEvent::class,
+    ];
 
     protected $casts = [
         'send_pending_status' => 'array'

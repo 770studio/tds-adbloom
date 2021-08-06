@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4df24d6e5f5ce69ba5f55fa193f56a11",
+    "content-hash": "c94259211a7364881f2334b80714a36f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2385,6 +2385,51 @@
             },
             "abandoned": "brick/math",
             "time": "2020-01-05T04:49:34+00:00"
+        },
+        {
+            "name": "naif/toggle",
+            "version": "1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/naifalshaye/toggle-switch.git",
+                "reference": "c159c309504755122f13a23eab2d97048b0ae240"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/naifalshaye/toggle-switch/zipball/c159c309504755122f13a23eab2d97048b0ae240",
+                "reference": "c159c309504755122f13a23eab2d97048b0ae240",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Naif\\Toggle\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Naif\\Toggle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova toggle switch field",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/naifalshaye/toggle-switch/issues",
+                "source": "https://github.com/naifalshaye/toggle-switch/tree/master"
+            },
+            "time": "2018-09-04T21:01:33+00:00"
         },
         {
             "name": "naoray/nova-json",

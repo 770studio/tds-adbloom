@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Models\RedirectStatus;
+use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BooleanGroup;
@@ -12,6 +13,8 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Panel;
+use Naif\Toggle\Toggle;
 
 class Partner extends Resource
 {
@@ -78,7 +81,11 @@ class Partner extends Resource
             BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
                 RedirectStatus::indexes()
             ),
-            MorphToMany::make('Tags'),
+
+
+            new Panel('Revenue', $this->RevenueFields()),
+
+            new Panel('Tags', $this->TagsFields()),
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
@@ -108,7 +115,7 @@ class Partner extends Resource
     public function filters(Request $request)
     {
         return [
-            new Filters\DateTimeFilter('datetime'),
+            new Filters\DateTimeFilter(),
         ];
     }
 
@@ -133,4 +140,23 @@ class Partner extends Resource
     {
         return [];
     }
+
+    protected function RevenueFields(): array
+    {
+        return [
+            Toggle::make('Revenue Share', 'rev_share')->showOnIndex(false),
+            NovaDependencyContainer::make([
+                Number::make('Percentage, %', 'percentage')->min(0)->max(100)->step(1)
+            ])->dependsOn('rev_share', 1),
+        ];
+    }
+
+    protected function TagsFields(): array
+    {
+        return [
+            MorphToMany::make('Tags'),
+        ];
+    }
+
+
 }
