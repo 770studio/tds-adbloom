@@ -45,6 +45,13 @@ class RedirectStatus implements Arrayable //extends Model
 
     }
 
+    public static function getName($status)
+    {
+        return self::exists($status)
+            ? self::all()[$status]
+            : null;
+    }
+
     public function toArray()
     {
         return self::all();

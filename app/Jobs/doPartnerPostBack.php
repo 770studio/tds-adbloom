@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Conversion;
 use App\Models\RedirectStatus;
+use App\Models\RedirectStatus_Client;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -113,7 +114,8 @@ class doPartnerPostBack implements ShouldQueue, ShouldBeUnique
             '{userPayout}' => 1,
             '{points}' => 1,
             '{token}' => 'token',
-            '{status}' => $macroStatus
+            '{status}' => RedirectStatus::getName($macroStatus)
+
 
         ]);
 
@@ -193,14 +195,14 @@ userPayout = FIXED FOR NOW
             case 'approveddefault':
             case 'approved':
             case 'approvedsuccess':
-            return RedirectStatus::success;
+            return RedirectStatus_Client::success;
             case 'approvedreject':
             case 'rejectedsuccess':
-            return RedirectStatus::reject;
+            return RedirectStatus_Client::reject;
             case 'approveddq':
-                return RedirectStatus::dq;
+                return RedirectStatus_Client::dq;
             case 'approvedoq':
-                return RedirectStatus::oq;
+                return RedirectStatus_Client::oq;
             default:
                 return false;
             // throw new Exception('unexpected compiled status:' . $Stat_status_compiled);
