@@ -111,10 +111,11 @@ class doPartnerPostBack implements ShouldQueue, ShouldBeUnique
             '{parnterSub3}' => $this->conversion->Stat_affiliate_info3,
             '{parnterSub4}' => $this->conversion->Stat_affiliate_info4,
             '{parnterSub5}' => $this->conversion->Stat_affiliate_info5,
-            '{userPayout}' => 1,
             '{points}' => 1,
             '{token}' => 'token',
-            '{status}' => RedirectStatus::getName($macroStatus)
+            '{status}' => RedirectStatus::getName($macroStatus),
+            '{userPayout}' => $this->conversion->user_payout,
+            '{userPoints}' => $this->conversion->user_points,
 
 
         ]);

@@ -63,6 +63,14 @@ class RedirectStatus implements Arrayable //extends Model
             self::all()
         );
     }
+    public static function fakeSendPendingStatus() : array
+    {
+        return array_map(
+            function($val){
+                return true;
+            },
+            self::all());
+    }
 
 
 }

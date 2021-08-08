@@ -15,10 +15,10 @@ class AddFieldsToPartner extends Migration
     {
         Schema::table('partners', function (Blueprint $table) {
 
-                $table->text('pending_url');
-                $table->boolean('send_pending_postback');
-                $table->string('send_pending_status');
-                $table->tinyInteger('pending_timeout', null, true);
+                $table->text('pending_url')->nullable();
+                $table->boolean('send_pending_postback')->default(0);
+                $table->string('send_pending_status')->default('[]');
+                $table->tinyInteger('pending_timeout', null, true)->default(24);
 
         });
     }

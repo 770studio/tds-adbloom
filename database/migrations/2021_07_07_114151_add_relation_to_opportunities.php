@@ -14,7 +14,7 @@ class AddRelationToOpportunities extends Migration
     public function up()
     {
         Schema::table('opportunities', function (Blueprint $table) {
-            $table->bigInteger('client_id');
+            $table->bigInteger('client_id')->nullable();
 
         });
     }

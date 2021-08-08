@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Events\PartnerUpdatedEvent;
-use App\Listeners\UpdatePartnerConversionListener;
+use App\Events\ConversionUpdatingEvent;
+use App\Listeners\RevShareUpdateListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -19,9 +19,13 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        PartnerUpdatedEvent::class => [
-            UpdatePartnerConversionListener::class
+        ConversionUpdatingEvent::class => [
+            RevShareUpdateListener::class,
         ],
+
+/*        PartnerUpdatedEvent::class => [
+            UpdatePartnerConversionListener::class
+        ],*/
     ];
 
     /**

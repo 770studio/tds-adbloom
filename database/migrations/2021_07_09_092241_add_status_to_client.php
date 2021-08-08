@@ -15,7 +15,7 @@ class AddStatusToClient extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->enum('status', array_values(Client::STATUSES));
+            $table->enum('status', array_values(Client::STATUSES))->nullable();
 
         });
     }

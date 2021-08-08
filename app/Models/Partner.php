@@ -22,8 +22,9 @@ class Partner extends BaseModel
      * @var array
      */
     protected $dispatchesEvents = [
-        'saved' => PartnerUpdatedEvent::class,
+       // 'saved' => PartnerUpdatedEvent::class,
         //  'updated' => PartnerUpdatedEvent::class,
+
     ];
 
     protected $casts = [

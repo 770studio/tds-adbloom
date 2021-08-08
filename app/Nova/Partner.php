@@ -146,8 +146,18 @@ class Partner extends Resource
         return [
             Toggle::make('Revenue Share', 'rev_share')->showOnIndex(false),
             NovaDependencyContainer::make([
-                Number::make('Percentage, %', 'percentage')->min(0)->max(100)->step(1)
+                Number::make('Percentage, %', 'percentage')->min(1)->max(100)->step(1)
+                    ->rules('required', 'gt:0'),
+                Toggle::make('Convert to Points', 'convert_to_points'),
+                NovaDependencyContainer::make([
+                    Number::make('Multiplier', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5)
+                        ->rules('required', 'gt:0'),
+                    Text::make('Points Name', 'points_name'),
+                ])->dependsOn('convert_to_points', 1),
             ])->dependsOn('rev_share', 1),
+
+
+
         ];
     }
 
