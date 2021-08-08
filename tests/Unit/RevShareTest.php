@@ -24,7 +24,7 @@ class RevShareTest extends TestCase
      *
      * @return void
      */
-    public function test_init()
+    public function test_we_are_under_testing_env()
     {
 
       $this->assertTrue("testing" == $this->app->environment());
