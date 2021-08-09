@@ -156,18 +156,18 @@ class Partner extends Resource
                     Number::make('Multiplier', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5)
                         ->rules('required', 'gt:0'),
                     Text::make('Points Name', 'points_name'),
-                    Image::make('Points Logo', 'points_logo')
-                        ->disk('creatives')
-                        ->storeAs(function (Request $request) {
-                            return StoreImageHelper::getCreativeAssetUniqueName($request->points_logo);
-                        })
-                        ->prunable()
-                        ->rules('mimes:gif,png,svg'),
-
 
                 ])->dependsOn('convert_to_points', 1),
             ])->dependsOn('rev_share', 1),
 
+
+            Image::make('Points Logo', 'points_logo')
+                ->disk('creatives')
+                ->storeAs(function (Request $request) {
+                    return StoreImageHelper::getCreativeAssetUniqueName($request->points_logo);
+                })
+                ->prunable()
+                ->rules('mimes:gif,png,svg'),
             Text::make('CDN points logo', function () {
                 $href = StoreImageHelper::getPartnerPointsLogoAssetCDNUrl($this->resource);
                 return $href
