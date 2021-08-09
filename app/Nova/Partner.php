@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use Naif\Toggle\Toggle;
 
@@ -73,7 +74,7 @@ class Partner extends Resource
 
             Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
 
-            Text::make('Postback URL', 'pending_url'),
+            Textarea::make('Postback URL', 'pending_url')->alwaysShow()->rows(3),
             Heading::make(
                 view('partner_url_possible_macros')->render()
             )->asHtml(),
