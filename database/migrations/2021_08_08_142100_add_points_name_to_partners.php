@@ -14,7 +14,7 @@ class AddPointsNameToPartners extends Migration
     public function up()
     {
         Schema::table('partners', function (Blueprint $table) {
-            $table->string('points_name');
+            $table->string('points_name')->nullable();
         });
     }
 
