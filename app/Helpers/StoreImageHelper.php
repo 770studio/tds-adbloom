@@ -29,19 +29,22 @@ class StoreImageHelper
         return Storage::disk('creatives')->url($opportunity->image);
     }
 
-    public static function getOpportunityAssetCDNUrl(Opportunity $opportunity): string
+    public static function getOpportunityAssetCDNUrl(Opportunity $opportunity): ?string
     {
         return self::getCreativesCDNUrl($opportunity->image);
 
     }
-    public static function getPartnerPointsLogoAssetCDNUrl(Partner $partner): string
+    public static function getPartnerPointsLogoAssetCDNUrl(Partner $partner): ?string
     {
         return self::getCreativesCDNUrl($partner->points_logo);
     }
 
-    public static function getCreativesCDNUrl(string $local_path): string
+    public static function getCreativesCDNUrl(?string $local_path): ?string
     {
-        return Storage::disk('creatives_cdn')->url($local_path);
+        return Storage::disk('creatives_cdn')->exists($local_path)
+            ? Storage::disk('creatives_cdn')->url($local_path)
+            : null;
+
     }
     private static function getUniqueName(UploadedFile $file, $postfix = ''): string
     {

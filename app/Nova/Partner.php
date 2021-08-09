@@ -163,14 +163,17 @@ class Partner extends Resource
                         })
                         ->prunable()
                         ->rules('mimes:gif,png,svg'),
-                    Text::make('CDN points logo', function () {
-                        return "<a href='" . StoreImageHelper::getPartnerPointsLogoAssetCDNUrl($this->resource) . "'>CDN</a>";
-                    })->asHtml(),
+
 
                 ])->dependsOn('convert_to_points', 1),
             ])->dependsOn('rev_share', 1),
 
-
+            Text::make('CDN points logo', function () {
+                $href = StoreImageHelper::getPartnerPointsLogoAssetCDNUrl($this->resource);
+                return $href
+                    ? "<a href='" . $href . "'>CDN</a>"
+                    : null;
+            })->asHtml(),
 
         ];
     }
