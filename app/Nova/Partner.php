@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Helpers\StoreImageHelper;
 use App\Models\RedirectStatus;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
@@ -154,6 +156,17 @@ class Partner extends Resource
                     Number::make('Multiplier', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5)
                         ->rules('required', 'gt:0'),
                     Text::make('Points Name', 'points_name'),
+                    Image::make('Points Logo', 'points_logo')
+                        ->disk('creatives')
+                        ->storeAs(function (Request $request) {
+                            return StoreImageHelper::getCreativeAssetUniqueName($request->points_logo);
+                        })
+                        ->prunable()
+                        ->rules('mimes:gif,png,svg'),
+                    Text::make('CDN points logo', function () {
+                        return "<a href='" . StoreImageHelper::getPartnerPointsLogoAssetCDNUrl($this->resource) . "'>CDN</a>";
+                    })->asHtml(),
+
                 ])->dependsOn('convert_to_points', 1),
             ])->dependsOn('rev_share', 1),
 

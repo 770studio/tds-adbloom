@@ -6,6 +6,7 @@ namespace App\Helpers;
 
 
 use App\Models\Opportunity;
+use App\Models\Partner;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,9 +31,18 @@ class StoreImageHelper
 
     public static function getOpportunityAssetCDNUrl(Opportunity $opportunity): string
     {
-        return Storage::disk('creatives_cdn')->url($opportunity->image);
+        return self::getCreativesCDNUrl($opportunity->image);
+
+    }
+    public static function getPartnerPointsLogoAssetCDNUrl(Partner $partner): string
+    {
+        return self::getCreativesCDNUrl($partner->points_logo);
     }
 
+    public static function getCreativesCDNUrl(string $local_path): string
+    {
+        return Storage::disk('creatives_cdn')->url($local_path);
+    }
     private static function getUniqueName(UploadedFile $file, $postfix = ''): string
     {
         return sha1($file->getClientOriginalName() . $postfix) . '.' . $file->getClientOriginalExtension();
