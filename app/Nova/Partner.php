@@ -167,7 +167,9 @@ class Partner extends Resource
                     return StoreImageHelper::getCreativeAssetUniqueName($request->points_logo);
                 })
                 ->prunable()
-                ->rules('mimes:gif,png,svg'),
+                ->rules('mimes:gif,png,svg')
+                ->help('Accepted: gif,png,svg'),
+
             Text::make('CDN points logo', function () {
                 $href = StoreImageHelper::getPartnerPointsLogoAssetCDNUrl($this->resource);
                 return $href
