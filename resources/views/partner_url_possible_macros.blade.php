@@ -10,6 +10,7 @@
 <p>{currency} - </p>
 <p>{payout} - </p>
 <p>{userPayout} - </p>
+<p>{userPoints} - </p>
 <p>{points} - </p>
 <p>{token} - </p>
 <p>{status} - </p>
@@ -24,7 +25,6 @@
 <p>{parnterSub3} - </p>
 <p>{parnterSub4} - </p>
 <p>{parnterSub5} - </p>
-
 
 
 

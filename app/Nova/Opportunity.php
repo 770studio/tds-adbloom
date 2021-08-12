@@ -91,7 +91,10 @@ class Opportunity extends Resource
                 ->rules('dimensions:min_width=640,min_height=360,max_width=640,max_height=360')
                 ->help('Dimensions allowed: 640x360'),
             Text::make('CDN IMAGE URL', function () {
-                return "<a href='" . StoreImageHelper::getOpportunityAssetCDNUrl($this->resource) . "'>CDN</a>";
+                $href = StoreImageHelper::getOpportunityAssetCDNUrl($this->resource);
+                return $href
+                    ? "<a href='" . $href . "'>CDN</a>"
+                    : null;
             })->asHtml(),
             /*    ->storeAs(function (Request $request) {
                     $class = get_class($this->resource);

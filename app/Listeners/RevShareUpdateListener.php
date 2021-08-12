@@ -33,7 +33,7 @@ class RevShareUpdateListener //implements ShouldQueue
     {
         $conv = $event->conversion;
         if(!$conv->wasRecentlyCreated
-            && !in_array("Stat_payout", $conv->getChanges())
+            && !$conv->isDirty('Stat_payout')
         ) {
             return true ;
         }
@@ -46,6 +46,7 @@ class RevShareUpdateListener //implements ShouldQueue
         // and partner is not null
         $conv->user_payout = ($partner->percentage * $conv->Stat_payout)/100;
         $conv->user_points = floor($partner->points_multiplier * $conv->user_payout);
+
         return true;
 
     }

@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Helpers\StoreImageHelper;
 use App\Models\RedirectStatus;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
@@ -9,9 +10,11 @@ use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Panel;
 use Naif\Toggle\Toggle;
 
@@ -68,6 +71,14 @@ class Partner extends Resource
                 ->rules('required')
                 ->sortable(),
 
+            Boolean::make('Send Pending Postback', 'send_pending_postback'),
+
+            Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
+
+            Textarea::make('Postback URL', 'pending_url')->alwaysShow()->rows(3),
+            Heading::make(
+                view('partner_url_possible_macros')->render()
+            )->asHtml(),
 
             BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
                 RedirectStatus::indexes()
@@ -165,6 +176,21 @@ class Partner extends Resource
             ])->dependsOn('rev_share', 1),
 
 
+            Image::make('Points Logo', 'points_logo')
+                ->disk('creatives')
+                ->storeAs(function (Request $request) {
+                    return StoreImageHelper::getCreativeAssetUniqueName($request->points_logo);
+                })
+                ->prunable()
+                ->rules('mimes:gif,png,svg')
+                ->help('Accepted: gif,png,svg'),
+
+            Text::make('CDN points logo', function () {
+                $href = StoreImageHelper::getPartnerPointsLogoAssetCDNUrl($this->resource);
+                return $href
+                    ? "<a href='" . $href . "'>CDN</a>"
+                    : null;
+            })->asHtml(),
 
         ];
     }
