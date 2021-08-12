@@ -71,19 +71,6 @@ class Partner extends Resource
                 ->rules('required')
                 ->sortable(),
 
-            Boolean::make('Send Pending Postback', 'send_pending_postback'),
-
-            Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
-
-            Textarea::make('Postback URL', 'pending_url')->alwaysShow()->rows(3),
-            Heading::make(
-                view('partner_url_possible_macros')->render()
-            )->asHtml(),
-
-            BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
-                RedirectStatus::indexes()
-            ),
-
             new Panel('Pending Postback', $this->PendingPBFields()),
 
             new Panel('Revenue', $this->RevenueFields()),
@@ -150,7 +137,10 @@ class Partner extends Resource
             Toggle::make('Send Pending Postback', 'send_pending_postback'),
             NovaDependencyContainer::make([
                 Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
-                Text::make('Postback URL', 'pending_url'),
+                Textarea::make('Postback URL', 'pending_url')->alwaysShow()->rows(3),
+                BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
+                    RedirectStatus::indexes()
+                ),
                 Heading::make(
                     view('partner_url_possible_macros')->render()
                 )->asHtml(),
@@ -162,6 +152,9 @@ class Partner extends Resource
 
     protected function RevenueFields(): array
     {
+
+        $pointsLogoHref = StoreImageHelper::getPartnerPointsLogoAssetCDNUrl($this->resource);
+
         return [
             Toggle::make('Revenue Share', 'rev_share')->showOnIndex(false),
             NovaDependencyContainer::make([
@@ -172,25 +165,24 @@ class Partner extends Resource
                     Number::make('Multiplier', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5),
                     //->rules('required', 'gt:0'),
                     Text::make('Points Name', 'points_name'),
+                    Image::make('Points Logo', 'points_logo')
+                        ->disk('creatives')
+                        ->storeAs(function (Request $request) {
+                            return StoreImageHelper::getCreativeAssetUniqueName($request->points_logo);
+                        })
+                        ->prunable()
+                        ->rules('mimes:gif,png,svg')
+                        ->help('Accepted: gif,png,svg')
+                        ->help($pointsLogoHref
+                            ? "<a href='" . $pointsLogoHref . "'>CDN</a>"
+                            : ''),
+
+
                 ])->dependsOn('convert_to_points', 1),
             ])->dependsOn('rev_share', 1),
 
 
-            Image::make('Points Logo', 'points_logo')
-                ->disk('creatives')
-                ->storeAs(function (Request $request) {
-                    return StoreImageHelper::getCreativeAssetUniqueName($request->points_logo);
-                })
-                ->prunable()
-                ->rules('mimes:gif,png,svg')
-                ->help('Accepted: gif,png,svg'),
 
-            Text::make('CDN points logo', function () {
-                $href = StoreImageHelper::getPartnerPointsLogoAssetCDNUrl($this->resource);
-                return $href
-                    ? "<a href='" . $href . "'>CDN</a>"
-                    : null;
-            })->asHtml(),
 
         ];
     }

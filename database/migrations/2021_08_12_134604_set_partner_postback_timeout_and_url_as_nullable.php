@@ -14,10 +14,12 @@ class SetPartnerPostbackTimeoutAndUrlAsNullable extends Migration
     public function up()
     {
         Schema::table('partners', function (Blueprint $table) {
+            $table->string('send_pending_status')->nullable()->default('[]')->change();
             $table->boolean('pending_timeout')->nullable()->default(0)->change();
             $table->text('pending_url')->nullable()->change();
             $table->decimal('points_multiplier', 8, 2, true)->nullable()->default(0)->change();
             $table->boolean('percentage')->nullable()->default(0)->change();
+            $table->string('points_logo')->nullable()->change();
 
         });
     }
