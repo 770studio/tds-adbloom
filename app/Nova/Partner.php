@@ -5,7 +5,6 @@ namespace App\Nova;
 use App\Models\RedirectStatus;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Heading;
@@ -69,19 +68,12 @@ class Partner extends Resource
                 ->rules('required')
                 ->sortable(),
 
-            Boolean::make('Send Pending Postback', 'send_pending_postback'),
-
-            Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
-
-            Text::make('Postback URL', 'pending_url'),
-            Heading::make(
-                view('partner_url_possible_macros')->render()
-            )->asHtml(),
 
             BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
                 RedirectStatus::indexes()
             ),
 
+            new Panel('Pending Postback', $this->PendingPBFields()),
 
             new Panel('Revenue', $this->RevenueFields()),
 
@@ -141,17 +133,33 @@ class Partner extends Resource
         return [];
     }
 
+    protected function PendingPBFields(): array
+    {
+        return [
+            Toggle::make('Send Pending Postback', 'send_pending_postback'),
+            NovaDependencyContainer::make([
+                Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
+                Text::make('Postback URL', 'pending_url'),
+                Heading::make(
+                    view('partner_url_possible_macros')->render()
+                )->asHtml(),
+            ])->dependsOn('send_pending_postback', 1),
+
+
+        ];
+    }
+
     protected function RevenueFields(): array
     {
         return [
             Toggle::make('Revenue Share', 'rev_share')->showOnIndex(false),
             NovaDependencyContainer::make([
-                Number::make('Percentage, %', 'percentage')->min(1)->max(100)->step(1)
-                    ->rules('required', 'gt:0'),
+                Number::make('Percentage, %', 'percentage')->min(1)->max(100)->step(1),
+                // ->rules('required', 'gt:0'),
                 Toggle::make('Convert to Points', 'convert_to_points'),
                 NovaDependencyContainer::make([
-                    Number::make('Multiplier', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5)
-                        ->rules('required', 'gt:0'),
+                    Number::make('Multiplier', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5),
+                    //->rules('required', 'gt:0'),
                     Text::make('Points Name', 'points_name'),
                 ])->dependsOn('convert_to_points', 1),
             ])->dependsOn('rev_share', 1),
