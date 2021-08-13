@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\RedirectHelper;
 use App\Jobs\doPostBackJob;
 use App\Models\Client;
-use App\Models\RedirectStatus;
 use App\Models\RedirectStatus_Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -69,7 +68,7 @@ class ClientController extends Controller
                 */
 
         return RedirectHelper::opportunity(
-            $client->redirect_to_domain ?? self::DEFAULT_REDIRECT_DOMAIN
+            self::DEFAULT_REDIRECT_DOMAIN //$client->redirect_to_domain ?? self::DEFAULT_REDIRECT_DOMAIN
             , $redirect_status_str
         );
 

@@ -61,8 +61,7 @@ class Client extends Resource
             Text::make('External Id')
                 ->rules('required')
                 ->sortable(),
-            Text::make('Redirect to', 'redirect_to_domain')
-                ->sortable(),
+           // Text::make('Redirect to', 'redirect_to_domain')->sortable(),
             HasMany::make('Opportunities'),
             Select::make('Status')->options(self::$model::STATUSES)
                 ->rules('required')->sortable(),
