@@ -13,6 +13,13 @@ use Naoray\NovaJson\JSON;
 
 class Yoursurveys extends Resource
 {
+
+    /**
+     * The logical group associated with the resource.
+     *
+     * @var string
+     */
+    public static $group = 'Integrations';
     /**
      * The model the resource corresponds to.
      *
@@ -33,7 +40,7 @@ class Yoursurveys extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'project_id', 'json'
+        'json'
     ];
 
 
