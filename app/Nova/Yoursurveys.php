@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
@@ -144,5 +145,36 @@ class Yoursurveys extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * Apply the search query to the query.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string  $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected static function applySearch($query, $search)
+    {
+
+        return $query->where(function ($query) use ($search) {
+            $model = $query->getModel();
+
+            $connectionType = $model->getConnection()->getDriverName();
+
+            $canSearchPrimaryKey = ctype_digit($search) &&
+                in_array($model->getKeyType(), ['int', 'integer']) &&
+                ($connectionType != 'pgsql' || $search <= static::maxPrimaryKeySize()) &&
+                in_array($model->getKeyName(), static::$search);
+
+            if ($canSearchPrimaryKey) {
+                $query->orWhere($model->getQualifiedKeyName(), $search);
+            }
+
+
+            $query->whereJsonContains('json->name', $search);
+
+
+        });
     }
 }

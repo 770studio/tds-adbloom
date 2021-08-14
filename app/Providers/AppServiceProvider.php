@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
-use App\Services\YoursurveysReadmeIoAPI\DaliaPublisherAPIService;
+use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
 use App\Services\YoursurveysReadmeIoAPI\YoursurveysAPIService;
 use Illuminate\Support\ServiceProvider;
 use Tune\NetworkApi;
@@ -63,7 +63,9 @@ class AppServiceProvider extends ServiceProvider
 
 
         $this->app->bind(DaliaPublisherAPIServiceIF::class, function () {
-            return new DaliaPublisherAPIService();
+            return new DaliaPublisherAPIService(
+                config('services.dalia.publisher_user_uuid')
+            );
 
         });
 

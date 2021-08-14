@@ -9,30 +9,26 @@ use Illuminate\Support\Facades\Http;
 
 class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
 {
-    private $secret;
-    private $api_url;
+    private string $publisher_user_uuid;
 
-    public function __construct()
+    public function __construct(string $publisher_user_uuid)
     {
-        $this->secret = config('services.yoursurveys_readme_io.secret');
-        $this->api_url = config('services.yoursurveys_readme_io.url');
+        $this->publisher_user_uuid = $publisher_user_uuid;
 
     }
 
-    public function BasicAPICall(): object
+    public function getAll(): object
     {
 
-        $params = http_build_query(
-            $this->params
+        $url = sprintf("https://platform.opinionsample.com/api/publisher/v1/publisher_users/%s/publisher_offers/",
+            $this->publisher_user_uuid
         );
-
-        $url = $this->api_url . '?' . $params;
 
         $response = Http::withOptions(
             ['debug' => true]
-        )->withHeaders([
-            'X-YourSurveys-Api-Key' => $this->secret,
-        ])->get($url);
+        )->get($url);
+
+        dd($response->object());
 
         return $response->object();
 

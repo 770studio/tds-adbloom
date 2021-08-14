@@ -38,4 +38,9 @@ return [
         'secret' => env('YOURSURVEYS_README_IO_SECRET'),
         'url' => env('YOURSURVEYS_README_IO_URL'),
     ],
+    'dalia' => [
+        'publisher_user_uuid' => env('DALIA_PUBLISHER_USER_UUID'),
+    ],
+
+
 ];
