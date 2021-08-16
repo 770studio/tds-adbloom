@@ -40,18 +40,20 @@ class DaliaPublisherAPIUpdateCommand extends Command
     public function handle(DaliaPublisherAPIServiceIF $APIService)
     {
 
-         //dd($APIService);
+//dd($APIService->getAll());
+
+            $updateTime = now();
 
             $APIService->getAll()
             ->parseData()
-            ->each(function ($record) {
-                DaliaOffers::updateOrCreate(
-                    ["uuid" => $record["uuid"]],
-                    $record
-                );
-
-
+            ->chunk(500)
+            ->each(function ($records) {
+                DaliaOffers::upsert($records->toArray(),
+                    ['uuid'],
+                    ['title', 'info_short', 'info', 'json' ]);
             });
+
+            $APIService->deleteInExistent($updateTime);
 
 
         return 0;

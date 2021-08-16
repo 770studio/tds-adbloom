@@ -5,6 +5,8 @@ namespace App\Services\DaliaPublisherAPI;
 
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
+use App\Models\Integrations\DaliaOffers;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
@@ -37,4 +39,13 @@ class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
 
 
     }
+
+    public function deleteInExistent(Carbon $updateTime)
+    {
+        $updateTime = $updateTime->toDateTimeString();
+        DaliaOffers::where('updated_at', '<' , $updateTime)
+            ->where('created_at', '<' , $updateTime)
+            ->delete();
+    }
+
 }

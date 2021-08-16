@@ -31,7 +31,7 @@ class DaliaPublisherAPIServiceResponse extends Response
                         'title' => $offer->title,
                         'info_short' => $offer->info_short,
                         'info' => $offer->info,
-                        'json' => $offer
+                        'json' => json_encode($offer)
 
 
                     ];
