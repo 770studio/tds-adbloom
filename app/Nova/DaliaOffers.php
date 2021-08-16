@@ -15,12 +15,8 @@ use Naoray\NovaJson\JSON;
 class DaliaOffers extends Resource
 {
 
-    /**
-     * The logical group associated with the resource.
-     *
-     * @var string
-     */
-    public static $group = 'Integrations';
+
+
     /**
      * The model the resource corresponds to.
      *
@@ -64,34 +60,20 @@ class DaliaOffers extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Project Id')
-                ->rules('required')
-                ->sortable(),
-
+            Text::make('uuid'),
+            Text::make('title'),
+            Text::make('info'),
+            Text::make('info_short'),
             JSON::make("json", [
-                Text::make('name'),
-                Number::make('study_type'),
-                Number::make('cpi'),
-                Number::make('remaining_completes'),
-                Number::make('conversion_rate'),
-                Number::make('loi'),
-                Text::make('country'),
-                Text::make('survey_groups_ids'),
-                Text::make('platform_types'),
-                Boolean::make('match_to_qualify'),
-                Boolean::make('delay_crediting'),
-                Boolean::make('tentative_payout'),
-
-                JSON::make('Order', [
-
-                    Number::make('Order loi', 'loi'),
-                    Number::make('Order ir', 'ir'),
-
-                ]),
-
-                Boolean::make('is_pmp'),
-                Text::make('entry_link'),
-                Text::make('score'),
+                Text::make('reward_dollar'),
+                Text::make('tag_list'),
+                Text::make('target_groups'),
+                Text::make('device_kinds'),
+                Number::make('total_entries'),
+                Number::make('total_completions'),
+                Number::make('estimated_duration_minutes'),
+                Number::make('max_duration_minutes'),
+                Text::make('url'),
 
 
             ]),

@@ -46,7 +46,7 @@ class DaliaPublisherAPIUpdateCommand extends Command
             ->parseData()
             ->each(function ($record) {
                 DaliaOffers::updateOrCreate(
-                    ["project_id" => $record["project_id"]],
+                    ["uuid" => $record["uuid"]],
                     $record
                 );
 

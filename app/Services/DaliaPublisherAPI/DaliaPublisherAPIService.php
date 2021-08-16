@@ -5,7 +5,6 @@ namespace App\Services\DaliaPublisherAPI;
 
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
-use App\Services\DaliaPublisherAPI\DaliaPublisherAPIServiceResponse;
 use Illuminate\Support\Facades\Http;
 
 class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
@@ -32,7 +31,7 @@ class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
 
        // dd($response->object());
 
-        return new DaliaPublisherAPIResponse (
+        return new DaliaPublisherAPIServiceResponse (
             $response->object()
         );
 

@@ -11,6 +11,7 @@
         "php": "^7.2.5|^8.0",
         "ext-json": "*",
         "bilaleren/tune-api": "^1.0",
+        "digital-creative/collapsible-resource-manager": "^1.3",
         "ebess/nova-collapsible-sidebar": "^0.1.2",
         "epartment/nova-dependency-container": "^1.3",
         "fideloper/proxy": "^4.4",
