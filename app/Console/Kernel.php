@@ -46,6 +46,8 @@ class Kernel extends ConsoleKernel
             $schedule->command('conversions:update')->everyThirtyMinutes();
             $schedule->command('yoursurveys:update 1000 CA')->hourly();
             $schedule->command('yoursurveys:update 1000 US')->hourly();
+            $schedule->command('dalia_publisher_api:update')->daily();
+
         }
 
 
