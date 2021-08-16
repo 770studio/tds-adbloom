@@ -12,7 +12,7 @@ use Laravel\Nova\Fields\Text;
 use Naoray\NovaJson\JSON;
 
 
-class Yoursurveys extends Resource
+class DaliaOffers extends Resource
 {
 
     /**
@@ -26,14 +26,14 @@ class Yoursurveys extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\Integrations\Yoursurveys::class;
+    public static $model = \App\Models\Integrations\DaliaOffers::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'project_id';
+    public static $title = 'uuid';
 
     /**
      * The columns that should be searched.
@@ -41,7 +41,7 @@ class Yoursurveys extends Resource
      * @var array
      */
     public static $search = [
-        'json'
+        'uuid', 'title', 'info_short', 'info'
     ];
 
 
@@ -147,34 +147,5 @@ class Yoursurveys extends Resource
         return [];
     }
 
-    /**
-     * Apply the search query to the query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  string  $search
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected static function applySearch($query, $search)
-    {
 
-        return $query->where(function ($query) use ($search) {
-            $model = $query->getModel();
-
-            $connectionType = $model->getConnection()->getDriverName();
-
-            $canSearchPrimaryKey = ctype_digit($search) &&
-                in_array($model->getKeyType(), ['int', 'integer']) &&
-                ($connectionType != 'pgsql' || $search <= static::maxPrimaryKeySize()) &&
-                in_array($model->getKeyName(), static::$search);
-
-            if ($canSearchPrimaryKey) {
-                $query->orWhere($model->getQualifiedKeyName(), $search);
-            }
-
-
-            $query->whereJsonContains('json->name', $search);
-
-
-        });
-    }
 }

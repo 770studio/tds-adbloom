@@ -3,8 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
-use App\Models\Yoursurveys;
-use App\Services\YoursurveysReadmeIoAPI\DaliaPublisherAPIService;
+use App\Models\Integrations\DaliaOffers;
 use Illuminate\Console\Command;
 
 class DaliaPublisherAPIUpdateCommand extends Command
@@ -41,14 +40,12 @@ class DaliaPublisherAPIUpdateCommand extends Command
     public function handle(DaliaPublisherAPIServiceIF $APIService)
     {
 
-        //dd($yoursurveysAPIService);
+         //dd($APIService);
 
-        (new YourSurveysResponse(
-            $APIService->BasicAPICall()
-        ))
+            $APIService->getAll()
             ->parseData()
             ->each(function ($record) {
-                Yoursurveys::updateOrCreate(
+                DaliaOffers::updateOrCreate(
                     ["project_id" => $record["project_id"]],
                     $record
                 );

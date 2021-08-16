@@ -5,11 +5,13 @@ namespace App\Services\DaliaPublisherAPI;
 
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
+use App\Services\DaliaPublisherAPI\DaliaPublisherAPIServiceResponse;
 use Illuminate\Support\Facades\Http;
 
 class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
 {
     private string $publisher_user_uuid;
+
 
     public function __construct(string $publisher_user_uuid)
     {
@@ -17,7 +19,7 @@ class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
 
     }
 
-    public function getAll(): object
+    public function getAll(): DaliaPublisherAPIServiceResponse
     {
 
         $url = sprintf("https://platform.opinionsample.com/api/publisher/v1/publisher_users/%s/publisher_offers/",
@@ -28,9 +30,11 @@ class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
             ['debug' => true]
         )->get($url);
 
-        dd($response->object());
+       // dd($response->object());
 
-        return $response->object();
+        return new DaliaPublisherAPIResponse (
+            $response->object()
+        );
 
 
     }

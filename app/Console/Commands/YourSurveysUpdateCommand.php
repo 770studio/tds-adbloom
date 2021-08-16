@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Integrations\Yoursurveys;
 use App\Interfaces\YoursurveysAPIServiceIF;
-use App\Models\Yoursurveys;
 use App\Services\YoursurveysReadmeIoAPI\YourSurveysResponse;
 use Exception;
 use Illuminate\Console\Command;
