@@ -3,7 +3,7 @@
 namespace App\Nova;
 
 use App\Helpers\StoreImageHelper;
-use App\Models\RedirectStatus;
+use App\Models\Infrastructure\RedirectStatus;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BooleanGroup;

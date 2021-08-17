@@ -1,12 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Infrastructure;
 
 
-
-
-use Illuminate\Contracts\Support\Arrayable;
-use ReflectionClass;
 
 class RedirectStatus_Client extends RedirectStatus
 {

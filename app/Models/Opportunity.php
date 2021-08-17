@@ -8,6 +8,7 @@ class Opportunity extends BaseModel
 {
     use HasFactory;
 
+
     const TYPES = ['offer'=>'offer', 'survey'=>'survey'];
 
     /**

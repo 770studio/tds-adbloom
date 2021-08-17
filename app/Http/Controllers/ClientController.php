@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\RedirectHelper;
 use App\Jobs\doPostBackJob;
 use App\Models\Client;
-use App\Models\RedirectStatus_Client;
+use App\Models\Infrastructure\RedirectStatus_Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 

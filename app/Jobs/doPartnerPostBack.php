@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Conversion;
-use App\Models\RedirectStatus;
-use App\Models\RedirectStatus_Client;
+use App\Models\Infrastructure\RedirectStatus;
+use App\Models\Infrastructure\RedirectStatus_Client;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;

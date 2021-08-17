@@ -3,9 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Conversion;
-use App\Models\RedirectStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class ConversionFactory extends Factory
 {

@@ -24,6 +24,7 @@
         "laravel/tinker": "^2.5",
         "naif/toggle": "^1.2",
         "naoray/nova-json": "^1.3",
+        "optimistdigital/nova-multiselect-field": "^2.3",
         "predis/predis": "^1.1"
     },
     "require-dev": {

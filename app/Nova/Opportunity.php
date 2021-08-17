@@ -3,6 +3,10 @@
 namespace App\Nova;
 
 use App\Helpers\StoreImageHelper;
+use App\Models\Infrastructure\Country;
+use App\Models\Infrastructure\Gender;
+use App\Models\Infrastructure\Platform;
+use App\Models\Infrastructure\TargetingParams;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -14,6 +18,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use OptimistDigital\MultiselectField\Multiselect;
 
 class Opportunity extends Resource
 {
@@ -117,9 +122,28 @@ class Opportunity extends Resource
 
             Text::make('Url', 'link'),
             Textarea::make('Description')->alwaysShow(),
+            Text::make('Call To Action' ),
+            Text::make('Incentive' ),
+            Multiselect::make('Platforms' )->options(
+                Platform::all_flipped()
+            )->default(Platform::values()),
+            Multiselect::make('Genders' )->options(
+                    Gender::all_flipped()
+                )->default(Gender::values()),
+            Multiselect::make('Countries' )->options(
+                Country::all()
+            )->default(null)
+                ->placeholder("All"),
+            //Country::make('Countries', 'country_code')->default("All"),
+            Number::make('Age from')->min(0)->max(130)->step(1),
+            Number::make('Age to')->min(0)->max(130)->step(1),
+            Multiselect::make('Targeting_params' )->options(
+                TargetingParams::all_flipped()
+            )->default(TargetingParams::values()),
+
             Number::make('Payout')->step(0.01)->default(0.00),
             Select::make('Currency')->options(
-                ['USD']
+                ['USD' => 'USD']
             )->default('USD'),
 
             MorphToMany::make('Tags'),

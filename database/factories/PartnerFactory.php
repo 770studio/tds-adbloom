@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Partner;
-use App\Models\RedirectStatus;
+use App\Models\Infrastructure\RedirectStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
