@@ -122,22 +122,24 @@ class Opportunity extends Resource
 
             Text::make('Url', 'link'),
             Textarea::make('Description')->alwaysShow(),
-            Text::make('Call To Action' ),
-            Text::make('Incentive' ),
-            Multiselect::make('Platforms' )->options(
+            Text::make('Call To Action'),
+            Text::make('Incentive'),
+            Multiselect::make('Platform', 'platforms')->options(
                 Platform::all_flipped()
-            )->default(Platform::values()),
-            Multiselect::make('Genders' )->options(
-                    Gender::all_flipped()
-                )->default(Gender::values()),
-            Multiselect::make('Countries' )->options(
+            )->default(Platform::values())
+                ->placeholder("All"),
+            Multiselect::make('Gender', 'genders')->options(
+                Gender::all_flipped()
+            )->default(Gender::values())
+                ->placeholder("All"),
+            Multiselect::make('Country', 'countries')->options(
                 Country::all()
             )->default(null)
                 ->placeholder("All"),
             //Country::make('Countries', 'country_code')->default("All"),
             Number::make('Age from')->min(0)->max(130)->step(1),
             Number::make('Age to')->min(0)->max(130)->step(1),
-            Multiselect::make('Targeting_params' )->options(
+            Multiselect::make('Required', 'targeting_params')->options(
                 TargetingParams::all_flipped()
             )->default(TargetingParams::values()),
 
