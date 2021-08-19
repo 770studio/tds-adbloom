@@ -152,7 +152,7 @@ class Opportunity extends Resource
             MorphToMany::make('Tags'),
 
 
-           // BelongsToMany::make('Widgets')
+            BelongsToMany::make('Widgets'),
 
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
