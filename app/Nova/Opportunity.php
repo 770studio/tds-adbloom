@@ -10,6 +10,7 @@ use App\Models\Infrastructure\TargetingParams;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -34,7 +35,7 @@ class Opportunity extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -149,6 +150,14 @@ class Opportunity extends Resource
             )->default('USD'),
 
             MorphToMany::make('Tags'),
+
+
+            BelongsToMany::make('Widgets')
+                ->fields(function () {
+                    return [
+                        Text::make('Name'),
+                    ];
+                }),
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),

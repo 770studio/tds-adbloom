@@ -8,6 +8,7 @@ use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -72,10 +73,11 @@ class Partner extends Resource
                 ->sortable(),
 
             new Panel('Pending Postback', $this->PendingPBFields()),
-
             new Panel('Revenue', $this->RevenueFields()),
-
             new Panel('Tags', $this->TagsFields()),
+            new Panel('Widgets', $this->WidgetFields()),
+
+
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
@@ -193,6 +195,11 @@ class Partner extends Resource
             MorphToMany::make('Tags'),
         ];
     }
-
+    protected function WidgetFields(): array
+    {
+        return [
+            HasMany::make('Widgets'),
+        ];
+    }
 
 }

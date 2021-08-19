@@ -23,6 +23,11 @@ class Opportunity extends BaseModel
         return $this->hasMany('App\Models\Conversion', 'Stat_offer_id', 'external_id');
     }
 
+    public function widgets()
+    {
+        return $this->belongsToMany(Widget::class, 'widget_opportunity',  'opportunity_id', 'widget_id');
+    }
+
     /**
      * Get all of the opportunity's tags.
      */

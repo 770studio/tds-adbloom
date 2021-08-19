@@ -99,6 +99,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                             \App\Nova\Client::class,
                             \App\Nova\Opportunity::class,
                             \App\Nova\Partner::class,
+                            \App\Nova\Widget::class,
                         ]
                     ]),
                     TopLevelResource::make([

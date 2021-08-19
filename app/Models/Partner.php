@@ -35,6 +35,10 @@ class Partner extends BaseModel
     {
         return $this->hasMany('App\Models\Conversion', 'Stat_affiliate_id', 'external_id');
     }
+    public function widgets()
+    {
+        return $this->hasMany('App\Models\Widget');
+    }
 
     /**
      * Get all of the partner's tags.
