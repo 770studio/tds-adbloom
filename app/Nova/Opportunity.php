@@ -152,12 +152,8 @@ class Opportunity extends Resource
             MorphToMany::make('Tags'),
 
 
-            BelongsToMany::make('Widgets')
-                ->fields(function () {
-                    return [
-                        Text::make('Name'),
-                    ];
-                }),
+           // BelongsToMany::make('Widgets')
+
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
