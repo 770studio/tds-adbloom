@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Opportunity extends BaseModel
 {
@@ -12,7 +13,7 @@ class Opportunity extends BaseModel
     const TYPES = ['offer'=>'offer', 'survey'=>'survey'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function Client()
     {
@@ -36,4 +37,8 @@ class Opportunity extends BaseModel
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
+    public function isSurvey()
+    {
+        return $this->type == self::TYPES['survey'];
+    }
 }

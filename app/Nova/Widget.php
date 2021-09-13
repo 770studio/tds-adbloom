@@ -5,22 +5,16 @@ namespace App\Nova;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
+use Everestmx\BelongsToManyField\BelongsToManyField;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Naif\Toggle\Toggle;
 use NovaAttachMany\AttachMany;
 use OptimistDigital\MultiselectField\Multiselect;
-use Everestmx\BelongsToManyField\BelongsToManyField;
 
 class Widget extends Resource
 {
@@ -83,18 +77,18 @@ class Widget extends Resource
             //BelongsToMany::make('opportunities'),
             //AttachMany::make( 'Opportunities' )->fields,
             //AttachMany::make('name', 'relationshipName', RelatedResource::class);
+            Text::make('Short Id')->exceptOnForms(),
             BelongsTo::make('Partner'),
-
-             Toggle::make('Dynamic / Static', 'dynamic_or_static')
+            Toggle::make('Dynamic / Static', 'dynamic_or_static')
                 ->help("Static when this is on otherwise Dynamic (by default)")
                 ->default(0),
 
-/*            Select::make('Dynamic / Static', 'dynamic_or_static' )  ->options([
-                '0' => 'Dynamic',
-                '1' => 'Static',
-            ])->default(0)
-                ->displayUsingLabels(),
-            */
+            /*            Select::make('Dynamic / Static', 'dynamic_or_static' )  ->options([
+                            '0' => 'Dynamic',
+                            '1' => 'Static',
+                        ])->default(0)
+                            ->displayUsingLabels(),
+                        */
 // Must be able to specify Tags, Platforms, Countries when Dynamic is enabled.
 // In this case Opportunities for this widget will be selected based on these criteria.
             NovaDependencyContainer::make([
