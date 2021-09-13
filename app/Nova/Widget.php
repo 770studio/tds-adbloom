@@ -20,6 +20,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Naif\Toggle\Toggle;
 use NovaAttachMany\AttachMany;
 use OptimistDigital\MultiselectField\Multiselect;
+use Everestmx\BelongsToManyField\BelongsToManyField;
 
 class Widget extends Resource
 {
@@ -84,15 +85,16 @@ class Widget extends Resource
             //AttachMany::make('name', 'relationshipName', RelatedResource::class);
             BelongsTo::make('Partner'),
 
-/*            Toggle::make('Dynamic / Static', 'dynamic_or_static')
+             Toggle::make('Dynamic / Static', 'dynamic_or_static')
                 ->help("Static when this is on otherwise Dynamic (by default)")
-                ->default(0),*/
+                ->default(0),
 
-            Select::make('Dynamic / Static', 'dynamic_or_static' )  ->options([
+/*            Select::make('Dynamic / Static', 'dynamic_or_static' )  ->options([
                 '0' => 'Dynamic',
                 '1' => 'Static',
             ])->default(0)
                 ->displayUsingLabels(),
+            */
 // Must be able to specify Tags, Platforms, Countries when Dynamic is enabled.
 // In this case Opportunities for this widget will be selected based on these criteria.
             NovaDependencyContainer::make([
@@ -107,12 +109,26 @@ class Widget extends Resource
                     Country::all()
                 )->default(null)
                     ->placeholder("All"),
+
             ])->dependsOn('dynamic_or_static', 0),
 
-            AttachMany::make( 'Opportunities' ),
-            BelongsToMany::make('Opportunities'),
+
+            // BelongsToMany::make('Opportunities'),
+
+
+
+            //AttachMany::make( 'Opportunities' ),
+
+       /*     Multiselect::make('Opportunities', 'opportunities')
+                ->belongsToMany(\App\Models\Opportunity::class),*/
+
+
 
             NovaDependencyContainer::make([
+              //  AttachMany::make( 'Opportunities' )->showRefresh(),
+               // BelongsToMany::make('Opportunities'),
+                BelongsToManyField::make('Opportunities', 'Opportunities', 'App\Nova\Opportunity')
+                    ->options(\App\Models\Opportunity::all()),
             ])->dependsOn('dynamic_or_static', 1),
 
 
