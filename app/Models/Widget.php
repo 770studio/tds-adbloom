@@ -8,6 +8,12 @@ class Widget extends BaseModel
 {
     use HasFactory;
 
+    protected $casts = [
+        'platforms' => 'object',
+        'tags' => 'object',
+        'countries' => 'object',
+    ];
+
     public function Partner()
     {
         return $this->belongsTo('App\Models\Partner');

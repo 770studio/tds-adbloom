@@ -4,8 +4,8 @@ namespace App\Nova;
 
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
+use App\MyBelongsToManyField;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
-use Everestmx\BelongsToManyField\BelongsToManyField;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -79,7 +79,7 @@ class Widget extends Resource
             //AttachMany::make('name', 'relationshipName', RelatedResource::class);
             Text::make('Short Id')->exceptOnForms(),
             BelongsTo::make('Partner'),
-            Toggle::make('Dynamic / Static', 'dynamic_or_static')
+            Toggle::make('Dynamic | Static', 'dynamic_or_static')
                 ->help("Static when this is on otherwise Dynamic (by default)")
                 ->default(0),
 
@@ -121,7 +121,7 @@ class Widget extends Resource
             NovaDependencyContainer::make([
               //  AttachMany::make( 'Opportunities' )->showRefresh(),
                // BelongsToMany::make('Opportunities'),
-                BelongsToManyField::make('Opportunities', 'Opportunities', 'App\Nova\Opportunity')
+                MyBelongsToManyField::make('Opportunities', 'Opportunities', 'App\Nova\Opportunity')
                     ->options(\App\Models\Opportunity::all()),
             ])->dependsOn('dynamic_or_static', 1),
 
