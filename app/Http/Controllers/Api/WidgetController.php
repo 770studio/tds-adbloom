@@ -15,26 +15,34 @@ class WidgetController extends Controller
         $widget = Widget::where('short_id', $widget_short_id)->firstOrFail();
 
         if ($widget->isDynamic()) {
+            //dd($widget->platforms, $widget->countries, $widget->tags);
+
             $opportunities = Opportunity::where(function ($query) use ($widget) {
                 return $query
-                    ->when($widget->platforms, function ($query) use ($widget) {
-                        return $query->whereJsonContains('platforms', $widget->platforms);
-                    })
                     ->when($widget->countries, function ($query) use ($widget) {
-                        return $query->whereJsonContains('countries', $widget->countries);
+                        foreach ($widget->countries as $country) {
+                            $query->orWhereJsonContains('countries', $country);
+                        }
                     });
-                /*             ->when($widget->tags, function ($query) use ($widget) {
-                                 return $query->whereJsonContains('tags', $widget->tags);
-                             });*/
-
             })
+                ->where(function ($query) use ($widget) {
+                    return $query
+                        ->when($widget->platforms, function ($query) use ($widget) {
+                            foreach ($widget->platforms as $platform) {
+                                $query->orWhereJsonContains('platforms', $platform);
+                            }
+                        });
+                })
+                ->when($widget->tags, function ($query) use ($widget) {
+                    return $query
+                        ->whereHas('tags', function ($query) use ($widget) {
+                            $query->whereIn('id', $widget->tags);
+                        });
+                })
                 ->get();
 
-            dd($opportunities);
-
-            dd($widget->platforms, $widget->countries, $widget->tags);
-            // $opportunities =
         } else {
+
             $opportunities = $widget->opportunities;
         }
         //$widgetOrts = $widget->isDynamic()

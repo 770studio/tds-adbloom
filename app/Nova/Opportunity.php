@@ -125,10 +125,13 @@ class Opportunity extends Resource
             Textarea::make('Description')->alwaysShow(),
             Text::make('Call To Action'),
             Text::make('Incentive'),
-            Multiselect::make('Platform', 'platforms')->options(
-                Platform::all_flipped()
-            )->default(Platform::values())
-                ->placeholder("All"),
+            Multiselect::make('Platform', 'platforms')
+                ->options(
+                    Platform::all_flipped()
+                )->default(Platform::values())
+                ->placeholder("All")
+                ->reorderable()
+                ->saveAsJSON(),
             Multiselect::make('Gender', 'genders')->options(
                 Gender::all_flipped()
             )->default(Gender::values())

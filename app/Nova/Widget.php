@@ -94,15 +94,17 @@ class Widget extends Resource
             NovaDependencyContainer::make([
                 Multiselect::make('Tag', 'tags')->options(
                     \App\Models\Tag::whereHas('opportunities')->pluck('name', 'id')
-                ),
+                )->saveAsJSON(),
                 Multiselect::make('Platform', 'platforms')->options(
                     Platform::all_flipped()
                 )->default(Platform::values())
-                    ->placeholder("All"),
+                    ->placeholder("All")
+                    ->saveAsJSON(),
                 Multiselect::make('Country', 'countries')->options(
                     Country::all()
                 )->default(null)
-                    ->placeholder("All"),
+                    ->placeholder("All")
+                    ->saveAsJSON(),
 
             ])->dependsOn('dynamic_or_static', 0),
 
