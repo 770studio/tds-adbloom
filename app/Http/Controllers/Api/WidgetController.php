@@ -12,7 +12,10 @@ class WidgetController extends Controller
     public function opportunities($widget_short_id)
     {
 
-        $widget = Widget::where('short_id', $widget_short_id)->firstOrFail();
+        $widget = Widget //::with('partner')
+        ::where('short_id', $widget_short_id)
+            ->firstOrFail();
+
 
         if ($widget->isDynamic()) {
             //dd($widget->platforms, $widget->countries, $widget->tags);
@@ -41,13 +44,22 @@ class WidgetController extends Controller
                 })
                 ->get();
 
+            $widget->opportunities()->sync($opportunities->pluck('id'));
+
+
         } else {
 
-            $opportunities = $widget->opportunities;
+            // $opportunities = $widget->opportunities;
         }
+
+
         //$widgetOrts = $widget->isDynamic()
+        // dd($opportunities);
+        // dd($opportunities->merge(['partner' => $widget->Partner ]));
+
+        //dd($widget );
         return new WidgetOpportunitiesCollection(
-            $opportunities
+            $widget->opportunities()->with('widgets.partner')->get()
         );
     }
 }

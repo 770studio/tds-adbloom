@@ -3,7 +3,6 @@
 namespace App\Models;
 
 
-use App\Events\PartnerUpdatedEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -46,6 +45,15 @@ class Partner extends BaseModel
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function calulateReward($payout): string
+    {
+        $reward = $payout * $this->percentage;
+        return $this->convert_to_points
+            ? $reward * $this->points_multiplier
+            : number_format($reward, 2);
+
     }
 
 

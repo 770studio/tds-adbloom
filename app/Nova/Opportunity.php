@@ -42,8 +42,9 @@ class Opportunity extends Resource
      *
      * @var array
      */
+    #TODO add db index
     public static $search = [
-        'id', 'name'
+        'id', 'name', 'short_id'
     ];
 
 

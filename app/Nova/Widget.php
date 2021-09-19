@@ -4,7 +4,6 @@ namespace App\Nova;
 
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
-use App\MyBelongsToManyField;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -13,8 +12,10 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Naif\Toggle\Toggle;
-use NovaAttachMany\AttachMany;
 use OptimistDigital\MultiselectField\Multiselect;
+
+//use Everestmx\BelongsToManyField\BelongsToManyField;
+
 
 class Widget extends Resource
 {
@@ -112,19 +113,29 @@ class Widget extends Resource
             // BelongsToMany::make('Opportunities'),
 
 
-
             //AttachMany::make( 'Opportunities' ),
 
-       /*     Multiselect::make('Opportunities', 'opportunities')
-                ->belongsToMany(\App\Models\Opportunity::class),*/
 
+            /*           MyBelongsToManyField::make('Opportunities', 'Opportunities', 'App\Nova\Opportunity')
+                           ->options(\App\Models\Opportunity::all())
+                           ->withMeta(['trackBy'=> 'short_id']),*/
 
 
             NovaDependencyContainer::make([
-              //  AttachMany::make( 'Opportunities' )->showRefresh(),
-               // BelongsToMany::make('Opportunities'),
-                MyBelongsToManyField::make('Opportunities', 'Opportunities', 'App\Nova\Opportunity')
-                    ->options(\App\Models\Opportunity::all()),
+                //  AttachMany::make( 'Opportunities' )->showRefresh(),
+                // BelongsToMany::make('Opportunities'),
+                /*                BelongsToManyField::make('Opportunities', 'opportunities', Opportunity::class)
+                                    ->options(\App\Models\Opportunity::all())
+                                    ->setMultiselectProps([
+                                        'trackBy' => 'short_id',
+                                        // and others from docs
+                                    ]) ,*/
+
+                Multiselect::make('Opportunities', 'opportunities')
+                    ->options(\App\Models\Opportunity::all())
+                    ->belongsToMany(Opportunity::class)
+
+
             ])->dependsOn('dynamic_or_static', 1),
 
 
