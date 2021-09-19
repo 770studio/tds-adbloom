@@ -6,6 +6,7 @@ use App\Interfaces\DaliaPublisherAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
 use App\Services\YoursurveysReadmeIoAPI\YoursurveysAPIService;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Tune\NetworkApi;
 use Tune\Networks;
@@ -21,13 +22,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if ($this->app->environment('local', 'staging')) {
+        if ($this->app->environment('local')) {
+            //  'staging'  убрали пока , т.к прун не работает
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
 
         if ($this->app->isLocal()) {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+            $this->app->register(IdeHelperServiceProvider::class);
         }
     }
 
