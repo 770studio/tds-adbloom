@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,14 +12,14 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {
-        DB::unprepared('alter table `opportunities` convert to character set utf8mb4 collate utf8mb4_general_ci');
+    {     // todo не работает в sqlite
+        //DB::unprepared('alter table `opportunities` convert to character set utf8mb4 collate utf8mb4_general_ci');
 
         Schema::table('opportunities', function (Blueprint $table) {
             $table->string('image')->nullable();
             $table->string('link')->nullable();
             $table->text('description')->nullable();
-            $table->decimal('payout', 15,5)->default(0);
+            $table->decimal('payout', 15, 5)->default(0);
             $table->enum('currency', ['USD'])->default('USD'); //#TODO move to config
             $table->unsignedInteger('timeToComplete')->default(0);
         });

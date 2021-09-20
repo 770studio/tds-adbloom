@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateDaliaOffers extends Migration
@@ -23,9 +22,10 @@ class CreateDaliaOffers extends Migration
             $table->json('json')->nullable();
             $table->timestamps();
 
-            $table->index([DB::raw('info(100)')]);
-            $table->index([DB::raw('info_short(100)')]);
-            $table->index([DB::raw('title(100)')]);
+            // todo не работает в sqlite
+            //$table->index([DB::raw('info(100)')]);
+            //$table->index([DB::raw('info_short(100)')]);
+            //$table->index([DB::raw('title(100)')]);
 
 
         });

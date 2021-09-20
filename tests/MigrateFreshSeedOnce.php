@@ -1,6 +1,9 @@
 <?php
+
 namespace Tests;
-use Illuminate\Support\Facades\Artisan;
+
+use Exception;
+
 trait MigrateFreshSeedOnce
 {
     /**
@@ -8,19 +11,32 @@ trait MigrateFreshSeedOnce
      * @var boolean
      */
     protected static $setUpHasRunOnce = false;
+
     /**
      * After the first run of setUp "migrate:fresh --seed"
      * @return void
      */
-    protected function setUp(): void    {
-
+    protected function setUp(): void
+    {
         parent::setUp();
         if (!static::$setUpHasRunOnce) {
-            Artisan::call('migrate:fresh');
-            Artisan::call(
-                'db:seed', ['--class' => 'DatabaseSeeder']
-            );
+            $this->artisan('config:clear');// чтоб перейти к тест окружению!!!
+
+            if ($this->app->environment() != 'testing') throw new Exception('wrong env');
+            //$this->app->useDatabasePath(base_path('tests/database')); //example path
+            $this->artisan('migrate:fresh --seed --path="./tests/database" ');
+
+            //dd(DB::getDefaultConnection());
+            //   dd(DB::getDefaultConnection(), DB::table('opportunities')->get());
+            /*        Artisan::call(
+                        'db:seed', ['--class' => 'DatabaseSeeder']
+                    );*/
             static::$setUpHasRunOnce = true;
         }
+    }
+
+    protected function tearDown(): void
+    {
+
     }
 }

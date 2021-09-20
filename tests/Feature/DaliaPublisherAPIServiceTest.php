@@ -3,8 +3,6 @@
 namespace Tests\Unit;
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class DaliaPublisherAPIServiceTest extends TestCase

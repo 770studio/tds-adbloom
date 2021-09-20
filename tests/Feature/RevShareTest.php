@@ -6,18 +6,16 @@ use App\Events\ConversionUpdatingEvent;
 use App\Models\Conversion;
 use App\Models\Partner;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
-use Tests\MigrateFreshSeedOnce;
 use Tests\TestCase;
+
 //use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 
 class RevShareTest extends TestCase
 {
    // use MigrateFreshSeedOnce;//  RefreshDatabase; //, DatabaseMigrations;
+        use RefreshDatabase;
 
     /**
      * A basic feature test example.
@@ -27,21 +25,23 @@ class RevShareTest extends TestCase
     public function test_we_are_under_testing_env()
     {
 
-      $this->assertTrue("testing" == $this->app->environment());
-      //$this->assertTrue("nova_test" == $this->getConnection()->getDatabaseName());
+        $this->assertTrue("testing" == $this->app->environment());
 
+        if ($this->hasFailed()) {
+            dd('wrong env');
+            // $this->seed();
+        }
+        //$this->assertTrue("nova_test" == $this->getConnection()->getDatabaseName());
 
     }
-
-
-
 
     /**
      * Test
      */
     public function test_partner_can_be_created()
-    {
-       $partner = Partner::factory()->create([
+    {  // dd(Partner::all());
+        //dd(DB::getDefaultConnection(), DB::table('partners')->get());
+        $partner = Partner::factory()->create([
             'rev_share' => 1,
             'percentage' => 10,
             'points_multiplier' => 1253
@@ -56,20 +56,22 @@ class RevShareTest extends TestCase
 
     }
 
-
-
-
     /**
      * Test ConversionUpdatingEvent dispatching.
      * @depends test_partner_can_be_created
      */
     public function test_conversion_creating_dispatches_the_event($partner)
     {
+        $partner = Partner::factory()->create([
+            'rev_share' => 1,
+            'percentage' => 10,
+            'points_multiplier' => 1253
+        ]);
 
         Event::fake();
         $conversion = Conversion::factory()
             ->for($partner)
-            ->create(['Stat_payout'=>100]);
+            ->create(['Stat_payout' => 100]);
 
         $this->assertDatabaseHas('conversions', [
             'id' => $conversion->id
@@ -86,17 +88,30 @@ class RevShareTest extends TestCase
      */
     public function test_conversion_updating_dispatches_the_event($conversion)
     {
-        Event::fake();
-        $conversion = Conversion::find($conversion->id); // $conversion->refresh();
-        $conversion->Stat_payout = 157.75;
 
-        $conversion ->save();
+        // $conversion = Conversion::find($conversion->id); // $conversion->refresh();
+
+
+        $partner = Partner::factory()->create([
+            'rev_share' => 1,
+            'percentage' => 10,
+            'points_multiplier' => 1253
+        ]);
+
+        $conversion = Conversion::factory()
+            ->for($partner)
+            ->create(['Stat_payout' => 100]);
+
+        Event::fake();
+        $conversion->Stat_payout = 157.75;
+        $conversion->save();
+
         Event::assertDispatched(ConversionUpdatingEvent::class);
 
         //dd($conversion->getChanges());
         $this->assertArrayHasKey("Stat_payout", $conversion->getChanges());
 
-        $this->assertFalse($conversion->wasRecentlyCreated);
+        $this->assertTrue($conversion->wasRecentlyCreated);
 
         return $conversion;
 
@@ -111,12 +126,21 @@ class RevShareTest extends TestCase
      */
     public function test_user_payout_and_points_are_recalculated($conversion, $partner)
     {
+        $partner = Partner::factory()->create([
+            'rev_share' => 1,
+            'percentage' => 10,
+            'points_multiplier' => 1253
+        ]);
+
+        $conversion = Conversion::factory()
+            ->for($partner)
+            ->create(['Stat_payout' => 100]);
 
         $conversion->Stat_payout = 15;
-        $conversion->save(); // down here the ConversionUpdatingEvent is fired
+        $conversion->save();
 
-        $this->assertEquals(15*0.1, $conversion->user_payout);
-        $this->assertEquals(floor(1.5*$partner->points_multiplier), $conversion->user_points);
+        $this->assertEquals(15 * 0.1, $conversion->user_payout);
+        $this->assertEquals(floor(1.5 * $partner->points_multiplier), $conversion->user_points);
 
 
 
