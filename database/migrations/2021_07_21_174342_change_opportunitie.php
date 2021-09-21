@@ -12,9 +12,10 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {     // todo не работает в sqlite
-        //DB::unprepared('alter table `opportunities` convert to character set utf8mb4 collate utf8mb4_general_ci');
-
+    {
+        if(!app()->runningUnitTests()) {
+            DB::unprepared('alter table `opportunities` convert to character set utf8mb4 collate utf8mb4_general_ci');
+        }
         Schema::table('opportunities', function (Blueprint $table) {
             $table->string('image')->nullable();
             $table->string('link')->nullable();

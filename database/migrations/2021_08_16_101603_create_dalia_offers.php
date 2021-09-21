@@ -22,10 +22,12 @@ class CreateDaliaOffers extends Migration
             $table->json('json')->nullable();
             $table->timestamps();
 
-            // todo не работает в sqlite
-            //$table->index([DB::raw('info(100)')]);
-            //$table->index([DB::raw('info_short(100)')]);
-            //$table->index([DB::raw('title(100)')]);
+            if(!app()->runningUnitTests()) {
+                $table->index([DB::raw('info(100)')]);
+                $table->index([DB::raw('info_short(100)')]);
+                $table->index([DB::raw('title(100)')]);
+            }
+
 
 
         });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\WidgetOpportunitiesCollection;
 use App\Models\Opportunity;
 use App\Models\Widget;
+use Illuminate\Support\Facades\DB;
 
 class WidgetController extends Controller
 {
@@ -19,8 +20,10 @@ class WidgetController extends Controller
 
         if ($widget->isDynamic()) {
             //dd($widget->platforms, $widget->countries, $widget->tags);
-
-            $opportunities = Opportunity::where(function ($query) use ($widget) {
+                            // Opportunity::
+            $opportunities = DB::table('opportunities')
+                ->select('id')
+                ->where(function ($query) use ($widget) {
                 return $query
                     ->when($widget->countries, function ($query) use ($widget) {
                         foreach ($widget->countries as $country) {
@@ -45,7 +48,6 @@ class WidgetController extends Controller
                 ->get();
 
             $widget->opportunities()->sync($opportunities->pluck('id'));
-
 
         } else {
 

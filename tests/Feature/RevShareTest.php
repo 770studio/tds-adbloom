@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use App\Events\ConversionUpdatingEvent;
 use App\Models\Conversion;
