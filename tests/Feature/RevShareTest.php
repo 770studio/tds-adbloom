@@ -22,10 +22,10 @@ class RevShareTest extends TestCase
      *
      * @return void
      */
-    public function test_we_are_under_testing_env()
+    public function test_we_are_under_testing_env(): void
     {
 
-        $this->assertTrue("testing" == $this->app->environment());
+        $this->assertSame("testing", $this->app->environment());
 
         if ($this->hasFailed()) {
             dd('wrong env');
@@ -60,7 +60,7 @@ class RevShareTest extends TestCase
      * Test ConversionUpdatingEvent dispatching.
      * @depends test_partner_can_be_created
      */
-    public function test_conversion_creating_dispatches_the_event($partner)
+    public function test_conversion_creating_dispatches_the_event()
     {
         $partner = Partner::factory()->create([
             'rev_share' => 1,
@@ -91,17 +91,6 @@ class RevShareTest extends TestCase
 
         // $conversion = Conversion::find($conversion->id); // $conversion->refresh();
 
-
-        $partner = Partner::factory()->create([
-            'rev_share' => 1,
-            'percentage' => 10,
-            'points_multiplier' => 1253
-        ]);
-
-        $conversion = Conversion::factory()
-            ->for($partner)
-            ->create(['Stat_payout' => 100]);
-
         Event::fake();
         $conversion->Stat_payout = 157.75;
         $conversion->save();
@@ -110,8 +99,7 @@ class RevShareTest extends TestCase
 
         //dd($conversion->getChanges());
         $this->assertArrayHasKey("Stat_payout", $conversion->getChanges());
-
-        $this->assertTrue($conversion->wasRecentlyCreated);
+        //$this->assertTrue($conversion->wasRecentlyCreated);
 
         return $conversion;
 
@@ -124,7 +112,7 @@ class RevShareTest extends TestCase
      * @depends test_conversion_creating_dispatches_the_event
      * @depends test_partner_can_be_created
      */
-    public function test_user_payout_and_points_are_recalculated($conversion, $partner)
+    public function test_user_payout_and_points_are_recalculated(): void
     {
         $partner = Partner::factory()->create([
             'rev_share' => 1,
