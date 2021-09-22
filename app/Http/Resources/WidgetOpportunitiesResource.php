@@ -23,6 +23,7 @@ class WidgetOpportunitiesResource extends JsonResource
     public function toArray($request)
     {
         $this->partner = $this->widgets->first()->partner;
+
         return [
             'id' => $this->short_id,
             'title' => $this->name,

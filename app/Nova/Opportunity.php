@@ -136,17 +136,23 @@ class Opportunity extends Resource
             Multiselect::make('Gender', 'genders')->options(
                 Gender::all_flipped()
             )->default(Gender::values())
-                ->placeholder("All"),
+                ->placeholder("All")
+                ->reorderable()
+                ->saveAsJSON(),
             Multiselect::make('Country', 'countries')->options(
                 Country::all()
             )->default(null)
-                ->placeholder("All"),
+                ->placeholder("All")
+                ->reorderable()
+                ->saveAsJSON(),
             //Country::make('Countries', 'country_code')->default("All"),
             Number::make('Age from')->min(0)->max(130)->step(1),
             Number::make('Age to')->min(0)->max(130)->step(1),
             Multiselect::make('Required', 'targeting_params')->options(
                 TargetingParams::all_flipped()
-            )->default(TargetingParams::values()),
+            )->default(TargetingParams::values())
+                ->reorderable()
+                ->saveAsJSON(),
 
             Number::make('Payout')->step(0.01)->default(0.00),
             Select::make('Currency')->options(
