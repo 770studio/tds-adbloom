@@ -47,12 +47,15 @@ class Partner extends BaseModel
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
-    public function calulateReward($payout): string
+    public function calulateReward($payout): int
     {
-        $reward = $payout * $this->percentage;
+
+        $reward = (int)number_format($payout * $this->percentage * 100, 0, '', '');
+
         return $this->convert_to_points
             ? $reward * $this->points_multiplier
-            : number_format($reward, 2);
+            : $reward;
+
 
     }
 
