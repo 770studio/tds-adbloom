@@ -73,39 +73,19 @@ class WidgetOpportunityTableSeeder extends Seeder
             10 =>
                 array(
                     'opportunity_id' => 6,
-                    'widget_id' => 3,
-                ),
-            11 =>
-                array(
-                    'opportunity_id' => 4,
-                    'widget_id' => 3,
-                ),
-            12 =>
-                array(
-                    'opportunity_id' => 1,
-                    'widget_id' => 3,
-                ),
-            13 =>
-                array(
-                    'opportunity_id' => 10,
-                    'widget_id' => 3,
-                ),
-            14 =>
-                array(
-                    'opportunity_id' => 6,
                     'widget_id' => 4,
                 ),
-            15 =>
+            11 =>
                 array(
                     'opportunity_id' => 7,
                     'widget_id' => 4,
                 ),
-            16 =>
+            12 =>
                 array(
                     'opportunity_id' => 8,
                     'widget_id' => 4,
                 ),
-            17 =>
+            13 =>
                 array(
                     'opportunity_id' => 9,
                     'widget_id' => 4,
