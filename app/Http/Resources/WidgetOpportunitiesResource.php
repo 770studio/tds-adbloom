@@ -36,9 +36,9 @@ class WidgetOpportunitiesResource extends JsonResource
             'callToAction' => $this->call_to_action,
             'incentive' => $this->incentive,
             'targeting' => [
-                'platform' => $this->platforms ?? [],
-                'country' => $this->countries ?? [],
-                'gender' => $this->genders ?? [],
+                'platform' => $this->when($this->platforms, $this->platforms),
+                'country' => $this->when($this->countries, $this->countries),
+                'gender' => $this->when($this->genders, $this->genders),
                 'age' => [
                     'from' => $this->age_from,
                     'to' => $this->age_to,
