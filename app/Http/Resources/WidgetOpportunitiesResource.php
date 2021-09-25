@@ -36,6 +36,7 @@ class WidgetOpportunitiesResource extends JsonResource
             'description' => $this->description,
             'timeToComplete' => $this->when($this->isSurvey(), $this->timeToComplete),
             'url' => $this->link,
+            'reward' => $this->partner->calulateReward($this->payout),
             'required' => TargetingParams::collection()->only($this->targeting_params)->values(),
             'callToAction' => $this->call_to_action,
             'incentive' => $this->incentive,
@@ -48,7 +49,6 @@ class WidgetOpportunitiesResource extends JsonResource
                     'to' => $this->age_to,
                 ]
             ],
-            'reward' => $this->partner->calulateReward($this->payout)
 
 
         ];
