@@ -14,6 +14,8 @@ class Opportunity extends BaseModel
         'platforms' => 'object',
         'genders' => 'object',
         'countries' => 'object',
+        'payout' => 'decimal:2'
+
     ];
     const TYPES = ['offer' => 'offer', 'survey' => 'survey'];
 
