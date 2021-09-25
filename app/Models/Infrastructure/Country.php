@@ -6,9 +6,14 @@ namespace App\Models\Infrastructure;
 
 class Country extends ArrayField
 {
+    public static function collection()
+    {
+        return collect(static::all());
+    }
+
     public static function all()
     {
-        return  [
+        return [
             'AF' => __('Afghanistan'),
             'AX' => __('Aland Islands'),
             'AL' => __('Albania'),

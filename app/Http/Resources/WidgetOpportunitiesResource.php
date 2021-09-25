@@ -3,6 +3,10 @@
 namespace App\Http\Resources;
 
 use App\Helpers\StoreImageHelper;
+use App\Models\Infrastructure\Country;
+use App\Models\Infrastructure\Gender;
+use App\Models\Infrastructure\Platform;
+use App\Models\Infrastructure\TargetingParams;
 use App\Models\Partner;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -32,13 +36,13 @@ class WidgetOpportunitiesResource extends JsonResource
             'description' => $this->description,
             'timeToComplete' => $this->when($this->isSurvey(), $this->timeToComplete),
             'url' => $this->link,
-            'required' => $this->targeting_params,
+            'required' => TargetingParams::collection()->only($this->targeting_params)->values(),
             'callToAction' => $this->call_to_action,
             'incentive' => $this->incentive,
             'targeting' => [
-                'platform' => $this->when($this->platforms, $this->platforms),
-                'country' => $this->when($this->countries, $this->countries),
-                'gender' => $this->when($this->genders, $this->genders),
+                'platform' => $this->when($this->platforms, Platform::collection()->only($this->platforms)->values()),
+                'country' => $this->when($this->countries, Country::collection()->only($this->countries)->values()),
+                'gender' => $this->when($this->genders, Gender::collection()->only($this->genders)->values()),
                 'age' => [
                     'from' => $this->age_from,
                     'to' => $this->age_to,

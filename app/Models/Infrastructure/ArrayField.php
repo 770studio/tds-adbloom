@@ -48,6 +48,11 @@ abstract class ArrayField implements Arrayable
         return static::all();
     }
 
+    public static function collection()
+    {
+        return collect(static::all_flipped());
+    }
+
     public static function indexes()
     {
         return array_keys(
