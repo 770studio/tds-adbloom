@@ -4,11 +4,11 @@ namespace App\Models\Infrastructure;
 
 
 
-class Platform  extends ArrayField
+class Platform extends ArrayField
 {
-    const Desktop = 1;
-    const Mobile = 2;
-    const Tablet = 3;
+    const desktop = 1;
+    const mobile = 2;
+    const tablet = 3;
 
     /*
      *  [
