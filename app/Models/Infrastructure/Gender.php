@@ -4,14 +4,12 @@ namespace App\Models\Infrastructure;
 
 
 
-class Gender  extends ArrayField
+class Gender extends ArrayField
 {
 
-    const Male = 1;
-    const Female = 2;
-    const Other = 3;
-
-
+    const male = 1;
+    const female = 2;
+    const other = 3;
 
 
 }

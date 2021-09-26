@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Helpers\StoreImageHelper;
-use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Gender;
 use App\Models\Infrastructure\Platform;
 use App\Models\Infrastructure\TargetingParams;
@@ -42,7 +41,7 @@ class WidgetOpportunitiesResource extends JsonResource
             'incentive' => $this->incentive,
             'targeting' => [
                 'platform' => $this->when($this->platforms, Platform::collection()->only($this->platforms)->values()),
-                'country' => $this->when($this->countries, Country::collection()->only($this->countries)->values()),
+                'country' => $this->when($this->countries, $this->countries),
                 'gender' => $this->when($this->genders, Gender::collection()->only($this->genders)->values()),
                 'age' => [
                     'from' => $this->age_from,
