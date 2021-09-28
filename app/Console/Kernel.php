@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         }
 
         if (App::environment('staging')) {
-            $schedule->command('conversions:update')->everyTwoMinutes();
+            $schedule->command('conversions:update')->hourlyAt(15);
             $schedule->command('yoursurveys:update 500 CA')->everyFourHours();
             $schedule->command('yoursurveys:update 500 US')->everyFourHours();
             $schedule->command('dalia_publisher_api:update')->daily();
