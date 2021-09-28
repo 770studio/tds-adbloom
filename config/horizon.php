@@ -178,7 +178,30 @@ return [
 
     'environments' => [
         'production' => [
+            'supervisor-stage1' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'maxProcesses' => 1,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+                'tries' => 3,
+                'maxExceptions' => 1,
+                'backoff' => 30,
+                'maxJobs' => 180, // per min
 
+            ],
+            'supervisor-stage2' => [
+                'connection' => 'redis',
+                'queue' => ['postback_queue'],
+                'balance' => 'auto',
+                'maxProcesses' => 5,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+                'tries' => 1,
+                'backoff' => 30,
+
+            ],
         ],
         'staging' => [
             'supervisor-stage1' => [
