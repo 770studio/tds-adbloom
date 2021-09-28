@@ -50,4 +50,18 @@ class Opportunity extends BaseModel
         return $this->type == self::TYPES['survey'];
     }
 
+    public function getAgeFromTo()
+    {
+        return $this->age_from || $this->age_to
+            ?  [
+                'from' => $this->age_from,
+                'to' => $this->age_to,
+            ]
+            : null;
+
+
+    }
+
+
+
 }

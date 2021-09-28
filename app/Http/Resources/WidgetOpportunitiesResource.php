@@ -26,27 +26,28 @@ class WidgetOpportunitiesResource extends JsonResource
     public function toArray($request)
     {
         $this->partner = $this->widgets->first()->partner;
+        $image = StoreImageHelper::getCreativesCDNUrl($this->image);
+        $reward = $this->partner->calulateReward($this->payout);
+        $targeting_params =  TargetingParams::collection()->only($this->targeting_params)->values();
+        $ageFromTo = $this->getAgeFromTo();
 
         return [
             'id' => $this->short_id,
-            'title' => $this->name,
+            'title' => $this->when($this->name, $this->name),
             //'img' => $this->image,
-            'image' => StoreImageHelper::getCreativesCDNUrl($this->image),
-            'description' => $this->description,
+            'image' => $this->when($image, $image),
+            'description' => $this->when($this->description,$this->description),
             'timeToComplete' => $this->when($this->isSurvey(), $this->timeToComplete),
-            'url' => $this->link,
-            'reward' => $this->partner->calulateReward($this->payout),
-            'required' => TargetingParams::collection()->only($this->targeting_params)->values(),
-            'callToAction' => $this->call_to_action,
-            'incentive' => $this->incentive,
+            'url' => $this->when($this->link,$this->link),
+            'reward' => $this->when($reward,$reward),
+            'required' => $this->when($targeting_params, $targeting_params),
+            'callToAction' => $this->when($this->call_to_action,$this->call_to_action),
+            'incentive' => $this->when($this->incentive, $this->incentive),
             'targeting' => [
                 'platform' => $this->when($this->platforms, Platform::collection()->only($this->platforms)->values()),
                 'country' => $this->when($this->countries, $this->countries),
                 'gender' => $this->when($this->genders, Gender::collection()->only($this->genders)->values()),
-                'age' => [
-                    'from' => $this->age_from,
-                    'to' => $this->age_to,
-                ]
+                'age' => $this->when($ageFromTo, $ageFromTo),
             ],
 
 
