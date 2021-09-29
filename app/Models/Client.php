@@ -9,10 +9,10 @@ class Client extends BaseModel
     use HasFactory;
 
     const STATUSES = [
-        'Active' => 'active',
-        'Pending' => 'pending',
-        'Deleted' => 'deleted',
-        'Paused' => 'paused'
+        'active' => 'active',
+        'pending' => 'pending',
+        'deleted' => 'deleted',
+        'paused' => 'paused'
     ];
 
     public function opportunities()
