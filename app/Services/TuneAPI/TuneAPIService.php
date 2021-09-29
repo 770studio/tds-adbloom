@@ -5,6 +5,7 @@ namespace App\Services\TuneAPI;
 
 
 use App\Models\Conversion;
+use App\Models\ConversionsHourlyStat;
 use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -92,8 +93,18 @@ class TuneAPIService
         return $this->entityName;
     }
 
-
-
+    public function getConversionsHourlyStats(int $page)
+    {
+        return $this->api->report()->getStats(function (HttpQueryBuilder $builder) use ($page) {
+            //dd($builder->toArray());
+            return $builder->setFields(
+                ConversionsHourlyStat::getFields()
+            )->addFilter('Stat.datetime',
+                []
+                , null, Operator::GREATER_THAN
+            )->setPage($page);
+        }, /* Request options */ []);
+    }
 
 
 }
