@@ -98,8 +98,8 @@ class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
     {
         return [
             'TuneAPIGetConversionPageJob_page#' . $this->page,
-            'TuneAPIGetConversionPageJob_' . app()->environment(),
-            app()->environment()
+            //'TuneAPIGetConversionPageJob_' . app()->environment(),
+            // app()->environment()
         ];
     }
 
