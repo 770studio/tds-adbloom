@@ -54,6 +54,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('partner:send_pb2')->everyTwoMinutes();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
+        // restart queues to avoid memory leaks
+        $schedule->command('horizon:terminate')->dailyAt('00:55');
+
+
     }
 
     /**
