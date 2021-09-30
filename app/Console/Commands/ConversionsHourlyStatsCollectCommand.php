@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\TuneAPIGetConversionPageJob;
-use App\Models\Conversion;
+use App\Jobs\TuneAPIGetConversionHourlyStatPageJob;
+use App\Models\ConversionsHourlyStat;
+use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Exception;
 use Illuminate\Console\Command;
@@ -23,6 +24,8 @@ class ConversionsHourlyStatsCollectCommand extends Command
      * @var string
      */
     protected $description = 'Command description';
+    private int $stat_hour;
+    private string $stat_date;
 
     /**
      * Create a new command instance.
@@ -32,26 +35,38 @@ class ConversionsHourlyStatsCollectCommand extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->stat_date = now()->toDateString();
+        $this->stat_hour = now()->subHour()->hour;
+
+
     }
 
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      * @throws Exception
      */
     public function handle(TuneAPIService $tuneAPIService)
     {
 
-        $pagesCount = (new ConversionsHourlyStatsResponse(
-            $tuneAPIService->getConversionsHourlyStats([], 1)
-        ))->parseCountPages();
-        dd($pagesCount);
+        if (
+            ConversionsHourlyStat::dateHourExists($this->stat_date, $this->stat_hour)
+        ) {
+            return; // we have already parsed it
+        }
 
+
+        $pagesCount = (new ConversionsHourlyStatsResponse(
+            $tuneAPIService->getConversionsHourlyStats($this->stat_date, $this->stat_hour, 1)
+        ))->parseCountPages();
 
         for ($page = 1; $page <= $pagesCount; $page++) {
-            TuneAPIGetConversionPageJob::dispatch($page, Conversion::FIELDS);
+            TuneAPIGetConversionHourlyStatPageJob::dispatch($page);
         }
-        return 0;
+        return;
     }
+
+
+
 }

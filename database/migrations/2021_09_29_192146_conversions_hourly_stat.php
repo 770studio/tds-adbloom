@@ -30,6 +30,8 @@ class ConversionsHourlyStat extends Migration
             $table->decimal('Stat_revenue', 15, 4, true)->default(0.00);
             $table->decimal('Stat_profit', 15, 4, true)->default(0.00);
             $table->string('Goal_name', 100)->nullable();
+            $table->date('Stat_date');
+            $table->unsignedTinyInteger('Stat_hour');
             $table->timestamps();
         });
     }

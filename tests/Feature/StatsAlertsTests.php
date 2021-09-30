@@ -17,7 +17,7 @@ class StatsAlertsTests extends TestCase
      *
      * @return void
      */
-    public function test_command_is_collable()
+    public function test_command_is_callable()
     {
 
 
@@ -31,20 +31,22 @@ class StatsAlertsTests extends TestCase
             ->report()
             ->getStats(function (HttpQueryBuilder $builder) use ($page) {
 
-                $builder->setFields(ConversionsHourlyStat::getFields());
+                $builder->setFields(ConversionsHourlyStat::TUNE_FIELDS);
 
                 /* filters[Stat.hour][conditional]=EQUAL_TO&filters[Stat.hour][values]=17&filters[Stat
     .date][conditional]=EQUAL_TO&filters[Stat.date][values]=2021-03-24&
     */
-                $builder->addFilter('Stat.hour', 17
+                $builder->addFilter('Stat.hour', [17]
                     , null, Operator::EQUAL_TO);
-                $builder->addFilter('Stat.date', "2021-03-24"
+                $builder->addFilter('Stat.date', ["2021-03-24"]
                     , null, Operator::EQUAL_TO);
+                // $builder->setLimit()
+                dd($builder->toArray());
                 return $builder;
                 //$builder->->setPage($page);
             }, /* Request options */ []);
 
-        dd(4444, $result);
+        dd(4444, $result->request);
 
 
         Artisan::call('conversions:collectHourlyStats');

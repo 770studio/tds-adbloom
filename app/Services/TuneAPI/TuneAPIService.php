@@ -51,7 +51,9 @@ class TuneAPIService
 
                 ]
                 , null, Operator::GREATER_THAN
-            )->setPage($page);
+            )->setPage($page)
+                ->setLimit(1000);
+
         }, /* Request options */ []);
     }
 
@@ -70,7 +72,7 @@ class TuneAPIService
     /**
      * @throws Exception
      */
-    public function getResponse(Request $request): Response
+    public function getResponse_DEPR(Request $request): Response
     {
         dump($request->toArray());
         Log::channel('queue')->debug('request:', $request->toArray());
@@ -93,17 +95,22 @@ class TuneAPIService
         return $this->entityName;
     }
 
-    public function getConversionsHourlyStats(int $page)
+    public function getConversionsHourlyStats(string $stat_date, int $stat_hour, int $page = 1): object
     {
-        return $this->api->report()->getStats(function (HttpQueryBuilder $builder) use ($page) {
-            //dd($builder->toArray());
-            return $builder->setFields(
-                ConversionsHourlyStat::getFields()
-            )->addFilter('Stat.datetime',
-                []
-                , null, Operator::GREATER_THAN
-            )->setPage($page);
-        }, /* Request options */ []);
+
+
+        return $this->api
+            ->report()
+            ->getStats(function (HttpQueryBuilder $builder) use ($page, $stat_date, $stat_hour) {
+                return $builder->setFields(
+                    ConversionsHourlyStat::TUNE_FIELDS
+                )->addFilter('Stat.date', [$stat_date]
+                    , null, Operator::EQUAL_TO)
+                    ->addFilter('Stat.hour', [$stat_hour]
+                        , null, Operator::EQUAL_TO
+                    )->setPage($page)
+                    ->setLimit(1000);
+            }, /* Request options */ []);
     }
 
 

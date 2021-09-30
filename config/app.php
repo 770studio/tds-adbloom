@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\DBFieldsHelper;
 use App\Helpers\RedirectHelper;
 use App\Helpers\ShortIdGeneratorHelper;
 use App\Helpers\StoreImageHelper;
@@ -235,6 +236,7 @@ return [
         'ShortIdGeneratorHelper' => ShortIdGeneratorHelper::class,
         'RedirectHelper' => RedirectHelper::class,
         'StoreImageHelper' => StoreImageHelper::class,
+        'DBFieldsHelper' => DBFieldsHelper::class,
 
     ],
 

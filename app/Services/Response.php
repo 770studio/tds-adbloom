@@ -45,7 +45,7 @@ class Response implements ResponseIF
     public function parseCountPages() : int
     {
         $this->pageCount = $this->apiResult->response->data->pageCount;
-        return $this->pageCount;
+        return (int)$this->pageCount;
 
     }
 
