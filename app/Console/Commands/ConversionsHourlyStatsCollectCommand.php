@@ -6,6 +6,7 @@ use App\Jobs\TuneAPIGetConversionHourlyStatPageJob;
 use App\Models\ConversionsHourlyStat;
 use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\TuneAPIService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 
@@ -25,7 +26,7 @@ class ConversionsHourlyStatsCollectCommand extends Command
      */
     protected $description = 'Command description';
     private int $stat_hour;
-    private string $stat_date;
+    private Carbon $stat_date;
 
     /**
      * Create a new command instance.
@@ -35,8 +36,8 @@ class ConversionsHourlyStatsCollectCommand extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->stat_date = now()->toDateString();
-        $this->stat_hour = now()->subHour()->hour;
+        $this->stat_date = now();
+        $this->stat_hour = $this->stat_date->subHour()->hour;
 
 
     }
@@ -62,9 +63,8 @@ class ConversionsHourlyStatsCollectCommand extends Command
         ))->parseCountPages();
 
         for ($page = 1; $page <= $pagesCount; $page++) {
-            TuneAPIGetConversionHourlyStatPageJob::dispatch($page);
+            TuneAPIGetConversionHourlyStatPageJob::dispatch($page, $this->stat_date, $this->stat_hour);
         }
-        return;
     }
 
 

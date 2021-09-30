@@ -6,6 +6,7 @@ namespace App\Services\TuneAPI;
 
 use App\Models\Conversion;
 use App\Models\ConversionsHourlyStat;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -95,7 +96,7 @@ class TuneAPIService
         return $this->entityName;
     }
 
-    public function getConversionsHourlyStats(string $stat_date, int $stat_hour, int $page = 1): object
+    public function getConversionsHourlyStats(Carbon $stat_date, int $stat_hour, int $page = 1): object
     {
 
 
@@ -104,7 +105,7 @@ class TuneAPIService
             ->getStats(function (HttpQueryBuilder $builder) use ($page, $stat_date, $stat_hour) {
                 return $builder->setFields(
                     ConversionsHourlyStat::TUNE_FIELDS
-                )->addFilter('Stat.date', [$stat_date]
+                )->addFilter('Stat.date', [$stat_date->toDateString()]
                     , null, Operator::EQUAL_TO)
                     ->addFilter('Stat.hour', [$stat_hour]
                         , null, Operator::EQUAL_TO

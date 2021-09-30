@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,7 +29,7 @@ class ConversionsHourlyStat extends Model
           return (new static)->getFillable();
       }*/
 
-    public static function dateHourExists($stat_date, $stat_hour)
+    public static function dateHourExists(Carbon $stat_date, int $stat_hour)
     {
         return (new self)->where([
             ['Stat_date', $stat_date],
