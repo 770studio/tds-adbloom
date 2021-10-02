@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Interfaces\DaliaPublisherAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
+use App\Services\TuneAPI\TuneAPIService;
 use App\Services\YoursurveysReadmeIoAPI\YoursurveysAPIService;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Tune\NetworkApi;
 use Tune\Networks;
@@ -40,7 +42,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->app->when(TuneAPIService::class)
+        ->needs('$dateStart')
+        ->give(function () {
+            return $this->app->environment('local', 'staging')
+                ? now()->subDays(
+                    config('services.tune_api.conversions_update_from_last_x_months')
+                )
+                : now()->subMonths(
+                    config('services.tune_api.conversions_update_from_last_x_months')
+                )
+           ;
 
+        });
 
         $this->app->bind(NetworkApi::class, function () {
             return new NetworkApi(new Networks([
