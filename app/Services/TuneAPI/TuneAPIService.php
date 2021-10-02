@@ -5,8 +5,8 @@ namespace App\Services\TuneAPI;
 
 
 use App\Models\Conversion;
-use App\Models\ConversionsHourlyStat;
 use Carbon\Carbon;
+use App\Models\ConversionsHourlyStat;
 use Exception;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -19,16 +19,14 @@ use Tune\Utils\Operator;
 class TuneAPIService
 {
 
+    public NetworkApi $api;
+    private string $entityName;
+    private Carbon $date_start;
 
-    /**
-     * @var NetworkApi
-     */
-    public $api;
-    private $entityName;
-
-    public function __construct(NetworkApi $api)
+    public function __construct(NetworkApi $api, $dateStart)
     {
         $this->api = $api;
+        $this->date_start = $dateStart;
 
     }
 
@@ -41,19 +39,11 @@ class TuneAPIService
                 array_merge([Conversion::ID_FIELD], $fields)
             )->addFilter('Stat.datetime',
                 [
-                    (App::environment('local', 'staging')
-                        ? now()->subDays(
-                            config('services.tune_api.conversions_update_from_last_x_months')
-                        )->toDateString()
-                        : now()->subMonths(
-                            config('services.tune_api.conversions_update_from_last_x_months')
-                        )->toDateString()
-                    )
-
+                    $this->date_start->toDateString()
                 ]
                 , null, Operator::GREATER_THAN
             )->setPage($page)
-                ->setLimit(1000);
+                ->setLimit(400)
 
         }, /* Request options */ []);
     }
