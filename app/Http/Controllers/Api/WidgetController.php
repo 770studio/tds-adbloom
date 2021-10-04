@@ -18,19 +18,17 @@ class WidgetController extends Controller
         ::where('short_id', $widget_short_id)
             ->firstOrFail();
 
-        if ($widget->countries === Country::indexes()) {
-            $widget->countries = null; // same as all (including undefined opportunity country)
-        }
-
-
-        if (count($widget->platforms) === count(Platform::indexes())) {
-            $widget->platforms = null; // same as all (including undefined opportunity country)
-        }
-
 
         if ($widget->isDynamic()) {
-            //dd($widget->platforms, $widget->countries, $widget->tags);
-                            // Opportunity::
+
+            if ($widget->countries === Country::indexes()) {
+                $widget->countries = null; // same as all (including undefined opportunity country)
+            }
+
+            if (count($widget->platforms) === count(Platform::indexes())) {
+                $widget->platforms = null; // same as all (including undefined opportunity country)
+            }
+
             $opportunities = Opportunity::select('id') //DB::table('opportunities')
             ->where(function ($query) use ($widget) {
                 return $query
