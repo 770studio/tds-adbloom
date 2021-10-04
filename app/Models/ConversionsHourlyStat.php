@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
+/**
+ * @method static Builder outdated()
+ */
 class ConversionsHourlyStat extends Model
 {
     use HasFactory;
@@ -35,6 +40,11 @@ class ConversionsHourlyStat extends Model
             ['Stat_date', $stat_date],
             ['Stat_hour', $stat_hour],
         ])->exists();
+    }
+
+    public static function scopeOutdated($q)
+    {
+        return $q->where('Stat_date', '<', now()->subMonths(3)->toDateString());
     }
 
 }

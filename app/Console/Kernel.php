@@ -50,6 +50,7 @@ class Kernel extends ConsoleKernel
 
         }
 
+            $schedule->command('conversionsHourlyStats:prune')->daily();
 
         $schedule->command('partner:send_pb2')->everyTwoMinutes();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
