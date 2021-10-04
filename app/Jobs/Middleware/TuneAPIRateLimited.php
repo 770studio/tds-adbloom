@@ -23,6 +23,11 @@ class TuneAPIRateLimited
      */
     public function handle($job, $next)
     {
+        if (app()->runningUnitTests()) {
+            $next($job);
+            return;
+        }
+
         Redis::throttle(
             config('services.tune_api.network_id')
         )->block(10)->allow(15)->every(10)

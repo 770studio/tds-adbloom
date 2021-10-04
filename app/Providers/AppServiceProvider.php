@@ -4,11 +4,14 @@ namespace App\Providers;
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
+use App\Models\Conversion;
+use App\Models\ConversionsHourlyStat;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
+use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
+use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use App\Services\YoursurveysReadmeIoAPI\YoursurveysAPIService;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Tune\NetworkApi;
 use Tune\Networks;
@@ -40,21 +43,46 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->app->when(TuneAPIService::class)
-        ->needs('$dateStart')
-        ->give(function () {
-            return $this->app->environment('local', 'staging')
-                ? now()->subDays(
-                    config('services.tune_api.conversions_update_from_last_x_months')
-                )
-                : now()->subMonths(
-                    config('services.tune_api.conversions_update_from_last_x_months')
-                )
-           ;
+        $this->app->bind(ConversionsResponse::class, function ($app, $params) {
+            return new  ConversionsResponse(
+            // auto inject rel model
+                new Conversion()
+            );
 
         });
+
+        $this->app->bind(ConversionsHourlyStatsResponse::class, function ($app, $params) {
+            return new  ConversionsHourlyStatsResponse(
+                new ConversionsHourlyStat()
+            );
+
+        });
+
+        $this->app->when(TuneAPIService::class)
+            ->needs('$dateStart')
+            ->give(function () {
+                return $this->app->environment('local', 'staging')
+                    ? now()->subDays(
+                        config('services.tune_api.conversions_update_from_last_x_months')
+                    )
+                    : now()->subMonths(
+                        config('services.tune_api.conversions_update_from_last_x_months')
+                    );
+
+            });
+
+        //  100 per page for testing
+        $this->app->when(TuneAPIService::class)
+            ->needs('$per_page')
+            ->give(function () {
+                return $this->app->runningUnitTests()
+                    ? 100
+                    : null; // define by a const inside the service
+
+            });
+
 
         $this->app->bind(NetworkApi::class, function () {
             return new NetworkApi(new Networks([

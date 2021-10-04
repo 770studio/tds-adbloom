@@ -43,15 +43,21 @@ class ConversionsUpdateCommand extends Command
      * @return void
      * @throws Exception
      */
-    public function handle (TuneAPIService $tuneAPIService)
+    public function handle(TuneAPIService $tuneAPIService, ConversionsResponse $responseProcessor): void
     {
 
-        $pagesCount = (new ConversionsResponse(
+        $pagesCount = $responseProcessor->setData(
             $tuneAPIService->getConversions([], 1)
-        ))->parseCountPages();
+        )
+            ->validate()
+            ->parseCountPages();
+
+        /*          (new ConversionsResponse(
+                  $tuneAPIService->getConversions([], 1)
+              ))->parseCountPages();*/
 
         for ($page = 1; $page <= $pagesCount; $page++) {
-            TuneAPIGetConversionPageJob::dispatch($page, Conversion::FIELDS);
+            TuneAPIGetConversionPageJob::dispatch($page, Conversion::TUNE_FIELDS);
         }
 
 

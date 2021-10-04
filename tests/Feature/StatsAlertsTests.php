@@ -2,55 +2,34 @@
 
 namespace Tests\Feature;
 
-use App\Models\ConversionsHourlyStat;
-use App\Services\TuneAPI\TuneAPIService;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
-use Tune\NetworkApi;
-use Tune\Utils\HttpQueryBuilder;
-use Tune\Utils\Operator;
 
 class StatsAlertsTests extends TestCase
 {
+    use WithoutMiddleware;
+
     /**
      * A basic feature test example.
      *
      * @return void
      */
-    public function test_command_is_callable()
+    public function test_can_parse_data()
     {
 
+        $this->withoutMiddleware(); // dont work at all!!!
 
-        $api = $this->app->make(NetworkApi::class);
-
-        $tuneAPIService = $this->app->make(TuneAPIService::class);
-
-        // $tuneAPIService->getConversionsHourlyStats(1);
-        $page = 1;
-        $result = $api
-            ->report()
-            ->getStats(function (HttpQueryBuilder $builder) use ($page) {
-
-                $builder->setFields(ConversionsHourlyStat::TUNE_FIELDS);
-
-                /* filters[Stat.hour][conditional]=EQUAL_TO&filters[Stat.hour][values]=17&filters[Stat
-    .date][conditional]=EQUAL_TO&filters[Stat.date][values]=2021-03-24&
-    */
-                $builder->addFilter('Stat.hour', [17]
-                    , null, Operator::EQUAL_TO);
-                $builder->addFilter('Stat.date', ["2021-03-24"]
-                    , null, Operator::EQUAL_TO);
-                // $builder->setLimit()
-                dd($builder->toArray());
-                return $builder;
-                //$builder->->setPage($page);
-            }, /* Request options */ []);
-
-        dd(4444, $result->request);
+        // TuneAPIGetConversionPageJob::dispatch(1, []);
+        //Artisan::call('conversions:update');
+        Artisan::call('conversions:collectHourlyStats --stat_date=2021-03-24 --stat_hour=11');
+        $this->assertDatabaseCount('conversions_hourly_stats', 94);
 
 
-        Artisan::call('conversions:collectHourlyStats');
+    }
 
+    public function test_example_inventory_audit()
+    {
 
     }
 

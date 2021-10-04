@@ -28,10 +28,10 @@ class DBFieldsHelper
     public function cast(string $dbFieldName, ?string $value): ?string
     {
         if (!$value) {
-            return null;
+            return $value;
         }
 
-        switch ($this->getDBFieldType($this->tableName, $dbFieldName)) {
+        switch ($this->getDBFieldType($dbFieldName)) {
             case 'datetime':
                 return Carbon::parse($value)->toDateTimeString();
             case 'date':
@@ -41,11 +41,12 @@ class DBFieldsHelper
         }
     }
 
-    private function getDBFieldType($fieldName)
+    private function getDBFieldType($fieldName): string
     {
         return DB::connection()->getDoctrineColumn($this->tableName, $fieldName)
             ->getType()
             ->getName();
 
     }
+
 }

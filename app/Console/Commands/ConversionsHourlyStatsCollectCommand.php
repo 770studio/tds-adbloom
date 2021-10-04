@@ -17,7 +17,7 @@ class ConversionsHourlyStatsCollectCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'conversions:collectHourlyStats';
+    protected $signature = 'conversions:collectHourlyStats {--stat_date=} {--stat_hour=}';
 
     /**
      * The console command description.
@@ -36,9 +36,9 @@ class ConversionsHourlyStatsCollectCommand extends Command
     public function __construct()
     {
         parent::__construct();
+        // auto stat sate and hour = current date last hour
         $this->stat_date = now();
         $this->stat_hour = $this->stat_date->subHour()->hour;
-
 
     }
 
@@ -48,19 +48,28 @@ class ConversionsHourlyStatsCollectCommand extends Command
      * @return void
      * @throws Exception
      */
-    public function handle(TuneAPIService $tuneAPIService)
+    public function handle(TuneAPIService $tuneAPIService, ConversionsHourlyStatsResponse $responseProcessor)
     {
+        // manual (configurable) stat_date
+        $this->stat_date = $this->option('stat_date')
+            ? Carbon::parse($this->option('stat_date'))
+            : $this->stat_date;
+        // manual (configurable) stat_hour
+        $this->stat_hour = (int)$this->option('stat_hour') ?: $this->stat_hour;
 
         if (
             ConversionsHourlyStat::dateHourExists($this->stat_date, $this->stat_hour)
         ) {
-            return; // we have already parsed it
+            $this->line(" we have already parsed it");
+            return;
         }
 
 
-        $pagesCount = (new ConversionsHourlyStatsResponse(
+        $pagesCount = $responseProcessor->setData(
             $tuneAPIService->getConversionsHourlyStats($this->stat_date, $this->stat_hour, 1)
-        ))->parseCountPages();
+        )
+            ->validate()
+            ->parseCountPages();
 
         for ($page = 1; $page <= $pagesCount; $page++) {
             TuneAPIGetConversionHourlyStatPageJob::dispatch($page, $this->stat_date, $this->stat_hour);

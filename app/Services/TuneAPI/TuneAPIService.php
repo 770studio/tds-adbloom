@@ -5,10 +5,9 @@ namespace App\Services\TuneAPI;
 
 
 use App\Models\Conversion;
-use Carbon\Carbon;
 use App\Models\ConversionsHourlyStat;
+use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 use Tune\NetworkApi;
@@ -19,14 +18,16 @@ use Tune\Utils\Operator;
 class TuneAPIService
 {
 
+    public const PER_PAGE_LIMIT = 400;
     public NetworkApi $api;
     private string $entityName;
     private Carbon $date_start;
 
-    public function __construct(NetworkApi $api, $dateStart)
+    public function __construct(NetworkApi $api, $dateStart, $per_page = null)
     {
         $this->api = $api;
         $this->date_start = $dateStart;
+        $this->perPageLimit = $per_page ?? self::PER_PAGE_LIMIT;
 
     }
 
@@ -43,7 +44,7 @@ class TuneAPIService
                 ]
                 , null, Operator::GREATER_THAN
             )->setPage($page)
-                ->setLimit(400)
+                ->setLimit($this->perPageLimit);
 
         }, /* Request options */ []);
     }
@@ -93,14 +94,17 @@ class TuneAPIService
         return $this->api
             ->report()
             ->getStats(function (HttpQueryBuilder $builder) use ($page, $stat_date, $stat_hour) {
-                return $builder->setFields(
-                    ConversionsHourlyStat::TUNE_FIELDS
-                )->addFilter('Stat.date', [$stat_date->toDateString()]
-                    , null, Operator::EQUAL_TO)
-                    ->addFilter('Stat.hour', [$stat_hour]
-                        , null, Operator::EQUAL_TO
-                    )->setPage($page)
-                    ->setLimit(1000);
+                return $builder->setFields(ConversionsHourlyStat::TUNE_FIELDS)
+                    ->addFilter('Stat.date', [$stat_date->toDateString()],
+                        null, Operator::EQUAL_TO)
+                    ->addFilter('Stat.hour', [$stat_hour],
+                        null, Operator::EQUAL_TO)
+                    ->setLimit($this->perPageLimit);
+
+                /*         dd( urldecode(
+                             $builder->toString()
+                         ));*/
+
             }, /* Request options */ []);
     }
 

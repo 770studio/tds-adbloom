@@ -2,16 +2,23 @@
 
 namespace App\Jobs;
 
-use App\Jobs\Middleware\TuneAPIRateLimited;
-use App\Models\Conversion;
+use App\Models\ConversionsHourlyStat;
 use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Redis\LimiterTimeoutException;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-class TuneAPIGetConversionHourlyStatPageJob
+class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUnique
 {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
      * The number of times the job may be attempted.
      *
@@ -25,20 +32,15 @@ class TuneAPIGetConversionHourlyStatPageJob
      */
     public $maxExceptions = 1;
     /**
-     * @var int
-     */
-    private $page;
-    /**
-     * @var TuneAPIService
-     */
-    private $tuneAPIService;
-    /**
      * The number of seconds the job can run before timing out.
      *
      * @var int
      */
     public $timeout = 120;
-
+    /**
+     * @var int
+     */
+    private $page;
     private Carbon $stat_date;
     private int $stat_hour;
 
@@ -49,6 +51,7 @@ class TuneAPIGetConversionHourlyStatPageJob
      */
     public function __construct(int $page, Carbon $stat_date, int $stat_hour)
     {
+
         $this->page = $page;
         $this->stat_date = $stat_date;
         $this->stat_hour = $stat_hour;
@@ -60,22 +63,20 @@ class TuneAPIGetConversionHourlyStatPageJob
      * @return void
      * @throws LimiterTimeoutException|Exception
      */
-    public function handle(TuneAPIService $tuneAPIService)
+    public function handle(TuneAPIService                 $tuneAPIService,
+                           ConversionsHourlyStatsResponse $responseProcessor): void
     {
-
-
-        (new ConversionsHourlyStatsResponse(
-            $tuneAPIService->getConversionsHourlyStats($this->stat_date, $this->stat_hour, $this->page)
-        ))
-            ->parseData()
-            ->each(function ($record) use (&$created, &$changed) {
-                Conversion::updateOrCreate(
-                    ["Stat_tune_event_id" => $record["Stat_tune_event_id"]],
-                    $record
-                );
-
-
-            });
+        // mass insert into stats
+        ConversionsHourlyStat::insert(
+        // set data to further process it
+            $responseProcessor->setData(
+            // get data with tune api (response data)
+                $tuneAPIService->getConversionsHourlyStats($this->stat_date, $this->stat_hour, $this->page)
+            )
+                ->validate() // validate api response
+                ->parseData() // parse api response,  map it with our formatting
+                ->toArray()  // insert accepts array
+        );
 
 
     }
@@ -110,10 +111,10 @@ class TuneAPIGetConversionHourlyStatPageJob
      *
      * @return array
      */
-    public function middleware()
-    {
-        return [new TuneAPIRateLimited];
-    }
+    /*    public function middleware()
+        {
+            return [new TuneAPIRateLimited];
+        }*/
 
     /**
      * The unique ID of the job.

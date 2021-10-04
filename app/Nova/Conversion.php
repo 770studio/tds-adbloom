@@ -70,7 +70,7 @@ class Conversion extends Resource
         $fields[] = ID::make('ID', 'id')->sortable();
 
 
-        foreach (\App\Models\Conversion::FIELDS as $field) {
+        foreach (\App\Models\Conversion::TUNE_FIELDS as $field) {
             $field_name = Str::replaceFirst('.', '_', $field);
             $human_field_name = Str::replace(['.', '_'], ' ', $field);
             switch ($field) {
