@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WidgetOpportunitiesCollection;
+use App\Models\Infrastructure\Country;
+use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
 use App\Models\Widget;
 
@@ -15,6 +17,15 @@ class WidgetController extends Controller
         $widget = Widget //::with('partner')
         ::where('short_id', $widget_short_id)
             ->firstOrFail();
+
+        if ($widget->countries === Country::indexes()) {
+            $widget->countries = null; // same as all (including undefined opportunity country)
+        }
+
+
+        if (count($widget->platforms) === count(Platform::indexes())) {
+            $widget->platforms = null; // same as all (including undefined opportunity country)
+        }
 
 
         if ($widget->isDynamic()) {
