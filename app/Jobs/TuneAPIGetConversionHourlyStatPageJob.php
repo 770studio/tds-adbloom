@@ -89,7 +89,7 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
                 'page' => $this->page,
                 'stat_date' => $this->stat_date,
                 'stat_hour' => $this->stat_hour,
-             
+
             ]
         );
 
