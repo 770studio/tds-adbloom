@@ -10,6 +10,7 @@ class StatsAlertsInventoryService
     use DBDateRangeTrait;
 
     private Group $group;
+    public string $timezone = 'EST';
 
     public function __construct(Group $group)
     {

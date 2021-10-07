@@ -58,7 +58,7 @@ class Response implements ResponseIF
 
     public function getCount(): int
     {
-        return $this->count;
+        return (int)$this->apiResult->response->count;
 
     }
 

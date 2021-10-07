@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\TuneAPIGetConversionHourlyStatPageJob;
 use App\Models\ConversionsHourlyStat;
+use App\Services\StatsAlerts\DBDateRangeTrait;
 use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Carbon\Carbon;
@@ -12,6 +13,7 @@ use Illuminate\Console\Command;
 
 class ConversionsHourlyStatsCollectCommand extends Command
 {
+    use DBDateRangeTrait;
     /**
      * The name and signature of the console command.
      *
@@ -37,7 +39,7 @@ class ConversionsHourlyStatsCollectCommand extends Command
     {
         parent::__construct();
         // auto stat sate and hour = current date last hour
-        $this->stat_date = now();
+        $this->stat_date = now()->timezone($this->timezone);
         $this->stat_hour = $this->stat_date->subHour()->hour;
 
     }
