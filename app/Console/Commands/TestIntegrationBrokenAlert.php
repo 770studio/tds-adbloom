@@ -73,10 +73,18 @@ class TestIntegrationBrokenAlert extends Command
                 )->cursor();*/
 
         // $resultsLastHour =
+        Log::debug("start alert lookup");
+        $this->line("start alert lookup");
 
-        $service->forTheLastHour(
-            $service->ConversionResultPartnerIndependent(true, true)
-        )->cursor()
+        $service->ConversionResultPartnerIndependent(true, true)
+            ->forTheLastHour()
+            ->getQueryBuilder()
+            ->cursor()
+            ->whenEmpty(function ($data) {
+                $this->line("nothing to lookup, no data");
+                Log::debug("nothing to lookup, no data");
+                return $data;
+            })
             ->each(function ($alertCandidate) use ($service) //use ($resultsBeforeLastHour, $resultsForLast24Hours)
             {
                 Log::debug(
@@ -84,20 +92,15 @@ class TestIntegrationBrokenAlert extends Command
                     (array)$alertCandidate
                 );
 
-                $resultsBeforeLastHour = $service->forTheHourBeforeLastHour(
-                    $service->ConversionResultPartnerIndependent(true)
+                $resultsBeforeLastHour_total = (int)$service->ConversionResultPartnerIndependent(true)
+                    ->forTheHourBeforeLastHour()
+                    ->matchCandidate($alertCandidate, true)
+                    ->getQueryBuilder()
+                    ->sum('Stat_conversions');
 
-                )->where([
-                    ['Stat_offer_id', $alertCandidate->Stat_offer_id],
-                    ['Stat_offer_url_id', $alertCandidate->Stat_offer_url_id],
-                    ['Stat_goal_id', $alertCandidate->Stat_goal_id],
-                ])
-                    ->first();
-
-                if ($resultsBeforeLastHour
-                    && $resultsBeforeLastHour->total_conversions > $this->conversionsThreshold) {
+                if ($resultsBeforeLastHour_total > $this->conversionsThreshold) {
                     Log::warning(
-                        "all partners zero conversion alert (comparing to prev. hour period).. integration is broken",
+                        "ALERT!!! all partners zero conversion  (comparing to prev. hour period).. integration is broken",
                         (array)$alertCandidate
                     );
 
@@ -105,20 +108,15 @@ class TestIntegrationBrokenAlert extends Command
                 }
 
 
-                $resultsForLast24Hours = $service->forTheLast24Hours(
-                    $service->ConversionResultPartnerIndependent()
+                $resultsForLast24Hours_total = (int)$service->ConversionResultPartnerIndependent()
+                    ->forTheLast24Hours()
+                    ->matchCandidate($alertCandidate, true)
+                    ->getQueryBuilder()
+                    ->sum('Stat_conversions');
 
-                )->where([
-                    ['Stat_offer_id', $alertCandidate->Stat_offer_id],
-                    ['Stat_offer_url_id', $alertCandidate->Stat_offer_url_id],
-                    ['Stat_goal_id', $alertCandidate->Stat_goal_id],
-                ])
-                    ->first();
-
-                if ($resultsForLast24Hours
-                    && $resultsForLast24Hours->total_conversions > $this->conversionsThreshold) {
+                if ($resultsForLast24Hours_total > $this->conversionsThreshold) {
                     Log::warning(
-                        "all partners zero conversion alert (comparing to 24h period). integration is broken",
+                        "ALERT!!! all partners zero conversion (comparing to 24h period). integration is broken",
                         (array)$alertCandidate
                     );
 
@@ -126,9 +124,13 @@ class TestIntegrationBrokenAlert extends Command
                 }
 
 
-                Log::warning(
-                    "filterd by one of the prev. periods.",
-                    (array)$alertCandidate
+                Log::debug(
+                    "filtered by one of the prev. periods.",
+                    [
+                        'prev. hour total' => $resultsForLast24Hours_total,
+                        '24h total' => $resultsBeforeLastHour_total,
+                        'conversionsThreshold' => $this->conversionsThreshold,
+                    ]
                 );
 
 
@@ -191,5 +193,9 @@ class TestIntegrationBrokenAlert extends Command
                         $this->line('finished');
                         return 0;*/
             });
+
+
+        $this->line("finished");
+
     }
 }
