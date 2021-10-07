@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Jobs\Middleware\TuneAPIRateLimited;
 use App\Models\ConversionsHourlyStat;
 use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\TuneAPIService;
@@ -111,10 +112,10 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
      *
      * @return array
      */
-    /*    public function middleware()
-        {
-            return [new TuneAPIRateLimited];
-        }*/
+    public function middleware()
+    {
+        return [new TuneAPIRateLimited];
+    }
 
     /**
      * The unique ID of the job.
