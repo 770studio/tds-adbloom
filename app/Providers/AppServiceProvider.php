@@ -6,11 +6,15 @@ use App\Interfaces\DaliaPublisherAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
 use App\Models\Conversion;
 use App\Models\ConversionsHourlyStat;
+use App\Models\Integrations\DaliaOffers;
+use App\Models\Integrations\Yoursurveys;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
+use App\Services\DaliaPublisherAPI\DaliaPublisherAPIServiceResponse;
 use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use App\Services\YoursurveysReadmeIoAPI\YoursurveysAPIService;
+use App\Services\YoursurveysReadmeIoAPI\YourSurveysResponse;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Tune\NetworkApi;
@@ -59,6 +63,18 @@ class AppServiceProvider extends ServiceProvider
             );
 
         });
+
+        $this->app->bind(DaliaPublisherAPIServiceResponse::class, function ($app, $params) {
+            return new  DaliaPublisherAPIServiceResponse(
+                new DaliaOffers()
+            );
+        });
+        $this->app->bind(YourSurveysResponse::class, function ($app, $params) {
+            return new  YourSurveysResponse(
+                new Yoursurveys()
+            );
+        });
+
 
         $this->app->when(TuneAPIService::class)
             ->needs('$dateStart')
