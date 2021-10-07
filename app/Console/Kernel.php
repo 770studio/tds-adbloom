@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('dalia_publisher_api:update')->daily();
             // $schedule->command('telescope:prune --hours=240')->daily();
             //
-            $schedule->command('conversions:collectHourlyStats')->everyThirtyMinutes();
+            $schedule->command('conversions:collectHourlyStats')->everyFifteenMinutes();
             $schedule->command('test:alert1')->hourlyAt(10);
             $schedule->command('conversionsHourlyStats:prune')->daily();
 

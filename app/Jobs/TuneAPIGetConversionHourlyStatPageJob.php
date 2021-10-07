@@ -15,6 +15,7 @@ use Illuminate\Contracts\Redis\LimiterTimeoutException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUnique
 {
@@ -44,6 +45,7 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
     private $page;
     private Carbon $stat_date;
     private int $stat_hour;
+    private int $total_count;
 
     /**
      * Create a new job instance.
@@ -79,6 +81,18 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
                 ->toArray()  // insert accepts array
         );
 
+        $this->total_count = $responseProcessor->getCount();
+        Log::debug(
+            "TuneAPIGetConversionHourlyStatPageJob",
+            [
+                'total_count' => $this->total_count,
+                'page' => $this->page,
+                'stat_date' => $this->stat_date,
+                'stat_hour' => $this->stat_hour,
+             
+            ]
+        );
+
 
     }
 
@@ -91,6 +105,7 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
     public function tags()
     {
         return [
+            'TuneAPIGetConversionHourlyStatPageJob',
             'TuneAPIGetConversionHourlyStatPageJob_page#' . $this->page,
             //'TuneAPIGetConversionPageJob_' . app()->environment(),
             //app()->environment()
@@ -124,6 +139,6 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
      */
     public function uniqueId()
     {
-        return (string)$this->page;
+        return $this->page . '-' . $this->stat_date . '-' . $this->stat_hour;
     }
 }

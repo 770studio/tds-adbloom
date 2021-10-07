@@ -73,8 +73,21 @@ class ConversionsHourlyStatsCollectCommand extends Command
             ->validate()
             ->parseCountPages();
 
+        if (!$pagesCount) {
+            $this->line(
+                sprintf('no data for date:%s, hour:%d',
+                    $this->stat_date, $this->stat_hour
+                )
+            );
+        }
+
         for ($page = 1; $page <= $pagesCount; $page++) {
             TuneAPIGetConversionHourlyStatPageJob::dispatch($page, $this->stat_date, $this->stat_hour);
+            $this->line(
+                sprintf('set queued job for page:%d, date:%s, hour:%d',
+                    $page, $this->stat_date, $this->stat_hour
+                )
+            );
         }
     }
 
