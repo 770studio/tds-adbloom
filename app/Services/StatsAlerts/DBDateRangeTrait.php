@@ -8,10 +8,16 @@ use Illuminate\Support\Carbon;
 
 trait DBDateRangeTrait
 {
+    public string $timezone = 'EST';
+
+    public function getNow()
+    {
+        return Carbon::now()->timezone($this->timezone);
+    }
 
     public function forTheLastHour(Builder $query)
     {
-        $date = Carbon::now();
+        $date = $this->getNow();
         $hour = $date->subHour()->hour;
         return $query->where('Stat_date', $date->toDateString())
             ->where('Stat_hour', $hour);
@@ -19,7 +25,7 @@ trait DBDateRangeTrait
 
     public function forTheHourBeforeLastHour(Builder $query)
     {
-        $date = Carbon::now();
+        $date = $this->getNow();
         $hour = $date->subHours(2)->hour;
         return $query->where('Stat_date', $date->toDateString())
             ->where('Stat_hour', $hour);
@@ -27,8 +33,8 @@ trait DBDateRangeTrait
 
     public function forTheLast24Hours(Builder $query)
     {
-        $dateStart = now()->subHours(25);
-        $dateEnd = now();
+        $dateStart = $this->getNow()->subHours(25);
+        $dateEnd = $this->getNow();
 
         return $query->where([
             ['Stat_date', '>=', $dateStart->toDateString()],

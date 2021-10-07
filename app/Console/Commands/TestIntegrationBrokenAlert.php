@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Services\StatsAlerts\StatsAlertsInventoryService;
-use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -51,9 +50,9 @@ class TestIntegrationBrokenAlert extends Command
          * TODO!!!!!!!!!! индексы на таблицу
          */
 
-        $date = CarbonImmutable::now();
+/*        $date = CarbonImmutable::now()->timezone('EST');
         $lastHour = $date->subHour()->hour;
-        $beforeLastHour = $date->subHours(2)->hour;
+        $beforeLastHour = $date->subHours(2)->hour;*/
 
         /*
                      $results = $service->foraCustomDateHour(
