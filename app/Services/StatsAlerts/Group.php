@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Services\StatsAlerts;
-
+//TODO REFACTOR THAT SHIT
 class Group
 {
     public $all =
