@@ -39,7 +39,12 @@ class Kernel extends ConsoleKernel
             $schedule->command('yoursurveys:update 500 CA')->everyFourHours();
             $schedule->command('yoursurveys:update 500 US')->everyFourHours();
             $schedule->command('dalia_publisher_api:update')->daily();
-           // $schedule->command('telescope:prune --hours=240')->daily();
+            // $schedule->command('telescope:prune --hours=240')->daily();
+            //
+            $schedule->command('conversions:collectHourlyStats')->everyThirtyMinutes();
+            $schedule->command('test:alert1')->hourlyAt(10);
+            $schedule->command('conversionsHourlyStats:prune')->daily();
+
         }
 
         if (App::environment('production')) {
@@ -50,7 +55,6 @@ class Kernel extends ConsoleKernel
 
         }
 
-            $schedule->command('conversionsHourlyStats:prune')->daily();
 
         $schedule->command('partner:send_pb2')->everyTwoMinutes();
         $schedule->command('horizon:snapshot')->everyFiveMinutes();

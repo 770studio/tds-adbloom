@@ -55,7 +55,9 @@ class ConversionsHourlyStatsCollectCommand extends Command
             ? Carbon::parse($this->option('stat_date'))
             : $this->stat_date;
         // manual (configurable) stat_hour
-        $this->stat_hour = (int)$this->option('stat_hour') ?: $this->stat_hour;
+        $this->stat_hour = $this->option('stat_hour') !== null
+            ? (int)$this->option('stat_hour')
+            : $this->stat_hour;
 
         if (
             ConversionsHourlyStat::dateHourExists($this->stat_date, $this->stat_hour)

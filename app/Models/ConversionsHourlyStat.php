@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @method static Builder outdated()
@@ -46,5 +47,25 @@ class ConversionsHourlyStat extends Model
     {
         return $q->where('Stat_date', '<', now()->subMonths(3)->toDateString());
     }
+
+    public function zeroConversionResultPartnerIndependent()
+    {
+        $results = DB::table('conversions_hourly_stats')
+            ->select('Stat_offer_id', 'Stat_offer_url_id', 'Stat_goal_id', 'Stat_date', 'Stat_hour',
+                DB::raw('sum(Stat_conversions) as total_conversions'))
+            ->groupBy(
+            //'stat_affiliate_id',  // all partners !!!
+                "Stat_offer_id",
+                "Stat_offer_url_id",
+                "Stat_goal_id",
+                "Stat_date",
+                "Stat_hour"
+
+            )
+            ->having('total_conversions', 0)
+            ->get();
+
+    }
+
 
 }
