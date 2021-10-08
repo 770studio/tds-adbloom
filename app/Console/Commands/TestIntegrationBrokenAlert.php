@@ -81,8 +81,8 @@ class TestIntegrationBrokenAlert extends Command
             ->getQueryBuilder()
             ->cursor()
             ->whenEmpty(function ($data) {
-                $this->line("nothing to lookup, no data");
-                Log::debug("nothing to lookup, no data");
+                $this->line("no results with zero conversions");
+                Log::debug("no results with zero conversions");
                 return $data;
             })
             ->each(function ($alertCandidate) use ($service) //use ($resultsBeforeLastHour, $resultsForLast24Hours)
