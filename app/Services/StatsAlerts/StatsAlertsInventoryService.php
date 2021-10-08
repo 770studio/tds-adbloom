@@ -15,21 +15,22 @@ final class StatsAlertsInventoryService
     use DBQueryWhereClauseExtendTrait;
 
 
-    private Group $group;
+    private StatsGroupBy $groupBy;
 
-    public function __construct(Group $group)
+    public function __construct(StatsGroupBy $groupBy)
     {
-        $this->group = $group;
+        $this->groupBy = $groupBy;
     }
 
 
     public function ConversionResultPartnerIndependent($groupByHour = false, $zeroResultsOnly = false): self
     {
         //'stat_affiliate_id',  // all partners !!!
+        // select is almost same as groupby
+        $select = $groupBy = $this->groupBy
+            ->createFromArray(['partners' => false, 'hour' => $groupByHour])
+            ->toArray();
 
-        $this->group->by(['partners' => false, 'hour' => $groupByHour]);
-
-        $select = $groupBy = $this->group->get();
         $select[] = DB::raw('sum(Stat_conversions) as total_conversions');
 
         $this->queryBuilder = DB::table('conversions_hourly_stats')

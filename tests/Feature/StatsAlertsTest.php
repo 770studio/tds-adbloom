@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
-class StatsAlertsTests extends TestCase
+class StatsAlertsTest extends TestCase
 {
     use WithoutMiddleware;
 
@@ -34,19 +34,6 @@ class StatsAlertsTests extends TestCase
      */
     public function test_example_inventory_audit()
     {
-
-        ConversionsHourlyStat::groupBy(
-
-        //'stat_affiliate_id',  // all partners !!!
-            Stat_offer_id,
-            Stat_offer_url_id,
-            Stat_goal_id,
-            Stat_date,
-            Stat_hour
-
-        )
-            ->having('Stat_conversions', 0)
-            ->get();
 
 
     }

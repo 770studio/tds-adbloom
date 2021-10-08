@@ -20,8 +20,8 @@ class DaliaPublisherAPIServiceTest extends TestCase
      */
     public function test_get_data(): void
     {
-        $daliaApi = $this->app->make(DaliaPublisherAPIServiceIF::class);
+/*        $daliaApi = $this->app->make(DaliaPublisherAPIServiceIF::class);
         $daliaApi->getAll();
-        dd($daliaApi);
+        dd($daliaApi);*/
     }
 }
