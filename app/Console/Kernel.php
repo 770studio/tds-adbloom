@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
             // $schedule->command('telescope:prune --hours=240')->daily();
             //
             $schedule->command('conversions:collectHourlyStats')->hourlyAt([20, 40]);
-            $schedule->command('test:alert1')->hourlyAt(10);
+            $schedule->command('test:alert1')->hourlyAt([25, 45]);
             $schedule->command('conversionsHourlyStats:prune')->daily();
 
         }
