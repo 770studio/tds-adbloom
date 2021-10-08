@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class ConversionsHourlyStatsHistoryDataLoadCommand extends Command
 {
-    use DBQueryWhereClauseExtendTrait;
-
     /**
      * The name and signature of the console command.
      *
@@ -23,6 +21,10 @@ class ConversionsHourlyStatsHistoryDataLoadCommand extends Command
      * @var string
      */
     protected $description = 'Command description';
+    /**
+     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private string $timezone;
 
     /**
      * Create a new command instance.
@@ -32,6 +34,8 @@ class ConversionsHourlyStatsHistoryDataLoadCommand extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->timezone = config('services.tune_api.stats_timezone');
+
     }
 
     /**

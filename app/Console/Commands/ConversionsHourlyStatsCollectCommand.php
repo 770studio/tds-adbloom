@@ -13,7 +13,6 @@ use Illuminate\Console\Command;
 
 class ConversionsHourlyStatsCollectCommand extends Command
 {
-    use DBQueryWhereClauseExtendTrait;
     /**
      * The name and signature of the console command.
      *
@@ -39,7 +38,9 @@ class ConversionsHourlyStatsCollectCommand extends Command
     {
         parent::__construct();
         // auto stat sate and hour = current date last hour
-        $this->stat_date = now()->timezone($this->timezone);
+        $this->stat_date = now()->timezone(
+            config('services.tune_api.stats_timezone')
+        );
         $this->stat_hour = $this->stat_date->subHour()->hour;
 
     }

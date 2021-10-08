@@ -8,7 +8,6 @@ use Illuminate\Support\Carbon;
 
 trait DBQueryWhereClauseExtendTrait
 {
-    public string $timezone = 'EST';
     private Builder $queryBuilder;
 
     public function getQueryBuilder(): Builder
@@ -29,7 +28,7 @@ trait DBQueryWhereClauseExtendTrait
 
     public function getNewMutableNowInst(): Carbon
     {
-        return Carbon::now()->timezone($this->timezone);
+        return Carbon::now()->timezone(config('services.tune_api.stats_timezone'));
     }
 
     public function forTheHourBeforeLastHour(): self
