@@ -23,7 +23,7 @@ class TuneAPIRateLimited
      */
     public function handle($job, $next)
     {
-        if (app()->runningUnitTests()) {
+        if (config('queue.default') === 'sync' || app()->runningUnitTests()) {
             $next($job);
             return;
         }

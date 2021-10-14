@@ -52,6 +52,21 @@ trait DBQueryWhereClauseExtendTrait
 
     }
 
+    /**
+     *  previous 24 hours = hours starting from subHours(49) , ending on  subHours(25)
+     */
+    public function forThePrev24Hours(): self
+    {
+        $dateStart = $this->getNewMutableNowInst()->subHours(49);
+
+        $this->queryBuilder->where([
+            ['Stat_date', '>=', $dateStart->toDateString()],
+            ['Stat_hour', '>', $dateStart->hour]
+        ]);
+        return $this;
+
+    }
+
     public function foraCustomDateHour(CarbonImmutable $date, int $hour): self
     {
         $this->queryBuilder->where('Stat_date', $date->toDateString())

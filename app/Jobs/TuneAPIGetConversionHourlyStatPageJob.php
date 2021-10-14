@@ -69,6 +69,10 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
     public function handle(TuneAPIService                 $tuneAPIService,
                            ConversionsHourlyStatsResponse $responseProcessor): void
     {
+        $datetime = clone($this->stat_date);
+        $datetime->hour = $this->stat_hour;
+        $datetime->minute = $datetime->second = 0;
+
         // mass insert into stats
         ConversionsHourlyStat::insert(
         // set data to further process it
@@ -78,6 +82,12 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
             )
                 ->validate() // validate api response
                 ->parseData() // parse api response,  map it with our formatting
+                // add StatDateTime based on Stat_date and Stat_hour
+                ->transform(function (array $item) use ($datetime) {
+                    return array_merge($item,
+                        ['StatDateTime' => $datetime->toDateTimeString()]
+                    );
+                })
                 ->toArray()  // insert accepts array
         );
 

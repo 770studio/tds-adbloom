@@ -44,5 +44,22 @@ final class StatsAlertsInventoryService
 
     }
 
+    /**
+     *  get click through  grouped by offer_id
+     */
+    public function ConversionClicks(): self
+    {
 
+        $select = $groupBy = $this->groupBy->Offer()->toArray();
+
+        $select[] = DB::raw('IF(sum( Stat_conversions ) = 0 or sum( Stat_clicks ) = 0 ,
+        0, sum( Stat_clicks )/sum( Stat_conversions ) ) as clickthrough');
+
+        $this->queryBuilder = DB::table('conversions_hourly_stats')
+            ->select($select)
+            ->groupBy($groupBy);
+
+        return $this;
+
+    }
 }

@@ -3,8 +3,10 @@
 namespace App\Services\StatsAlerts;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
 
-Class StatsGroupBy implements Arrayable
+
+class StatsGroupBy implements Arrayable
 {
     private array $StatsGroupByOptions =
         [
@@ -22,9 +24,15 @@ Class StatsGroupBy implements Arrayable
     {
         $this->reset();
     }
+
     public function toArray(): array
     {
         return $this->StatsGroupBy;
+    }
+
+    public function collection(): Collection
+    {
+        return collect($this->StatsGroupBy);
     }
 
     public function noPartner(): self
@@ -32,24 +40,33 @@ Class StatsGroupBy implements Arrayable
         unset($this->StatsGroupBy[array_search("Stat_affiliate_id", $this->StatsGroupBy, true)]);
         return $this;
     }
+
     public function noHour(): self
     {
         unset($this->StatsGroupBy[array_search("Stat_hour", $this->StatsGroupBy, true)]);
         return $this;
     }
+
     public function reset(): self
     {
         $this->StatsGroupBy = $this->StatsGroupByOptions;
         return $this;
     }
 
-     public function createFromArray(array $params): self
+    public function Offer(): self
+    {
+        $this->StatsGroupBy = ["Stat_offer_id"];
+        return $this;
+
+    }
+
+    public function createFromArray(array $params): self
     {
         $this->reset();
         foreach ($params as $criteria => $value) {
             switch ($criteria) {
                 case 'partners' :
-                    if(!$value) {
+                    if (!$value) {
                         $this->noPartner();
                     }
                     break;

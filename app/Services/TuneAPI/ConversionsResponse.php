@@ -33,11 +33,14 @@ class ConversionsResponse extends Response
 
 
                     }
+
                 }
 
             });
 
         $this->data = collect($data);
+
+
         return $this->data;
     }
 
@@ -51,7 +54,6 @@ class ConversionsResponse extends Response
         }
         return $this;
     }
-
 
 
 }
