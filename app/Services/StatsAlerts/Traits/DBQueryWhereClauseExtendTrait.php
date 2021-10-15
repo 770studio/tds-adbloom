@@ -58,10 +58,11 @@ trait DBQueryWhereClauseExtendTrait
     public function forThePrev24Hours(): self
     {
         $dateStart = $this->getNewMutableNowInst()->subHours(49);
+        $dateEnd = $this->getNewMutableNowInst()->subHours(25);
 
         $this->queryBuilder->where([
-            ['Stat_date', '>=', $dateStart->toDateString()],
-            ['Stat_hour', '>', $dateStart->hour]
+            ['StatDateTime', '>=', $dateStart->toDateTimeString()],
+            ['StatDateTime', '<', $dateEnd->toDateTimeString()]
         ]);
         return $this;
 

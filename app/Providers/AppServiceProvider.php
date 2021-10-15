@@ -6,6 +6,7 @@ use App\Interfaces\DaliaPublisherAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
 use App\Models\Conversion;
 use App\Models\ConversionsHourlyStat;
+use App\Models\Infrastructure\PrepareQueryBuilderWhere;
 use App\Models\Integrations\DaliaOffers;
 use App\Models\Integrations\Yoursurveys;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
@@ -128,8 +129,21 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(DaliaPublisherAPIServiceIF::class, function () {
             return new DaliaPublisherAPIService(
-                config('services.dalia.publisher_user_uuid')
+                config('services.dalia.publisher_user_uuid'),
+                new  DaliaPublisherAPIServiceResponse(
+                    new DaliaOffers()
+                )
             );
+
+
+        });
+
+        // timezone for tune api
+        $this->app->bind(PrepareQueryBuilderWhere::class, function () {
+            return new PrepareQueryBuilderWhere(
+                config('services.tune_api.stats_timezone')
+            );
+
 
         });
 

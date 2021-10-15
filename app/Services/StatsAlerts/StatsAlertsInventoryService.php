@@ -23,6 +23,7 @@ final class StatsAlertsInventoryService
     }
 
 
+
     public function ConversionResultPartnerIndependent($groupByHour = false, $zeroResultsOnly = false): self
     {
         //'stat_affiliate_id',  // all partners !!!
@@ -47,19 +48,21 @@ final class StatsAlertsInventoryService
     /**
      *  get click through  grouped by offer_id
      */
-    public function ConversionClicks(): self
+    public function ConversionClicks(): Builder
     {
 
-        $select = $groupBy = $this->groupBy->Offer()->toArray();
+        return DB::table('conversions_hourly_stats')
+            ->select(
+                'Stat_offer_id',
+                DB::raw('IF
+                    ( sum( Stat_conversions ) = 0 OR sum(Stat_clicks ) = 0, 0,
+                    sum( Stat_clicks ) / sum( Stat_conversions ) ) AS clickthrough  ')
+            )
+            ->havingRaw('(sum( Stat_conversions ) > 0  OR sum(Stat_clicks ) > 0) ')  //do not consider 0 clicks + 0
+            ->groupBy(
+                $this->groupBy->Offer()->toArray()
+            );
 
-        $select[] = DB::raw('IF(sum( Stat_conversions ) = 0 or sum( Stat_clicks ) = 0 ,
-        0, sum( Stat_clicks )/sum( Stat_conversions ) ) as clickthrough');
-
-        $this->queryBuilder = DB::table('conversions_hourly_stats')
-            ->select($select)
-            ->groupBy($groupBy);
-
-        return $this;
 
     }
 }
