@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Log;
 
 class TestOfferClickThroughRateAlert extends Command
 {
-    const CLICK_THROUGH_MIN_THREASHOLD = 2;
-    const CLICK_THROUGH_MIN_PERCENT_THREASHOLD = 50;
+    public const CLICK_THROUGH_MIN_THREASHOLD = 2;
+    public const CLICK_THROUGH_MIN_PERCENT_THREASHOLD = 50;
 
     /**
      * The name and signature of the console command.
