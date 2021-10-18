@@ -106,6 +106,20 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'stats_alerts' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/stats_alerts.log'),
+            'level' => env('APP_DEBUG') ? 'debug' : 'info',
+            'days' => 30,
+
+        ],
+        'stats_alerts_results' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/stats_alerts_results.log'),
+            'level' => env('APP_DEBUG') ? 'debug' : 'info',
+
+        ],
     ],
 
 ];

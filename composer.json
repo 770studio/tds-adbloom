@@ -22,6 +22,7 @@
         "laravel/framework": "^v8.47.0",
         "laravel/horizon": "^5.7",
         "laravel/nova": "*",
+        "laravel/slack-notification-channel": "^2.3",
         "laravel/tinker": "^2.5",
         "naif/toggle": "^1.2",
         "naoray/nova-json": "^1.3",

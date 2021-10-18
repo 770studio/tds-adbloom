@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\StatsAlerts;
 
 use App\Services\StatsAlerts\StatsAlertsInventoryService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class TestIntegrationBrokenAlert extends Command
+class TestIntegrationBroken extends Command
 {
     /**
      * The name and signature of the console command.

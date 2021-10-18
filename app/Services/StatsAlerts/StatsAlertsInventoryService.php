@@ -5,6 +5,7 @@ namespace App\Services\StatsAlerts;
 use App\Services\StatsAlerts\Traits\DBQueryWhereClauseExtendTrait;
 use App\Services\StatsAlerts\Traits\StatMatchTrait;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -16,12 +17,22 @@ final class StatsAlertsInventoryService
 
 
     private StatsGroupBy $groupBy;
+    /**
+     * @var mixed|string
+     */
+    private $timezone;
 
-    public function __construct(StatsGroupBy $groupBy)
+    public function __construct(StatsGroupBy $groupBy) // $timezone = "EST"
     {
         $this->groupBy = $groupBy;
+
     }
 
+    /*    public function setPeriod(string $period): self
+        {
+            $this->period = new Period24h($period);
+            return $this;
+        }*/
 
 
     public function ConversionResultPartnerIndependent($groupByHour = false, $zeroResultsOnly = false): self
@@ -48,21 +59,47 @@ final class StatsAlertsInventoryService
     /**
      *  get click through  grouped by offer_id
      */
-    public function ConversionClicks(): Builder
+    public function getConversionClicksCtr(Period24h $period): Collection
     {
-
         return DB::table('conversions_hourly_stats')
-            ->select(
-                'Stat_offer_id',
+            ->select('Stat_offer_id', 'OfferUrl_name', 'Offer_name',
                 DB::raw('IF
                     ( sum( Stat_conversions ) = 0 OR sum(Stat_clicks ) = 0, 0,
-                    sum( Stat_clicks ) / sum( Stat_conversions ) ) AS clickthrough  ')
+                    ROUND(sum( Stat_conversions )*100 / sum( Stat_clicks ),2) ) AS ctr  ')
             )
             ->havingRaw('(sum( Stat_conversions ) > 0  OR sum(Stat_clicks ) > 0) ')  //do not consider 0 clicks + 0
             ->groupBy(
                 $this->groupBy->Offer()->toArray()
-            );
+            )
+            ->where(
+                $period->toArray()
+            )
+            ->get();
 
 
     }
+
+
+    public function forThePrev24Hours($dbFieldName): array
+    {
+        $dateStart = $this->getNewMutableNowInst()->subHours(48);
+        $dateEnd = $this->getNewMutableNowInst()->subHours(24);
+
+        return [
+            [$dbFieldName, '>=', $dateStart->toDateTimeString()],
+            [$dbFieldName, '<', $dateEnd->toDateTimeString()],
+        ];
+    }
+
+    public function forTheLast24Hours($dbFieldName): array
+    {
+        $dateStart = $this->getNewMutableNowInst()->subHours(24);
+        return [
+            [$dbFieldName, '>=', $dateStart->toDateTimeString()]
+        ];
+
+
+    }
+
+
 }
