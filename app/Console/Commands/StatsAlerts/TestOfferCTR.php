@@ -112,14 +112,15 @@ class TestOfferCTR extends Command
                 //2. do have both and do have difference
 
                 if ($diff = $this->meetsTheAlertCondition($recent_item, $older_item)) {
-
-                    $alert = sprintf("CTR value of *%s* prs. (offer name: *%s*) , period: from *%s* to *%s* is greater by *%s* prs than the value of *%s* prs for the same upnext 24h period from *%s* to *%s*",
-                        $recent_item->ctr ?? 0,
+// CTR value of *%s* prs. (offer name: *%s*) , period: from *%s* to *%s* is greater by *%s* prs
+                    //than the value of *%s* prs for the same upnext 24h period from *%s* to *%s*",
+                    $alert = sprintf("Offer: *%s* - Conversion Rate is currently: *%s* (current CR) %%, changed by *%s* (CR change) %% from the previous 1 day average of *%s* (yesterday average CR)",
                         $older_item->Offer_name,
-                        $older_period->getStartDate(), $older_period->getEndDate(),
+                        $recent_item->ctr ?? 0,
                         round($diff, 2),
-                        $older_item->ctr,
-                        $recent_period->getStartDate(), $recent_period->getEndDate(),
+                        $older_item->ctr
+                    // $older_period->getStartDate(), $older_period->getEndDate(),
+                    // $recent_period->getStartDate(), $recent_period->getEndDate(),
                     );
                     $this->line("ALERT:" . $alert);
                     $this->logger->debug($alert, [
