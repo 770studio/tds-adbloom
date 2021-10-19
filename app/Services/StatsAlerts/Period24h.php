@@ -30,7 +30,7 @@ class Period24h implements Arrayable
                     $this->getNewMutableNowInst()
                 );
                 break;
-            default:
+            default: //   n=0 is for last24h, 1 - prev24h, and so on
                 $n = (int)$period;
                 $this->setDates(
                     $this->getNewMutableNowInst()->subHours(24 * ($n + 1)),
@@ -41,7 +41,7 @@ class Period24h implements Arrayable
         }
     }
 
-    private function setDates(Carbon $start, Carbon $end)
+    private function setDates(Carbon $start, Carbon $end): void
     {
         $this->dateSrart = $start;
         $this->dateEnd = $end;
@@ -52,17 +52,17 @@ class Period24h implements Arrayable
         return Carbon::now()->timezone($this->timezone);
     }
 
-    public function getDateRange()
+    public function getDateRange(): array
     {
         return [$this->dateSrart, $this->dateEnd];
     }
 
-    public function getStartDate()
+    public function getStartDate(): string
     {
         return $this->dateSrart->toDateTimeString();
     }
 
-    public function getEndDate()
+    public function getEndDate(): string
     {
         return $this->dateEnd->toDateTimeString();
     }

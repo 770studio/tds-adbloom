@@ -34,8 +34,8 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->environment('local')) {
             //  'staging'  убрали пока , т.к прун не работает
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
+            //   $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            //   $this->app->register(TelescopeServiceProvider::class);
         }
 
         if ($this->app->isLocal()) {
@@ -138,14 +138,7 @@ class AppServiceProvider extends ServiceProvider
 
         });
 
-        // timezone for tune api
-        $this->app->bind(PrepareQueryBuilderWhere::class, function () {
-            return new PrepareQueryBuilderWhere(
-                config('services.tune_api.stats_timezone')
-            );
 
-
-        });
 
 
     }

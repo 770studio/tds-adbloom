@@ -28,33 +28,8 @@ final class StatsAlertsInventoryService
 
     }
 
-    /*    public function setPeriod(string $period): self
-        {
-            $this->period = new Period24h($period);
-            return $this;
-        }*/
 
 
-    public function ConversionResultPartnerIndependent($groupByHour = false, $zeroResultsOnly = false): self
-    {
-        //'stat_affiliate_id',  // all partners !!!
-        // select is almost same as groupby
-        $select = $groupBy = $this->groupBy
-            ->createFromArray(['partners' => false, 'hour' => $groupByHour])
-            ->toArray();
-
-        $select[] = DB::raw('sum(Stat_conversions) as total_conversions');
-
-        $this->queryBuilder = DB::table('conversions_hourly_stats')
-            ->select($select)
-            ->groupBy($groupBy)
-            ->when($zeroResultsOnly, function ($q) {
-                return $q->having('total_conversions', 0);
-            });
-
-        return $this;
-
-    }
 
     /**
      *  get click through  grouped by offer_id
@@ -79,6 +54,27 @@ final class StatsAlertsInventoryService
 
     }
 
+/*
+    public function ConversionResultPartnerIndependent($groupByHour = false, $zeroResultsOnly = false): self
+    {
+        //'stat_affiliate_id',  // all partners !!!
+        // select is almost same as groupby
+        $select = $groupBy = $this->groupBy
+            ->createFromArray(['partners' => false, 'hour' => $groupByHour])
+            ->toArray();
+
+        $select[] = DB::raw('sum(Stat_conversions) as total_conversions');
+
+        $this->queryBuilder = DB::table('conversions_hourly_stats')
+            ->select($select)
+            ->groupBy($groupBy)
+            ->when($zeroResultsOnly, function ($q) {
+                return $q->having('total_conversions', 0);
+            });
+
+        return $this;
+
+    }
 
     public function forThePrev24Hours($dbFieldName): array
     {
@@ -99,7 +95,7 @@ final class StatsAlertsInventoryService
         ];
 
 
-    }
+    }*/
 
 
 }

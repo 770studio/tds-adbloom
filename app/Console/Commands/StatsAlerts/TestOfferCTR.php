@@ -2,14 +2,12 @@
 
 namespace App\Console\Commands\StatsAlerts;
 
-use App\Notifications\StatsAlertNotification;
 use App\Services\StatsAlerts\Period24h;
 use App\Services\StatsAlerts\StatsAlertsInventoryService;
 use Illuminate\Console\Command;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
 use LogicException;
-use Notification;
+use Psr\Log\LoggerInterface;
 
 class TestOfferCTR extends Command
 {
@@ -29,8 +27,7 @@ class TestOfferCTR extends Command
      * @var string
      */
     protected $description = 'Command description';
-    private Logger $logger;
-    private SlackAlertNotificationIF $slackAlert;
+    private LoggerInterface $logger;
 
 
     /**
@@ -111,7 +108,7 @@ class TestOfferCTR extends Command
                 //1. do have for older period but do not have for recent
                 //2. do have both and do have difference
 
-                if ($diff = $this->meatsTheAlertCondition($recent_item, $older_item)) {
+                if ($diff = $this->meetsTheAlertCondition($recent_item, $older_item)) {
 
                     $alert = sprintf("CTR value of *%s* prs. (offer name: *%s*) , period: from *%s* to *%s* is greater by *%s* prs than the value of *%s* prs for the same upnext 24h period from *%s* to *%s*",
                         $recent_item->ctr ?? 0,
@@ -127,8 +124,8 @@ class TestOfferCTR extends Command
                         'older period' => $older_item,
                     ]);
                     #TODO move webhook to config
-                    Notification::route('slack', 'https://hooks.slack.com/services/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')
-                        ->notify(new StatsAlertNotification($alert));
+                    /*   Notification::route('slack', 'https://hooks.slack.com/services/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')
+                           ->notify(new StatsAlertNotification($alert));*/
                 }
 
 
@@ -139,7 +136,7 @@ class TestOfferCTR extends Command
 
     }
 
-    private function meatsTheAlertCondition(?object $recent_item, object $older_item)
+    private function meetsTheAlertCondition(?object $recent_item, object $older_item)
     {
         //1. do have for older period but do not have for recent
         if (!$recent_item && $older_item->ctr > self::CLICK_THROUGH_MIN_THREASHOLD) {
