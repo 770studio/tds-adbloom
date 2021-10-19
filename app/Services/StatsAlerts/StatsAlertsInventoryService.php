@@ -34,7 +34,7 @@ final class StatsAlertsInventoryService
     /**
      *  get click through  grouped by offer_id
      */
-    public function getConversionClicksCtr(Period24h $period): Collection
+    public function getConversionClicksCtr(Period24h $period, int $min_clicks = 2): Collection
     {
         return DB::table('conversions_hourly_stats')
             ->select('Stat_offer_id', 'OfferUrl_name', 'Offer_name',
@@ -42,7 +42,9 @@ final class StatsAlertsInventoryService
                     ( sum( Stat_conversions ) = 0 OR sum(Stat_clicks ) = 0, 0,
                     ROUND(sum( Stat_conversions )*100 / sum( Stat_clicks ),2) ) AS ctr  ')
             )
-            ->havingRaw('(sum( Stat_conversions ) > 0  OR sum(Stat_clicks ) > 0) ')  //do not consider 0 clicks + 0
+            //->havingRaw('(sum( Stat_conversions ) > 0  OR sum(Stat_clicks ) > 0) ')  //do not consider 0 clicks + 0
+            ->havingRaw('sum(Stat_clicks ) > ? ', [$min_clicks])  // ignore anything that is under xx clicks
+            // + 0
             ->groupBy(
                 $this->groupBy->Offer()->toArray()
             )

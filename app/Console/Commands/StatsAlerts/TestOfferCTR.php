@@ -2,17 +2,20 @@
 
 namespace App\Console\Commands\StatsAlerts;
 
+use App\Notifications\StatsAlertNotification;
 use App\Services\StatsAlerts\Period24h;
 use App\Services\StatsAlerts\StatsAlertsInventoryService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use LogicException;
 use Psr\Log\LoggerInterface;
 
 class TestOfferCTR extends Command
 {
-    const CLICK_THROUGH_MIN_THREASHOLD = 2;
-    const CLICK_THROUGH_MIN_PERCENT_THREASHOLD = 50;
+    public const CLICK_THROUGH_MIN_THREASHOLD = 2;
+    public const CLICK_THROUGH_MIN_PERCENT_THREASHOLD = 50;
+    public const CLICKS_NOISE_THREASHOLD = 20;
 
     /**
      * The name and signature of the console command.
@@ -92,9 +95,9 @@ class TestOfferCTR extends Command
         $older_period = new Period24h($older_period);
         $recent_period = new Period24h($recent_period);
 
-        $Older = $Service->getConversionClicksCtr($older_period);
+        $Older = $Service->getConversionClicksCtr($older_period, self::CLICKS_NOISE_THREASHOLD);
 
-        $Recent = $Service->getConversionClicksCtr($recent_period);
+        $Recent = $Service->getConversionClicksCtr($recent_period, self::CLICKS_NOISE_THREASHOLD);
 
 
         // if older ctr =0 then we have either zero change (when recent ctr =0) or positive change
@@ -124,8 +127,8 @@ class TestOfferCTR extends Command
                         'older period' => $older_item,
                     ]);
                     #TODO move webhook to config
-                    /*   Notification::route('slack', 'https://hooks.slack.com/services/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')
-                           ->notify(new StatsAlertNotification($alert));*/
+                    Notification::route('slack', 'https://hooks.slack.com/services/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')
+                        ->notify(new StatsAlertNotification($alert));
                 }
 
 
