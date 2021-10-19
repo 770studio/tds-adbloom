@@ -114,7 +114,7 @@ class TestOfferCTR extends Command
                 if ($diff = $this->meetsTheAlertCondition($recent_item, $older_item)) {
 // CTR value of *%s* prs. (offer name: *%s*) , period: from *%s* to *%s* is greater by *%s* prs
                     //than the value of *%s* prs for the same upnext 24h period from *%s* to *%s*",
-                    $alert = sprintf("Offer: *%s* - Conversion Rate is currently: *%s* (current CR) %%, changed by *%s* (CR change) %% from the previous 1 day average of *%s* (yesterday average CR)",
+                    $alert = sprintf("Offer: *%s* - Conversion Rate is currently: *%s* (current CR) %%, changed by *%s* (CR change) %% from the previous 24h average of *%s* (24h average CR)",
                         $older_item->Offer_name,
                         $recent_item->ctr ?? 0,
                         round($diff, 2),
