@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Services\StatsAlerts\Traits\DBQueryWhereClauseExtendTrait;
+use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Artisan;
 
 class ConversionsHourlyStatsHistoryDataLoadCommand extends Command
@@ -13,7 +14,7 @@ class ConversionsHourlyStatsHistoryDataLoadCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'stats:grabHistory {--period=7}';
+    protected $signature = 'stats:grabHistory {--start=} {--end=}';
 
     /**
      * The console command description.
@@ -22,7 +23,7 @@ class ConversionsHourlyStatsHistoryDataLoadCommand extends Command
      */
     protected $description = 'Command description';
     /**
-     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
+     * @var Repository|Application|mixed
      */
     private string $timezone;
 
