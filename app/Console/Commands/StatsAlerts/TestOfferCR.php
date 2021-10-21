@@ -92,12 +92,17 @@ class TestOfferCR extends Command
         }
         dump($older_period, $recent_period);
 
-        $older_period = new Period24h($older_period);
-        $recent_period = new Period24h($recent_period);
-        
         $this->logger->debug("periods:", [
             'recent' => $recent_period,
             'older' => $older_period,
+        ]);
+
+        $older_period = new Period24h($older_period);
+        $recent_period = new Period24h($recent_period);
+
+        $this->logger->debug("periods decoded:", [
+            'recent' => $recent_period->getDateRange(),
+            'older' => $older_period->getDateRange(),
         ]);
 
         $Older = $Service->getConversionClicksCRValue($older_period, self::CLICKS_NOISE_THREASHOLD);
