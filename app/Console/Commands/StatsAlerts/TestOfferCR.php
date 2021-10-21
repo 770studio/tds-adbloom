@@ -22,7 +22,7 @@ class TestOfferCR extends Command
      *
      * @var string
      */
-    protected $signature = 'statstests:alert2 {--older=} {--recent=}';
+    protected $signature = 'statstests:alert2 {--older=} {--recent=} {--notify}';
 
     /**
      * The console command description.
@@ -134,8 +134,11 @@ class TestOfferCR extends Command
                         'older period' => $older_item,
                     ]);
 
-                    Notification::route('slack', config('services.slack_notification.alert_incoming_webhook'))
-                        ->notify(new StatsAlertNotification($slackAlert));
+                    if ($this->option('notify')) {
+                        Notification::route('slack', config('services.slack_notification.alert_incoming_webhook'))
+                            ->notify(new StatsAlertNotification($slackAlert));
+                    }
+
                 }
 
 
