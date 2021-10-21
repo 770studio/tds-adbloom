@@ -42,6 +42,9 @@ return [
     'dalia' => [
         'publisher_user_uuid' => env('DALIA_PUBLISHER_USER_UUID'),
     ],
+    'slack_notification' => [
+        'alert_incoming_webhook' => env('SLACKALERT_INCOMING_WEBHOOK'),
+    ],
 
 
 ];
