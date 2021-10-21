@@ -71,7 +71,7 @@ class TestOfferCR extends Command
          */
 
         $this->line("start alert2 lookup");
-
+        $this->logger->debug("alert2 lookup fired");
 
         // but we also might need to compare a custom arbitrary period
         // TODO refactor somehow
