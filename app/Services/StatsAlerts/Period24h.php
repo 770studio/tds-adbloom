@@ -31,17 +31,15 @@ class Period24h implements Arrayable
                 );
                 break;
             case 'lastDay':
-                $day = $this->getNewMutableNowInst()->subDay();
                 $this->setDates(
-                    $day->startOfDay(),
-                    $day->endOfDay()
+                    $this->getNewMutableNowInst()->subDay()->startOfDay(),
+                    $this->getNewMutableNowInst()->subDay()->endOfDay()
                 );
                 break;
             case 'dayBeforelastDay':
-                $day = $this->getNewMutableNowInst()->subDays(2);
                 $this->setDates(
-                    $day->startOfDay(),
-                    $day->endOfDay()
+                    $this->getNewMutableNowInst()->subDays(2)->startOfDay(),
+                    $this->getNewMutableNowInst()->subDays(2)->endOfDay()
                 );
                 break;
             case '24n': //   n=0 is for last24h, 1 - prev24h, and so on
@@ -53,10 +51,9 @@ class Period24h implements Arrayable
                 break;
 
             default: // n days ago
-                $day = $this->getNewMutableNowInst()->subDays((int)$period);
                 $this->setDates(
-                    $day->startOfDay(),
-                    $day->endOfDay()
+                    $this->getNewMutableNowInst()->subDays((int)$period)->startOfDay(),
+                    $this->getNewMutableNowInst()->subDays((int)$period)->endOfDay()
                 );
 
             // throw new \LogicException('period dates are not set. undefined period');
