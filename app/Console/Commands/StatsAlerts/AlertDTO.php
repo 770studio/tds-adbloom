@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\StatsAlerts;
 
-use App\DomainObjects\DataTransferObject;
+use App\Helpers\DataTransferObject;
 use App\Services\StatsAlerts\Period24h;
 use InvalidArgumentException;
 

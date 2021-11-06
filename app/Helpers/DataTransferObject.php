@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DomainObjects;
+namespace App\Helpers;
 
 use ReflectionClass;
 use ReflectionProperty;
