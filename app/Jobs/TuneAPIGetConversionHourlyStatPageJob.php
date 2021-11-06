@@ -20,29 +20,19 @@ use Illuminate\Support\Facades\Log;
 class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     /**
      * The number of times the job may be attempted.
-     *
-     * @var int
      */
-    public $tries = 3;
+    public int $tries = 3;
     /**
      * The maximum number of unhandled exceptions to allow before failing.
-     *
-     * @var int
      */
-    public $maxExceptions = 1;
+    public int $maxExceptions = 1;
     /**
      * The number of seconds the job can run before timing out.
-     *
-     * @var int
      */
-    public $timeout = 120;
-    /**
-     * @var int
-     */
-    private $page;
+    public int $timeout = 120;
+    private int $page;
     private Carbon $stat_date;
     private int $stat_hour;
     private int $total_count;
@@ -92,7 +82,7 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
         );
 
         $this->total_count = $responseProcessor->getCount();
-        Log::debug(
+        Log::channel('tune_hourly_data_extractor')->debug(
             "TuneAPIGetConversionHourlyStatPageJob",
             [
                 'total_count' => $this->total_count,

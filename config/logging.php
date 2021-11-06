@@ -114,6 +114,13 @@ return [
             'days' => 30,
 
         ],
+        'tune_hourly_data_extractor' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/tune_hourly_data_extractor.log'),
+            'level' => 'debug',
+
+        ],
+
 
     ],
 

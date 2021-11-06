@@ -2,20 +2,21 @@
 
 namespace App\Console\Commands\StatsAlerts;
 
+use App\Helpers\CompareObjectValueHelper;
 use App\Notifications\StatsAlertNotification;
 use App\Services\StatsAlerts\Period24h;
 use App\Services\StatsAlerts\StatsAlertsInventoryService;
 use Illuminate\Console\Command;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use LogicException;
-use Psr\Log\LoggerInterface;
 
 class TestOfferCR extends Command
 {
-    public const CLICK_THROUGH_MIN_THREASHOLD = 2;
-    public const CLICK_THROUGH_MIN_PERCENT_THREASHOLD = 50;
-    public const CLICKS_NOISE_THREASHOLD = 20;
+    public const CLICK_THROUGH_MIN_THRESHOLD = 2;
+    public const CLICK_THROUGH_MIN_PERCENT_THRESHOLD = 50;
+    public const CLICKS_NOISE_THRESHOLD = 20;
 
     /**
      * The name and signature of the console command.
@@ -30,7 +31,7 @@ class TestOfferCR extends Command
      * @var string
      */
     protected $description = 'Command description';
-    private LoggerInterface $logger;
+    private Logger $logger;
 
 
     /**
@@ -105,78 +106,84 @@ class TestOfferCR extends Command
             'older' => $older_period->getDateRange(),
         ]);
 
-        $Older = $Service->getConversionClicksCRValue($older_period, self::CLICKS_NOISE_THREASHOLD);
+        $Older = $Service->getConversionClicksCRValue($older_period);
+        $Recent = $Service->getConversionClicksCRValue($recent_period);
 
-        $Recent = $Service->getConversionClicksCRValue($recent_period, self::CLICKS_NOISE_THREASHOLD);
+        $Older->each(function ($older_item) use ($Recent, $older_period, $recent_period) {
+            $recent_item = $Recent->where("Stat_offer_id", $older_item->Stat_offer_id)->first();
 
+            if ($recent_item->clicks < self::CLICKS_NOISE_THRESHOLD ||
+                $older_item->clicks < self::CLICKS_NOISE_THRESHOLD) {
+                return true; // continue as one of the periods is below noise threshold
+            }
 
-        $Older
-            // ->whereNotNull('cr_value')      // if older ctr =0 then we have either zero change (when recent ctr =0) or positive change
-            // ->where('cr_value', '>', 0)     // whereas we are interested in negative change only
-            ->each(function ($older_item) use ($Recent, $older_period, $recent_period) {
-                $recent_item = $Recent->where("Stat_offer_id", $older_item->Stat_offer_id)->first();
-                //1. do have for older period but do not have for recent
-                //2. do have both and do have difference
+            $comparator = (new CompareObjectValueHelper('cr_value', self::CLICK_THROUGH_MIN_PERCENT_THRESHOLD));
+            // check if we have DOWN (classic older period is greater than recent)
+            //TODO refactor as following looks like shit
+            if ($diff = $comparator->compare($recent_item, $older_item)) {
+                $direction = 'DOWN';
+            } elseif ($diff = $comparator->compare($older_item, $recent_item)) {
+                $direction = 'UP';
+            }
 
-                if ($diff = $this->meetsTheAlertCondition($recent_item, $older_item)) {
-
-                    $logAlert = sprintf("CR value of %s prs. (offer name: %s) , period: from %s to %s is greater by %s prs
-                     than the value of %s prs for the same upnext 24h period from %s to %s",
-                        $older_item->cr_value,
-                        $older_item->Offer_name,
-                        $older_period->getStartDate(), $older_period->getEndDate(), // period: from to
-                        round($diff, 2), // greater by
-                        $recent_item->cr_value ?? 0,
-                        $recent_period->getStartDate(), $recent_period->getEndDate(), // period: from to
-                    );
-
-                    $slackAlert = sprintf("Offer: *%s* - Conversion Rate is currently: *%s* (current CR) %%, changed by *%s* (CR change) %% from the previous 24h average of *%s* (24h average CR)",
-                        $older_item->Offer_name,
-                        $recent_item->cr_value ?? 0,
-                        round($diff, 2),
-                        $older_item->cr_value
-                    // $older_period->getStartDate(), $older_period->getEndDate(),
-                    // $recent_period->getStartDate(), $recent_period->getEndDate(),
-                    );
-                    $this->line("ALERT2:" . $logAlert);
-                    $this->logger->debug($logAlert, [
-                        'recent period' => $recent_item,
-                        'older period' => $older_item,
+            if ($diff) {
+                $this->logger->debug('alert is about to fire',
+                    [
+                        'recent_period' => $recent_item,
+                        'older_period' => $older_item,
                     ]);
 
-                    if ($this->option('notify')) {
-                        Notification::route('slack', config('services.slack_notification.alert_incoming_webhook'))
-                            ->notify(new StatsAlertNotification($slackAlert));
-                    }
+                $alertDto = AlertDTO::fromArray([
+                    'direction' => $direction,
+                    'diff_prs' => $diff,
+                    'recent_period' => $recent_period,
+                    'older_period' => $older_period,
+                    'recent_item_prs_value' => $recent_item->cr_value,
+                    'older_item_prs_value' => $older_item->cr_value,
+                    'offer_name' => $older_item->Offer_name
+                ]);
+                $this->stat_alert($alertDto);
+            }
 
-                }
 
-
-            });
-
-
+        });
         $this->line("finished");
 
     }
 
-    private function meetsTheAlertCondition(?object $recent_item, object $older_item)
+    public function stat_alert(AlertDTO $alertDTO): void
     {
-        //1. do have for older period but do not have for recent
-        if (!$recent_item && $older_item->cr_value > self::CLICK_THROUGH_MIN_THREASHOLD) {
-            return round(
-                100 * ($older_item->cr_value - 0) / $older_item->cr_value,
-                2
-            );
+
+        $logAlert = sprintf("CR value of %s prs. (offer name: %s) , period: from %s to %s is greater by %s prs
+                     than the value of %s prs for the same daily period from %s to %s",
+            $alertDTO->older_item_prs_value,
+            $alertDTO->offer_name,
+            $alertDTO->older_period->getStartDate(), $alertDTO->older_period->getEndDate(), // period: from to
+            $alertDTO->diff_prs, // greater by
+            $alertDTO->recent_item_prs_value,
+            $alertDTO->recent_period->getStartDate(), $alertDTO->recent_period->getEndDate(), // period: from to
+        );
+
+
+        //CR is %(current cr), (DOWN/UP) by %(CR % Change) from prior day average of %(yesterday CR)
+        $slackAlert = sprintf("Offer: *%s* - CR is *%s*(current cr), (*%s*) by *%s*(CR %% Change) from prior day average of *%s*(yesterday CR)",
+            $alertDTO->offer_name,
+            $alertDTO->recent_item_prs_value,
+            $alertDTO->direction,
+            $alertDTO->diff_prs,
+            $alertDTO->older_item_prs_value
+        );
+
+        $this->line("ALERT2:" . $logAlert);
+        $this->logger->debug($logAlert);
+
+        if ($this->option('notify')) {
+            Notification::route('slack', config('services.slack_notification.alert_incoming_webhook'))
+                ->notify(new StatsAlertNotification($slackAlert));
         }
 
-        //2. do have both and do have difference (negative change)
-        if ($recent_item && $older_item->cr_value > $recent_item->cr_value) {
-            $diff = 100 * ($older_item->cr_value - $recent_item->cr_value) / $older_item->cr_value;
-            if ($diff >= self::CLICK_THROUGH_MIN_PERCENT_THREASHOLD) {
-                return round($diff, 2);
-            }
-        }
 
-        return false;
     }
+
+
 }
