@@ -7,8 +7,6 @@ namespace App\Services\TuneAPI;
 use App\Models\Conversion;
 use App\Models\ConversionsHourlyStat;
 use Carbon\Carbon;
-use Exception;
-use Illuminate\Support\Facades\Log;
 use stdClass;
 use Tune\NetworkApi;
 use Tune\Utils\HttpQueryBuilder;
@@ -59,27 +57,6 @@ class TuneAPIService
         }
 
         return $this;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function getResponse_DEPR(Request $request): Response
-    {
-        dump($request->toArray());
-        Log::channel('queue')->debug('request:', $request->toArray());
-
-        switch ($this->getEntityName()) {
-            case 'Conversion':
-                return new Response(
-                    $this->api
-                        ->conversion()
-                        ->findAll($request->toArray(), /* Request options */ [])
-                    , $this->entityName
-                );
-        }
-
-
     }
 
     private function getEntityName()
