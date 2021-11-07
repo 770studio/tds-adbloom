@@ -14,14 +14,19 @@ class AlertDTO extends DataTransferObject
     public Period24h $recent_period, $older_period;
     public float $recent_item_prs_value, $older_item_prs_value;
 
+    protected function __construct(array $parameters = [])
+    {
+        parent::__construct($parameters);
+        self::validate($parameters);
+
+    }
 
     public static function fromArray(array $params): self
     {
-        self::validate($params);
 
         return new self([
             'direction' => $params['direction'],
-            'diff_prs' => $params['diff'],
+            'diff_prs' => $params['diff_prs'],
             'recent_period' => $params['recent_period'],
             'older_period' => $params['older_period'],
             'recent_item_prs_value' => $params['recent_item_prs_value'],

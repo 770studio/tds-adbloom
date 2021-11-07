@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use LogicException;
 
-class TestOfferCR extends Command
+final class TestOfferCR extends Command
 {
     public const CLICK_THROUGH_MIN_THRESHOLD = 2;
     public const CLICK_THROUGH_MIN_PERCENT_THRESHOLD = 50;
