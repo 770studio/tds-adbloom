@@ -2,17 +2,21 @@
 
 namespace App\Nova;
 
+use App\Helpers\WidgetJSTemplateHelper;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 use Naif\Toggle\Toggle;
 use OptimistDigital\MultiselectField\Multiselect;
+use Sixlive\TextCopy\TextCopy;
 
 //use Everestmx\BelongsToManyField\BelongsToManyField;
 
@@ -108,29 +112,7 @@ class Widget extends Resource
                     ->saveAsJSON(),
 
             ])->dependsOn('dynamic_or_static', 0),
-
-
-            // BelongsToMany::make('Opportunities'),
-
-
-            //AttachMany::make( 'Opportunities' ),
-
-
-            /*           MyBelongsToManyField::make('Opportunities', 'Opportunities', 'App\Nova\Opportunity')
-                           ->options(\App\Models\Opportunity::all())
-                           ->withMeta(['trackBy'=> 'short_id']),*/
-
-
             NovaDependencyContainer::make([
-                //  AttachMany::make( 'Opportunities' )->showRefresh(),
-                // BelongsToMany::make('Opportunities'),
-                /*                BelongsToManyField::make('Opportunities', 'opportunities', Opportunity::class)
-                                    ->options(\App\Models\Opportunity::all())
-                                    ->setMultiselectProps([
-                                        'trackBy' => 'short_id',
-                                        // and others from docs
-                                    ]) ,*/
-
                 Multiselect::make('Opportunities', 'opportunities')
                     ->options(\App\Models\Opportunity::all())
                     ->belongsToMany(Opportunity::class)
@@ -138,10 +120,49 @@ class Widget extends Resource
 
             ])->dependsOn('dynamic_or_static', 1),
 
+            new Panel('Integration', $this->IntegrationFields()),
+
 
         ];
     }
 
+    protected function IntegrationFields(): array
+    {
+        return [
+            TextCopy::make('Link', function () {
+                return sprintf("https://dev.widget.adbloom.co/?widgetId=%s&partnerId=%d",
+                    $this->short_id,
+                    $this->partner->external_id
+                );
+            }),
+
+            Code::make('Add this code right before the </head> tag of the HTML page. Add this code to the place where you want to display the widget <div id="adblm-widget"></div>', function () {
+                return WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id);
+            })->language('javascript'),
+
+            TextCopy::make('On-page', function () {
+                return WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id);
+            })->truncate(1)
+                ->copyValue(function ($value) {
+                    return $value;
+                })->copyButtonTitle('Copy the code into clipboard'),
+
+
+            /*            TextCopy::make('On-page', function () {
+                            return  nl2br(WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id));
+                        })->truncate(100)*/
+
+
+            /*
+                         TextCopy::make('', function() {
+                             return '';
+                         })
+                            ->copyValue(
+                                WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id)
+                            )*/
+
+        ];
+    }
 
     /**
      * Get the cards available for the request.
@@ -208,8 +229,5 @@ class Widget extends Resource
         return $query;
     }
 
-    /*    protected function isPartnerPendingPBSent()
-        {
-            return
-        }*/
+
 }
