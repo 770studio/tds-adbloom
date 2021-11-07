@@ -107,12 +107,13 @@ final class TestOfferCR extends Command
         ]);
 
         $Older = $Service->getConversionClicksCRValue($older_period);
+        //dd($Older);
         $Recent = $Service->getConversionClicksCRValue($recent_period);
 
         $Older->each(function ($older_item) use ($Recent, $older_period, $recent_period) {
             $recent_item = $Recent->where("Stat_offer_id", $older_item->Stat_offer_id)->first();
 
-            if ($recent_item->clicks < self::CLICKS_NOISE_THRESHOLD ||
+            if (!$recent_item || $recent_item->clicks < self::CLICKS_NOISE_THRESHOLD ||
                 $older_item->clicks < self::CLICKS_NOISE_THRESHOLD) {
                 return true; // continue as one of the periods is below noise threshold
             }

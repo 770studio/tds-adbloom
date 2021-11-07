@@ -34,7 +34,7 @@ final class StatsAlertsInventoryService
     /**
      *  get click through  grouped by offer_id
      */
-    public function getConversionClicksCRValue(Period24h $period, int $min_clicks = 2): Collection
+    public function getConversionClicksCRValue(Period24h $period): Collection
     {
         return DB::table('conversions_hourly_stats')
             ->select('Stat_offer_id', 'OfferUrl_name', 'Offer_name',
