@@ -167,7 +167,7 @@ final class TestOfferCR extends Command
 
 
         //CR is %(current cr), (DOWN/UP) by %(CR % Change) from prior day average of %(yesterday CR)
-        $slackAlert = sprintf("Offer: *%s* - CR is *%s*(current cr), (*%s*) by *%s*(CR %% Change) from prior day average of *%s*(yesterday CR)",
+        $slackAlert = sprintf("Offer: *%s* - CR is currently *%s* %%, *%s* by *%s* %% from prior day average of *%s* %%",
             $alertDTO->offer_name,
             $alertDTO->recent_item_prs_value,
             $alertDTO->direction,
