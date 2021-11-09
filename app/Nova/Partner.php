@@ -72,11 +72,10 @@ class Partner extends Resource
                 ->rules('required')
                 ->sortable(),
 
-            new Panel('Pending Postback', $this->PendingPBFields()),
+            new Panel('Postback', $this->PostbackFields()),
             new Panel('Revenue', $this->RevenueFields()),
             new Panel('Tags', $this->TagsFields()),
             new Panel('Widgets', $this->WidgetFields()),
-
 
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
@@ -133,24 +132,26 @@ class Partner extends Resource
         return [];
     }
 
-    protected function PendingPBFields(): array
+    protected function PostbackFields(): array
     {
         return [
+            Textarea::make('Postback URL', 'pending_url')->alwaysShow()->rows(3),
+            Heading::make(
+                view('partner_url_possible_macros')->render()
+            )->asHtml(),
+            BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
+                RedirectStatus::indexes()
+            ),
             Toggle::make('Send Pending Postback', 'send_pending_postback'),
             NovaDependencyContainer::make([
                 Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
-                Textarea::make('Postback URL', 'pending_url')->alwaysShow()->rows(3),
-                BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
-                    RedirectStatus::indexes()
-                ),
-                Heading::make(
-                    view('partner_url_possible_macros')->render()
-                )->asHtml(),
+
             ])->dependsOn('send_pending_postback', 1),
 
 
         ];
     }
+
 
     protected function RevenueFields(): array
     {
