@@ -58,7 +58,7 @@ class Client extends Resource
                 ->rules('required')
                 ->sortable(),
             Text::make('Short Id')->exceptOnForms(),
-            Text::make('External Id')
+            Text::make('Tune ID', 'external_id')
                 ->rules('required')
                 ->sortable(),
            // Text::make('Redirect to', 'redirect_to_domain')->sortable(),
