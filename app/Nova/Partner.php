@@ -68,7 +68,7 @@ class Partner extends Resource
                 ->rules('required')
                 ->sortable(),
             Text::make('Short Id')->exceptOnForms(),
-            Text::make('External Id')
+            Text::make('Tune ID', 'external_id')
                 ->rules('required')
                 ->sortable(),
 

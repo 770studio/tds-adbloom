@@ -4,69 +4,56 @@
 namespace App\Services\TuneAPI;
 
 
-use App\Models\Conversion;
+use App\Helpers\DBFieldsHelper;
 use App\Services\Response;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ConversionsResponse extends Response
 {
-    private static $dbFieldTypes = [];
 
+
+    /**
+     * @throws Exception
+     */
     public function parseData(): Collection
     {
-        $data = [];
+        $dbFieldsHelper = (new DBFieldsHelper($this->relModel->getTable()));
+
         collect($this->apiResult->response->data->data)
-            ->transform(function ($items, $numkey) use (&$data) {
-                //return $item->{$entity};
+            ->transform(function ($items, $numkey) use (&$data, $dbFieldsHelper) {
+
                 foreach ($items as $UpperLevelKey => $item_Arr) {
                     foreach ($item_Arr as $itemkey => $val) {
                         #TODO str macro toMysqlFieldname and ViseVersa
-                        if (in_array($UpperLevelKey . '.' . $itemkey, Conversion::FIELDS)) {
+                        if (in_array($UpperLevelKey . '.' . $itemkey, $this->relModel::TUNE_FIELDS, false)) {
                             $dbFieldName = $UpperLevelKey . '_' . $itemkey;
-                            $data[$numkey][$dbFieldName] = $this->cast($dbFieldName, $val);
+                            $data[$numkey][$dbFieldName] = $dbFieldsHelper->cast($dbFieldName, $val);
                         }
 
 
                     }
+
                 }
 
             });
+
         $this->data = collect($data);
+
+
         return $this->data;
-    }
-    #TODO move somewhere
-    private function cast(string $dbFieldName, $val): ?string
-    {
-        if(!$val) return $val;
-
-        switch($this->getDBFieldType($dbFieldName)) {
-            case 'datetime': return Carbon::parse($val)->toDateTimeString();
-            case 'date': return Carbon::parse($val)->toDateString();
-            default: return $val;
-        }
-    }
-
-    #TODO move somewhere
-    private function getDBFieldType($dbFieldName)
-    {
-        if (!isset(self::$dbFieldTypes[$dbFieldName])) {
-            self::$dbFieldTypes[$dbFieldName] = DB::connection()->getDoctrineColumn('conversions', $dbFieldName)->getType()->getName();
-        }
-
-        return self::$dbFieldTypes[$dbFieldName];
-
     }
 
     /**
      * @throws Exception
      */
-    public function validate()
+    public function validate(): self
     {
-        if ($this->apiResult->response->errorMessage) throw new Exception($this->apiResult->response->errorMessage);
-
+        if ($this->apiResult->response->errorMessage) {
+            throw new Exception($this->apiResult->response->errorMessage);
+        }
+        return $this;
     }
+
 
 }

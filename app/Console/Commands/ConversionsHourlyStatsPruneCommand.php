@@ -2,20 +2,17 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\TuneAPIRecursiveConversionUpdateJob;
-use Carbon\CarbonImmutable;
-use Exception;
+use App\Models\ConversionsHourlyStat;
 use Illuminate\Console\Command;
 
-
-class ConversionsUpdateCommand_recursive extends Command
+class ConversionsHourlyStatsPruneCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'conversions:update_DEPR';
+    protected $signature = 'conversionsHourlyStats:prune';
 
     /**
      * The console command description.
@@ -37,15 +34,11 @@ class ConversionsUpdateCommand_recursive extends Command
     /**
      * Execute the console command.
      *
-     * @return void
-     * @throws Exception
+     * @return int
      */
     public function handle()
     {
-
-        TuneAPIRecursiveConversionUpdateJob::dispatch( 0,
-            CarbonImmutable::now()->subMonths(3)
-        );
-
+        ConversionsHourlyStat::outdated()->delete();
+        return 0;
     }
 }

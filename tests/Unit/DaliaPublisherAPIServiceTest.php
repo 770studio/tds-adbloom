@@ -18,10 +18,10 @@ class DaliaPublisherAPIServiceTest extends TestCase
     /**
      * @throws BindingResolutionException
      */
-    public function test_get_data(): void
-    {
-        $daliaApi = $this->app->make(DaliaPublisherAPIServiceIF::class);
-        $daliaApi->getAll();
-        dd($daliaApi);
-    }
+    /*   public function test_get_data(): void
+      {
+         $daliaApi = $this->app->make(DaliaPublisherAPIServiceIF::class);
+          $daliaApi->getAll();
+          dd($daliaApi);
+    } */
 }

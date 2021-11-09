@@ -178,7 +178,7 @@ return [
 
     'environments' => [
         'production' => [
-            'supervisor-stage1' => [
+            'supervisor-prod1' => [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'auto',
@@ -188,10 +188,11 @@ return [
                 'tries' => 3,
                 'maxExceptions' => 1,
                 'backoff' => 30,
+                'maxTime' => 3600,
                 'maxJobs' => 180, // per min
 
             ],
-            'supervisor-stage2' => [
+            'supervisor-prod2' => [
                 'connection' => 'redis',
                 'queue' => ['postback_queue'],
                 'balance' => 'auto',
@@ -200,6 +201,8 @@ return [
                 'balanceCooldown' => 3,
                 'tries' => 1,
                 'backoff' => 30,
+                'maxTime' => 3600,
+                'maxJobs' => 180,
 
             ],
         ],
@@ -214,7 +217,8 @@ return [
                 'tries' => 3,
                 'maxExceptions' => 1,
                 'backoff' => 30,
-                'maxJobs' => 180, // per min
+                'maxTime' => 600,
+                'maxJobs' => 50, // per min
 
             ],
             'supervisor-stage2' => [
@@ -226,7 +230,8 @@ return [
                 'balanceCooldown' => 3,
                 'tries' => 1,
                 'backoff' => 30,
-
+                'maxTime' => 600,
+                'maxJobs' => 50, // per min
             ],
 
 

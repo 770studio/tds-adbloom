@@ -12,12 +12,13 @@ use Illuminate\Support\Facades\Http;
 class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
 {
     private string $publisher_user_uuid;
+    private DaliaPublisherAPIServiceResponse $responseProcessor;
 
 
-    public function __construct(string $publisher_user_uuid)
+    public function __construct(string $publisher_user_uuid, DaliaPublisherAPIServiceResponse $responseProcessor)
     {
         $this->publisher_user_uuid = $publisher_user_uuid;
-
+        $this->responseProcessor = $responseProcessor;
     }
 
     public function getAll(): DaliaPublisherAPIServiceResponse
@@ -32,8 +33,7 @@ class DaliaPublisherAPIService implements DaliaPublisherAPIServiceIF
         )->get($url);
 
        // dd($response->object());
-
-        return new DaliaPublisherAPIServiceResponse (
+        return $this->responseProcessor->setData(
             $response->object()
         );
 

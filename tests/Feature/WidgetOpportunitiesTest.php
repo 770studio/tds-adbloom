@@ -16,7 +16,7 @@ class WidgetOpportunitiesTest extends TestCase
     {
 
         $response = $this->json('GET', '/api/v1/widget/SVLSaRWEFhiTd6TVT4FjT/opportunities');
-        // dd($response->json());
+          //dd($response->json());
 
         $response->assertStatus(200);
         $response->assertJson(fn(AssertableJson $json) => $json->has('items', 4)
@@ -27,13 +27,10 @@ class WidgetOpportunitiesTest extends TestCase
                 ->where('required', [0 => "email", 1 => "country", 2 => "age"])
                 ->where('targeting', [
                     "platform" => [
-                        0 => "Mobile",
-                        1 => "Tablet",
+                        0 => "mobile",
+                        1 => "tablet",
                     ],
-                    "age" => [
-                        "from" => null,
-                        "to" => null,
-                    ]])
+                   ])
                 ->missing('targeting.0.country')
                 ->missing('targeting.0.gender', [])
                 ->etc()
@@ -44,18 +41,14 @@ class WidgetOpportunitiesTest extends TestCase
                 ->where('targeting',
                     [
                         "platform" => [
-                            0 => "Mobile"
+                            0 => "mobile"
                         ],
                         "country" => [
-                            0 => "Åland Islands",
-                            1 => "Andorra",
-                            2 => "Angola",
-                            3 => "Argentina",
-                            4 => "Azerbaijan",
+                             "AD", "AX", "AO", "AR", "AZ"
                         ],
                         "gender" => [
-                            0 => "Male",
-                            1 => "Female"
+                            0 => "male",
+                            1 => "female"
                         ],
                         "age" => [
                             "from" => "8",

@@ -39,7 +39,13 @@ class Kernel extends ConsoleKernel
             $schedule->command('yoursurveys:update 500 CA')->everyFourHours();
             $schedule->command('yoursurveys:update 500 US')->everyFourHours();
             $schedule->command('dalia_publisher_api:update')->daily();
-           // $schedule->command('telescope:prune --hours=240')->daily();
+            // $schedule->command('telescope:prune --hours=240')->daily();
+            //
+            $schedule->command('conversions:collectHourlyStats')->hourlyAt([20, 40]);
+            // $schedule->command('test:alert1')->hourlyAt([25, 45]);
+             $schedule->command('statstests:alert2 --notify')->dailyAt('10:00');
+            $schedule->command('conversionsHourlyStats:prune')->daily();
+
         }
 
         if (App::environment('production')) {

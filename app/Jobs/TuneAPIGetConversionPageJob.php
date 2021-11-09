@@ -68,15 +68,15 @@ class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
      * @return void
      * @throws LimiterTimeoutException|Exception
      */
-    public function handle(TuneAPIService $tuneAPIService)
+    public function handle(TuneAPIService $tuneAPIService, ConversionsResponse $responseProcessor): void
     {
 
-
-        (new ConversionsResponse(
+        $responseProcessor->setData(
             $tuneAPIService->getConversions($this->fields, $this->page)
-        ))
+        )
+            ->validate()
             ->parseData()
-            ->each(function ($record) use (&$created, &$changed) {
+            ->each(function ($record) {
                 Conversion::updateOrCreate(
                     ["Stat_tune_event_id" => $record["Stat_tune_event_id"]],
                     $record
@@ -98,8 +98,8 @@ class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
     {
         return [
             'TuneAPIGetConversionPageJob_page#' . $this->page,
-            'TuneAPIGetConversionPageJob_' . app()->environment(),
-            app()->environment()
+            //'TuneAPIGetConversionPageJob_' . app()->environment(),
+            // app()->environment()
         ];
     }
 

@@ -106,6 +106,22 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'stats_alerts' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/stats_alerts.log'),
+            'level' => 'debug',
+            'days' => 30,
+
+        ],
+        'tune_hourly_data_extractor' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/tune_hourly_data_extractor.log'),
+            'level' => 'debug',
+
+        ],
+
+
     ],
 
 ];

@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Integrations\Yoursurveys;
 use App\Interfaces\YoursurveysAPIServiceIF;
+use App\Models\Integrations\Yoursurveys;
 use App\Services\YoursurveysReadmeIoAPI\YourSurveysResponse;
 use Exception;
 use Illuminate\Console\Command;
@@ -40,14 +40,13 @@ class YourSurveysUpdateCommand extends Command
      * @return int
      * @throws Exception
      */
-    public function handle(YoursurveysAPIServiceIF $yoursurveysAPIService)
+    public function handle(YoursurveysAPIServiceIF $yoursurveysAPIService, YourSurveysResponse $responseProcessor)
     {
 
         //dd($yoursurveysAPIService);
-
-        (new YourSurveysResponse(
+        $responseProcessor->setData(
             $yoursurveysAPIService->BasicAPICall()
-        ))
+        )
             ->parseData()
             ->each(function ($record) {
                 Yoursurveys::updateOrCreate(

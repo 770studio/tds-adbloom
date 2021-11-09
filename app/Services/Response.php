@@ -6,52 +6,59 @@ namespace App\Services;
 
 use App\Interfaces\ResponseIF;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use stdClass;
 
 class Response implements ResponseIF
 {
+
     protected $pageCount;
     protected $data;
     protected $count;
     protected $apiResult;
+    protected Model $relModel;
 
     /**
      * @throws Exception
      */
-    public function __construct(stdClass $apiResult)
+    public function __construct(Model $relModel)
     {
-        $this->apiResult = $apiResult;
-        $this->validate();
+        $this->relModel = $relModel;
     }
 
-    public function getData() : Collection
+    public function setData(object $apiResult): self
+    {
+        $this->apiResult = $apiResult;
+        return $this;
+    }
+
+    public function getData(): Collection
     {
         return $this->data;
     }
 
-    public function parseData() : Collection
+    public function parseData(): Collection
     {
         //implemented on upper level
         return collect([]);
     }
 
-    public function getCountPages() : int
+    public function getCountPages(): int
     {
         return $this->pageCount;
 
     }
 
-    public function parseCountPages() : int
+    public function parseCountPages(): int
     {
         $this->pageCount = $this->apiResult->response->data->pageCount;
-        return $this->pageCount;
+        return (int)$this->pageCount;
 
     }
 
-    public function getCount() : int
+    public function getCount(): int
     {
-        return $this->count;
+        return (int)$this->apiResult->response->data->count;
 
     }
 
