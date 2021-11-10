@@ -10,7 +10,6 @@ use App\Models\Opportunity;
 use App\Models\Partner;
 use App\Models\Widget;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class WidgetController extends Controller
 {
@@ -71,14 +70,14 @@ class WidgetController extends Controller
 
         //dd($widget );
 
-        DB::listen(function ($query) {
+/*        DB::listen(function ($query) {
             $sql = $query->sql;
             $bindings = $query->bindings;
             $executionTime = $query->time;
 
             dump($sql);
 
-        });
+        });*/
 
         if ($request->partnerId) {
             Partner::setDefault($request->partnerId);
