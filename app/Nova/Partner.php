@@ -165,7 +165,7 @@ class Partner extends Resource
                 // ->rules('required', 'gt:0'),
                 Toggle::make('Convert to In-app Currency', 'convert_to_points'),
                 NovaDependencyContainer::make([
-                    Number::make('Multiplier', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5),
+                    Number::make('Reward users this amount for each $1 earned', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5),
                     //->rules('required', 'gt:0'), Reward users [input] for each $1 earned
                     Text::make('In-app Currecny Name', 'points_name'),
                     Image::make('In-app Currency Icon', 'points_logo')
