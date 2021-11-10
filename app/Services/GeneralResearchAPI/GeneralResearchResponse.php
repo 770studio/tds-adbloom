@@ -18,7 +18,6 @@ class GeneralResearchResponse extends Response
     public function validate(): self
     {
         if ($this->apiResult->info->success != 'true') {
-            //TODO ErrorException
             throw new Exception("GeneralResearchResponse is not parsable");
         }
         return $this;

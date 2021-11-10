@@ -20,7 +20,7 @@ class GeneralResearchAPIService implements GeneralResearchAPIServiceIF
         $this->params = [
             'bpuid' => 'max',
             'format' => 'json',
-            'ip' => '69.253.144.82', //$request->ip(),
+            'ip' => $request->ip(),
             'n_bins' => $n_bins,
         ];
     }
