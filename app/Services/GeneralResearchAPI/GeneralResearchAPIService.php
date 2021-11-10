@@ -4,17 +4,28 @@
 namespace App\Services\GeneralResearchAPI;
 
 
+use App\Interfaces\GeneralResearchAPIServiceIF;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class GeneralResearchAPIService
+class GeneralResearchAPIService implements GeneralResearchAPIServiceIF
 {
+    public array $params = [];
+    private string $api_url;
 
-    public function __construct($limit = 1000, $country = "US", $basic = 1)
+
+    public function __construct(Request $request, $n_bins = 3)
     {
-//https://fsb.generalresearch.com/6c7c06f784d14fb98a292cf1410169b1/offerwall/45b7228a7/?bpuid=max&format=json&ip=69.253.144.82&n_bins=3
+        $this->api_url = config('services.generalresearch.api_base_url');
+        $this->params = [
+            'bpuid' => 'max',
+            'format' => 'json',
+            'ip' => '69.253.144.82', //$request->ip(),
+            'n_bins' => $n_bins,
+        ];
     }
 
-    public function BasicAPICall(): object
+    public function request(): object
     {
 
         $params = http_build_query(
@@ -22,13 +33,7 @@ class GeneralResearchAPIService
         );
 
         $url = $this->api_url . '?' . $params;
-
-        $response = Http::withOptions(
-            ['debug' => true]
-        )->withHeaders([
-            'X-YourSurveys-Api-Key' => $this->secret,
-        ])->get($url);
-
+        $response = Http::get($url);
         return $response->object();
 
 

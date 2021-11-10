@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WidgetOpportunitiesCollection;
+use App\Interfaces\GeneralResearchAPIServiceIF;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use App\Models\Widget;
+use App\Services\GeneralResearchAPI\GeneralResearchResponse;
+use Exception;
 use Illuminate\Http\Request;
+use Str;
 
 class WidgetController extends Controller
 {
@@ -86,17 +90,32 @@ class WidgetController extends Controller
         );
     }
 
-    public function grl(Request $request, string $widget_short_id)
+    /**
+     * @throws Exception
+     */
+    public function grl(Request                     $request, string $widget_short_id,
+                        GeneralResearchAPIServiceIF $grlService, GeneralResearchResponse $responseProcessor)
     {
-        //dd($widget_short_id, $request);
-        // partner is either in partnerId of the request or related to widget
-        $partner = $request->partnerId
-            ? Partner::where('external_id', $request->partnerId)->first()
-            : Widget::where('short_id', $widget_short_id)->first()->partner;
+        try {
+            // partner is either in partnerId of the request or related to widget
+            $partner = $request->partnerId
+                ? Partner::where('external_id', $request->partnerId)->first()
+                : Widget::where('short_id', $widget_short_id)->first()->partner;
 
-        dd($request->ip());
+            return $responseProcessor->setData(
+                $grlService->request()
+            )->validate()
+                ->transformResponse($partner)
+                ->toJson();
 
-        //https://fsb.generalresearch.com/6c7c06f784d14fb98a292cf1410169b1/offerwall/45b7228a7/?bpuid=max&format=json&ip=69.253.144.82&n_bins=3
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'errorMessage' => Str::substr($e->getMessage(), 0, 50) . '...'
+            ]);
+        }
+
+
     }
 
 

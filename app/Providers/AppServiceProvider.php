@@ -3,14 +3,18 @@
 namespace App\Providers;
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
+use App\Interfaces\GeneralResearchAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
 use App\Models\Conversion;
 use App\Models\ConversionsHourlyStat;
+use App\Models\Dummy;
 use App\Models\Infrastructure\PrepareQueryBuilderWhere;
 use App\Models\Integrations\DaliaOffers;
 use App\Models\Integrations\Yoursurveys;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIServiceResponse;
+use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
+use App\Services\GeneralResearchAPI\GeneralResearchResponse;
 use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\TuneAPIService;
@@ -75,7 +79,11 @@ class AppServiceProvider extends ServiceProvider
                 new Yoursurveys()
             );
         });
-
+        $this->app->bind(GeneralResearchResponse::class, function ($app, $params) {
+            return new  GeneralResearchResponse(
+                new Dummy()
+            );
+        });
 
         $this->app->when(TuneAPIService::class)
             ->needs('$dateStart')
@@ -139,6 +147,10 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
+        $this->app->bind(GeneralResearchAPIServiceIF::class, function () {
+            return new GeneralResearchAPIService(request());
+
+        });
 
 
     }
