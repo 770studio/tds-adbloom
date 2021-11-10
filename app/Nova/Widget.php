@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -129,37 +130,47 @@ class Widget extends Resource
     protected function IntegrationFields(): array
     {
         return [
-            TextCopy::make('Link', function () {
-                return sprintf("https://dev.widget.adbloom.co/?widgetId=%s&partnerId=%d",
+            Heading::make('<hr><b>Link</b>')->asHtml()->onlyOnDetail(),
+            Code::make('', function () {
+                return sprintf("%s/?widgetId=%s&partnerId=%d",
+                    config('app.url'),
                     $this->short_id,
                     $this->partner->external_id
                 );
-            }),
+            })->language('javascript')
+                ->height(30)->onlyOnDetail(),
+            TextCopy::make('Copy to clipboard', function () {
+                return sprintf(" %s/?widgetId=%s&partnerId=%d",
+                    config('app.url'),
+                    $this->short_id,
+                    $this->partner->external_id
+                );
+            })->truncate(1)
+                ->copyValue(function ($value) {
+                    return trim($value);
+                })->copyButtonTitle('Copy the link into clipboard')->onlyOnDetail(),
 
-            Code::make('Add this code right before the </head> tag of the HTML page. Add this code to the place where you want to display the widget <div id="adblm-widget"></div>', function () {
+            Heading::make('<hr><b>On-page</b>')->asHtml()->onlyOnDetail(),
+            Code::make('Add this code right before the </head> tag of the HTML page. ', function () {
                 return WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id);
-            })->language('javascript'),
-
-            TextCopy::make('On-page', function () {
+            })->language('javascript')->onlyOnDetail(),
+            TextCopy::make('Copy to clipboard', function () {
                 return WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id);
             })->truncate(1)
                 ->copyValue(function ($value) {
-                    return $value;
-                })->copyButtonTitle('Copy the code into clipboard'),
+                    return trim($value);
+                })->copyButtonTitle('Copy the code into clipboard')->onlyOnDetail(),
+            Code::make('Add this code to the place where you want to display the widget. ', function () {
+                return '<div id="adblm-widget"></div>';
+            })->language('javascript')
+                ->height(10)->onlyOnDetail(),
+            TextCopy::make('Copy to clipboard', function () {
+                return ' <div id="adblm-widget"></div>';
+            })->truncate(1)
+                ->copyValue(function ($value) {
+                    return trim($value);
+                })->copyButtonTitle('Copy the code into clipboard')->onlyOnDetail(),
 
-
-            /*            TextCopy::make('On-page', function () {
-                            return  nl2br(WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id));
-                        })->truncate(100)*/
-
-
-            /*
-                         TextCopy::make('', function() {
-                             return '';
-                         })
-                            ->copyValue(
-                                WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id)
-                            )*/
 
         ];
     }
