@@ -18,7 +18,16 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });*/
 
-Route::get('/v1/widget/{widget_short_id}/opportunities', [WidgetController::class, 'opportunities']);
+//Route::get('/v1/widget/{widget_short_id}/opportunities', [WidgetController::class, 'opportunities']);
+//Route::get('/v1/widget/{widget_short_id}/opportunities', [WidgetController::class, 'opportunities']);
+// /api/v1/widget/SVLSaRWEFhiTd6TVT4FjT/opportunities/grl
+
+Route::prefix('v1/widget/{widget_short_id}/opportunities')->group(function () {
+
+    Route::get('/', [WidgetController::class, 'opportunities']);
+    Route::get('/grl', [WidgetController::class, 'grl']);
+});
+
 /* Route::middleware('auth:api')->group(function () {
  }) ;*/
 
