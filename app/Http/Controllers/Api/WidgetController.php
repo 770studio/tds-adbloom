@@ -7,11 +7,14 @@ use App\Http\Resources\WidgetOpportunitiesCollection;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
+use App\Models\Partner;
 use App\Models\Widget;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WidgetController extends Controller
 {
-    public function opportunities($widget_short_id)
+    public function opportunities(Request $request, string $widget_short_id): WidgetOpportunitiesCollection
     {
 
         $widget = Widget //::with('partner')
@@ -67,8 +70,26 @@ class WidgetController extends Controller
         // dd($opportunities->merge(['partner' => $widget->Partner ]));
 
         //dd($widget );
+
+        DB::listen(function ($query) {
+            $sql = $query->sql;
+            $bindings = $query->bindings;
+            $executionTime = $query->time;
+
+            dump($sql);
+
+        });
+
+        if ($request->partnerId) {
+            Partner::setDefault($request->partnerId);
+        }
+
         return new WidgetOpportunitiesCollection(
-            $widget->opportunities()->with('widgets.partner')->get()
+            $widget->opportunities()
+                ->when(!$request->partnerId, function ($q) {
+                    $q->with('widgets.partner');
+                })
+                ->get()
         );
     }
 }

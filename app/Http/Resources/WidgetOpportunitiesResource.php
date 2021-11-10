@@ -25,10 +25,12 @@ class WidgetOpportunitiesResource extends JsonResource
      */
     public function toArray($request)
     {
-        $this->partner = $this->widgets->first()->partner;
+        $this->partner = $request->partnerId
+            ? Partner::getDefault()
+            : $this->widgets->first()->partner;
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
         $reward = $this->partner->calulateReward($this->payout);
-        $targeting_params =  TargetingParams::collection()->only($this->targeting_params)->values();
+        $targeting_params = TargetingParams::collection()->only($this->targeting_params)->values();
         $ageFromTo = $this->getAgeFromTo();
 
         return [
