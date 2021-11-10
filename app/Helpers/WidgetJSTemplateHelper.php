@@ -7,11 +7,7 @@ class WidgetJSTemplateHelper
 
     public static function getTpl($partnerId, $widgetId): string
     {
-
-        $URL = app()->environment('production')
-            ? 'https://widget.adbloom.co/e.js'
-            : 'https://dev.widget.adbloom.co/e.js';
-
+        $URL = config('app.url') . '/e.js';
 
         return <<<TPL
 

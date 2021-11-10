@@ -130,12 +130,12 @@ class Widget extends Resource
     {
         return [
             TextCopy::make('Link', function () {
-                return sprintf("https://dev.widget.adbloom.co/?widgetId=%s&partnerId=%d",
+                return sprintf("%s/?widgetId=%s&partnerId=%d",
+                    config('app.url'),
                     $this->short_id,
                     $this->partner->external_id
                 );
             }),
-
             Code::make('Add this code right before the </head> tag of the HTML page. Add this code to the place where you want to display the widget <div id="adblm-widget"></div>', function () {
                 return WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id);
             })->language('javascript'),
@@ -146,7 +146,6 @@ class Widget extends Resource
                 ->copyValue(function ($value) {
                     return $value;
                 })->copyButtonTitle('Copy the code into clipboard'),
-
 
             /*            TextCopy::make('On-page', function () {
                             return  nl2br(WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id));
