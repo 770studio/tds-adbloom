@@ -102,7 +102,7 @@ class Opportunity extends Resource
                 return $href
                     ? "<a href='" . $href . "'>CDN</a>"
                     : null;
-            })->asHtml(),
+            })->asHtml()->hideFromIndex(),
             /*    ->storeAs(function (Request $request) {
                     $class = get_class($this->resource);
 
@@ -122,42 +122,48 @@ class Opportunity extends Resource
                         : null;
                 })*/
 
-            Text::make('Url', 'link'),
+            Text::make('Url', 'link')->hideFromIndex(),
             Textarea::make('Description')->alwaysShow(),
-            Text::make('Call To Action'),
-            Text::make('Incentive'),
-            Multiselect::make('Platform', 'platforms')
+            Text::make('Call To Action')->hideFromIndex(),
+            Text::make('Incentive')->hideFromIndex(),
+            Multiselect::make('Platform', 'platforms')->hideFromIndex()
                 ->options(
                     Platform::all_flipped()
                 )->default(Platform::values())
                 ->placeholder("All")
                 ->reorderable()
                 ->saveAsJSON(),
-            Multiselect::make('Gender', 'genders')->options(
-                Gender::all_flipped()
-            )->default(Gender::values())
+            Multiselect::make('Gender', 'genders')->hideFromIndex()
+                ->options(
+                    Gender::all_flipped()
+                )->default(Gender::values())
                 ->placeholder("All")
                 ->reorderable()
                 ->saveAsJSON(),
-            Multiselect::make('Country', 'countries')->options(
-                Country::all()
-            )->default(null)
+            Multiselect::make('Country', 'countries')->hideFromIndex()
+                ->options(
+                    Country::all()
+                )->default(null)
                 ->placeholder("All")
                 ->reorderable()
                 ->saveAsJSON(),
             //Country::make('Countries', 'country_code')->default("All"),
-            Number::make('Age from')->min(0)->max(130)->step(1),
-            Number::make('Age to')->min(0)->max(130)->step(1),
-            Multiselect::make('Required', 'targeting_params')->options(
-                TargetingParams::all_flipped()
-            )->default(TargetingParams::values())
+            Number::make('Age from')->min(0)->max(130)
+                ->step(1)->hideFromIndex(),
+            Number::make('Age to')->min(0)->max(130)
+                ->step(1)->hideFromIndex(),
+            Multiselect::make('Required', 'targeting_params')->hideFromIndex()
+                ->options(
+                    TargetingParams::all_flipped()
+                )->default(TargetingParams::values())
                 ->reorderable()
                 ->saveAsJSON(),
 
             Number::make('Payout')->step(0.01)->default(0.00),
-            Select::make('Currency')->options(
-                ['USD' => 'USD']
-            )->default('USD'),
+            Select::make('Currency')->hideFromIndex()
+                ->options(
+                    ['USD' => 'USD']
+                )->default('USD'),
 
             MorphToMany::make('Tags'),
 
@@ -165,8 +171,8 @@ class Opportunity extends Resource
             BelongsToMany::make('Widgets'),
 
 
-            DateTime::make('Created at')->sortable()->exceptOnForms(),
-            DateTime::make('Updated at')->sortable()->exceptOnForms(),
+            DateTime::make('Created at')->sortable()->onlyOnDetail(),
+            DateTime::make('Updated at')->sortable()->onlyOnDetail(),
 
         ];
     }

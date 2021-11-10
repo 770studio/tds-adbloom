@@ -61,16 +61,16 @@ class Client extends Resource
             Text::make('Tune ID', 'external_id')
                 ->rules('required')
                 ->sortable(),
-           // Text::make('Redirect to', 'redirect_to_domain')->sortable(),
+            // Text::make('Redirect to', 'redirect_to_domain')->sortable(),
             HasMany::make('Opportunities'),
             Select::make('Status')->options(self::$model::STATUSES)
                 ->rules('required')->sortable(),
-           // Text::make('Email')->sortable()
-                //->rules('required', 'email', 'max:255')
-               // ->creationRules('unique:clients'),
+            // Text::make('Email')->sortable()
+            //->rules('required', 'email', 'max:255')
+            // ->creationRules('unique:clients'),
 
-            DateTime::make('Created at')->sortable()->exceptOnForms(),
-            DateTime::make('Updated at')->sortable()->exceptOnForms(),
+            DateTime::make('Created at')->sortable()->onlyOnDetail(),
+            DateTime::make('Updated at')->sortable()->onlyOnDetail(),
         ];
     }
 

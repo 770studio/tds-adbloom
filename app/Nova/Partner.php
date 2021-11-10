@@ -78,8 +78,8 @@ class Partner extends Resource
             new Panel('Widgets', $this->WidgetFields()),
 
 
-            DateTime::make('Created at')->sortable()->exceptOnForms(),
-            DateTime::make('Updated at')->sortable()->exceptOnForms(),
+            DateTime::make('Created at')->sortable()->onlyOnDetail(),
+            DateTime::make('Updated at')->sortable()->onlyOnDetail(),
 
 
         ];
@@ -163,12 +163,12 @@ class Partner extends Resource
             NovaDependencyContainer::make([
                 Number::make('Percentage, %', 'percentage')->min(1)->max(100)->step(1),
                 // ->rules('required', 'gt:0'),
-                Toggle::make('Convert to Points', 'convert_to_points'),
+                Toggle::make('Convert to In-app Currency', 'convert_to_points'),
                 NovaDependencyContainer::make([
                     Number::make('Multiplier', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5),
-                    //->rules('required', 'gt:0'),
-                    Text::make('Points Name', 'points_name'),
-                    Image::make('Points Logo', 'points_logo')
+                    //->rules('required', 'gt:0'), Reward users [input] for each $1 earned
+                    Text::make('In-app Currecny Name', 'points_name'),
+                    Image::make('In-app Currency Icon', 'points_logo')
                         ->disk('creatives')
                         ->storeAs(function (Request $request) {
                             return StoreImageHelper::getCreativeAssetUniqueName($request->points_logo);
