@@ -61,8 +61,8 @@ class Tag extends Resource
             MorphToMany::make('Partners'),
 
 
-            DateTime::make('Created at')->sortable()->exceptOnForms(),
-            DateTime::make('Updated at')->sortable()->exceptOnForms(),
+            DateTime::make('Created at')->sortable()->onlyOnDetail(),
+            DateTime::make('Updated at')->sortable()->onlyOnDetail(),
         ];
     }
 

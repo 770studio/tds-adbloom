@@ -42,6 +42,9 @@ return [
     'dalia' => [
         'publisher_user_uuid' => env('DALIA_PUBLISHER_USER_UUID'),
     ],
+    'generalresearch' => [
+        'api_base_url' => env('GENERALRESEARCH_API_BASE_URL')
+    ],
     'slack_notification' => [
         'alert_incoming_webhook' => env('SLACKALERT_INCOMING_WEBHOOK'),
     ],
