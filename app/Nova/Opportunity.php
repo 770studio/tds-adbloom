@@ -129,14 +129,14 @@ class Opportunity extends Resource
             Multiselect::make('Platform', 'platforms')->hideFromIndex()
                 ->options(
                     Platform::all_flipped()
-                )->default(Platform::values())
+                )->default("All")
                 ->placeholder("All")
                 ->reorderable()
                 ->saveAsJSON(),
             Multiselect::make('Gender', 'genders')->hideFromIndex()
                 ->options(
                     Gender::all_flipped()
-                )->default(Gender::values())
+                )->default("All")
                 ->placeholder("All")
                 ->reorderable()
                 ->saveAsJSON(),
