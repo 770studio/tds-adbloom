@@ -33,12 +33,16 @@ class WidgetOpportunitiesResource extends JsonResource
         $reward = $this->partner->calulateReward($this->payout);
         $targeting_params = TargetingParams::collection()->only($this->targeting_params)->values();
 
-
+/*  if("MIZzRZtPRlxu1SiSnghAn" == $this->short_id) {
+      dd($this->platforms,
+          Platform::collection()->only([])
+      );
+  }*/
         $targeting = ArrayHelper::stackNotEmpty(
             [
-                'platform' => Platform::collection()->only($this->platforms),
+                'platform' => Platform::collection()->only((array)$this->platforms),
                 'country' => $this->countries,
-                'gender' => Gender::collection()->only($this->genders)->values(),
+                'gender' => Gender::collection()->only((array)$this->genders)->values(),
                 'age' => $this->getAgeFromTo()
             ]
         );
