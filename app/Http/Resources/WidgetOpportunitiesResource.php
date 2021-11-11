@@ -33,6 +33,7 @@ class WidgetOpportunitiesResource extends JsonResource
         $targeting_params = TargetingParams::collection()->only($this->targeting_params)->values();
         $ageFromTo = $this->getAgeFromTo();
 
+        //TODO remove unnecessary `when`
         return [
             'id' => $this->short_id,
             'title' => $this->when($this->name, $this->name),
@@ -46,10 +47,13 @@ class WidgetOpportunitiesResource extends JsonResource
             'callToAction' => $this->when($this->call_to_action,$this->call_to_action),
             'incentive' => $this->when($this->incentive, $this->incentive),
             'targeting' => [
-                'platform' => $this->when($this->platforms, Platform::collection()->only($this->platforms)->values()),
-                'country' => $this->when($this->countries, $this->countries),
-                'gender' => $this->when($this->genders, Gender::collection()->only($this->genders)->values()),
-                'age' => $this->when($ageFromTo, $ageFromTo),
+                (object)[
+                    'platform' => $this->when($this->platforms, Platform::collection()->only($this->platforms)->values()),
+                    'country' => $this->when($this->countries, $this->countries),
+                    'gender' => $this->when($this->genders, Gender::collection()->only($this->genders)->values()),
+                    'age' => $this->when($ageFromTo, $ageFromTo)
+                ],
+                // targeting должен быть массивом объектов. В текущей реализации у нас только один объект будет
             ],
 
 

@@ -84,7 +84,7 @@ class WidgetController extends Controller
         return new WidgetOpportunitiesCollection(
             $widget->opportunities()
                 ->when(!$request->partnerId, function ($q) {
-                    $q->with('widgets.partner');
+                    $q->with('widgets.partner'); // by default partner is related to widget
                 })
                 ->get()
         );
@@ -106,7 +106,7 @@ class WidgetController extends Controller
                 $grlService->request()
             )->validate()
                 ->transformResponse($partner)
-                ->toJson();
+                ->toJson(JSON_UNESCAPED_SLASHES);
 
         } catch (Exception $e) {
             return response()->json([
@@ -114,7 +114,6 @@ class WidgetController extends Controller
                 'errorMessage' => Str::substr($e->getMessage(), 0, 50) . '...'
             ]);
         }
-
 
     }
 

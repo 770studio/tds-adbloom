@@ -20,14 +20,13 @@ class GeneralResearchAPIService implements GeneralResearchAPIServiceIF
         $this->params = [
             'bpuid' => 'max',
             'format' => 'json',
-            'ip' => $request->ip(),
+            'ip' => $request->ip(), // '69.253.144.82' , //, //TODO setup ip for tests in service provider probably
             'n_bins' => $n_bins,
         ];
     }
 
     public function request(): object
     {
-
         $params = http_build_query(
             $this->params
         );
@@ -35,7 +34,6 @@ class GeneralResearchAPIService implements GeneralResearchAPIServiceIF
         $url = $this->api_url . '?' . $params;
         $response = Http::get($url);
         return $response->object();
-
 
     }
 }
