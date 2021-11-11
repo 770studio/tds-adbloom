@@ -9,7 +9,7 @@ class ArrayHelper
     public static function stackNotEmpty(array $array): array
     {
         foreach ($array as $key => $value) {
- 
+
             $empty = $value instanceof Collection
                 ? $value->isEmpty()
                 : !(bool)$value;
