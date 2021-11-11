@@ -29,7 +29,7 @@ class GeneralResearchResponse extends Response
         return collect($this->apiResult);
     }
 
-    public function transformResponse(Partner $partner): Collection
+    public function transformResponse(Partner $partner): array
     {
         return $this->parseData()
             ->transform(function ($item, $key) use ($partner) {
@@ -41,6 +41,6 @@ class GeneralResearchResponse extends Response
                     return $item;
                 });
                 return $item;
-            });
+            })->toArray();
     }
 }

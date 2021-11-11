@@ -101,12 +101,14 @@ class WidgetController extends Controller
             $partner = $request->partnerId
                 ? Partner::where('external_id', $request->partnerId)->first()
                 : Widget::where('short_id', $widget_short_id)->first()->partner;
-
-            return $responseProcessor->setData(
-                $grlService->request()
-            )->validate()
-                ->transformResponse($partner)
-                ->toJson(JSON_UNESCAPED_SLASHES);
+            return response()->json(
+                $responseProcessor->setData(
+                    $grlService->request()
+                )->validate()
+                    ->transformResponse($partner)
+                , 200, [], JSON_UNESCAPED_SLASHES);
+            /*      return
+                      ->toJson(JSON_UNESCAPED_SLASHES);*/
 
         } catch (Exception $e) {
             return response()->json([
