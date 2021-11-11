@@ -40,7 +40,7 @@ class WidgetOpportunitiesResource extends JsonResource
   }*/
         $targeting = ArrayHelper::stackNotEmpty(
             [
-                'platform' => Platform::collection()->only((array)$this->platforms),
+                'platform' => Platform::collection()->only((array)$this->platforms)->values(),
                 'country' => $this->countries,
                 'gender' => Gender::collection()->only((array)$this->genders)->values(),
                 'age' => $this->getAgeFromTo()
