@@ -10,23 +10,6 @@ use ReflectionClass;
 abstract class ArrayField implements Arrayable
 {
 
-    public static function all()
-    {
-        $oClass = new ReflectionClass(static::class);
-        return $oClass->getConstants();
-    }
-
-    public static function all_flipped() {
-        return array_flip(
-            static::all()
-        );
-    }
-
-    public static function exists($key) : bool
-    {
-        return in_array($key, static::indexes());
-    }
-
     public static function fromStr($value)
     {
         $value = strtolower($value);
@@ -36,21 +19,20 @@ abstract class ArrayField implements Arrayable
 
     }
 
-    public static function getName($key)
+    public static function equalsToAll($array): bool
     {
-        return static::exists($key)
-            ? static::all()[$key]
-            : null;
+        // dd(array_diff(static::all(), (array)$array));
+        return !array_diff(static::all(), (array)$array);
     }
 
-    public function toArray()
+    public static function exists($key): bool
     {
-        return static::all();
+        return in_array($key, static::indexes());
     }
 
-    public static function collection()
+    public static function keyExists($key): bool
     {
-        return collect(static::all_flipped());
+        return in_array($key, static::all());
     }
 
     public static function indexes()
@@ -60,10 +42,40 @@ abstract class ArrayField implements Arrayable
         );
     }
 
+    public static function all()
+    {
+        $oClass = new ReflectionClass(static::class);
+        return $oClass->getConstants();
+    }
+
+    public static function getName($key)
+    {
+        return static::exists($key)
+            ? static::all()[$key]
+            : null;
+    }
+
+    public static function collection()
+    {
+        return collect(static::all_flipped());
+    }
+
+    public static function all_flipped()
+    {
+        return array_flip(
+            static::all()
+        );
+    }
+
     public static function values()
     {
         return array_values(
             static::all()
         );
+    }
+
+    public function toArray()
+    {
+        return static::all();
     }
 }

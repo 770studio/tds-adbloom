@@ -33,9 +33,10 @@ class WidgetOpportunitiesResource extends JsonResource
         $reward = $this->partner->calulateReward($this->payout);
         $targeting_params = TargetingParams::collection()->only($this->targeting_params)->values();
 
+
         $targeting = ArrayHelper::stackNotEmpty(
             [
-                'platform' => Platform::collection()->only($this->platforms)->values(),
+                'platform' => Platform::collection()->only($this->platforms),
                 'country' => $this->countries,
                 'gender' => Gender::collection()->only($this->genders)->values(),
                 'age' => $this->getAgeFromTo()
