@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\ArrayHelper;
 use App\Helpers\StoreImageHelper;
 use App\Models\Infrastructure\Gender;
 use App\Models\Infrastructure\Platform;
@@ -31,7 +32,16 @@ class WidgetOpportunitiesResource extends JsonResource
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
         $reward = $this->partner->calulateReward($this->payout);
         $targeting_params = TargetingParams::collection()->only($this->targeting_params)->values();
-        $ageFromTo = $this->getAgeFromTo();
+
+        $targeting = ArrayHelper::stackNotEmpty(
+            [
+                'platform' => Platform::collection()->only($this->platforms)->values(),
+                'country' => $this->countries,
+                'gender' => Gender::collection()->only($this->genders)->values(),
+                'age' => $this->getAgeFromTo()
+            ]
+        );
+
 
         //TODO remove unnecessary `when`
         return [
@@ -39,7 +49,7 @@ class WidgetOpportunitiesResource extends JsonResource
             'title' => $this->when($this->name, $this->name),
             //'img' => $this->image,
             'image' => $this->when($image, $image),
-            'description' => $this->when($this->description,$this->description),
+            'description' => $this->when($this->description, $this->description),
             'timeToComplete' => $this->when($this->isSurvey(), $this->timeToComplete),
             'url' => $this->when($this->link,$this->link),
             'reward' => $this->when($reward,$reward),
@@ -47,12 +57,7 @@ class WidgetOpportunitiesResource extends JsonResource
             'callToAction' => $this->when($this->call_to_action,$this->call_to_action),
             'incentive' => $this->when($this->incentive, $this->incentive),
             'targeting' => [
-                (object)[
-                    'platform' => $this->when($this->platforms, Platform::collection()->only($this->platforms)->values()),
-                    'country' => $this->when($this->countries, $this->countries),
-                    'gender' => $this->when($this->genders, Gender::collection()->only($this->genders)->values()),
-                    'age' => $this->when($ageFromTo, $ageFromTo)
-                ],
+                $this->when((bool)$targeting, (object)$targeting)
                 // targeting должен быть массивом объектов. В текущей реализации у нас только один объект будет
             ],
 
