@@ -17,22 +17,24 @@ class GeneralResearchAPIService
     private Partner $partner;
 
 
-    public function __construct(Request $request, $n_bins = 3)
+    public function __construct(Request $request, $n_bins = 1)
     {
         $this->api_url = config('services.generalresearch.api_base_url');
         $this->timeout = config('services.common_api.timeout');
         $this->params = [
-            'bpuid' => $request->userId,
+            'bpuid' => $request->userId ?? 'generic',
             'format' => 'json',
             'ip' => $request->ip(), // '69.253.144.82' , //, //TODO setup ip for tests in service provider probably
-            'n_bins' => $n_bins,
-            'min_payout' => 1,
             'country_iso' => $request->country,
+            'min_payout' => 1,
+            'n_bins' => $n_bins,
+
             /*age
             zip
             gender*/
         ];
-
+        https://fsb.generalresearch.com/6c7c06f784d14fb98a292cf1410169b1/offerwall/45b7228a7/?bpuid=generic&format
+        //=json&country_iso=US&ip=69.253.144.82&min_payout=1&n_bins=1&min_payout=1&
 
     }
 
