@@ -25,7 +25,9 @@ class Conversion extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = [
+        'id', 'Affiliate_company', 'Offer_name', 'Stat_tune_event_id'
+    ];
 
     /**
      * The columns that should be searched.
