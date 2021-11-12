@@ -25,9 +25,7 @@ class Conversion extends Resource
      *
      * @var string
      */
-    public static $title = [
-        'id', 'Affiliate_company', 'Offer_name', 'Stat_tune_event_id'
-    ];
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -35,7 +33,7 @@ class Conversion extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'id', 'Affiliate_company', 'Offer_name', 'Stat_tune_event_id'
     ];
 
     /**
