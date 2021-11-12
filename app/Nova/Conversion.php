@@ -33,7 +33,7 @@ class Conversion extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'Affiliate_company', 'Offer_name', 'Stat_tune_event_id'
+        'id', 'Affiliate_company', 'Offer_name', 'Stat_tune_event_id', 'Stat_affiliate_id', 'Stat_offer_id'
     ];
 
     /**
