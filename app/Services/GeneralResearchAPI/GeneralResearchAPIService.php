@@ -21,11 +21,15 @@ class GeneralResearchAPIService
         $this->api_url = config('services.generalresearch.api_base_url');
         $this->timeout = config('services.common_api.timeout');
         $this->params = [
-            'bpuid' => 'max',
+            'bpuid' => $request->userId,
             'format' => 'json',
             'ip' => $request->ip(), // '69.253.144.82' , //, //TODO setup ip for tests in service provider probably
             'n_bins' => $n_bins,
             'min_payout' => 1,
+            'country_iso' => $request->country,
+            /*age
+            zip
+            gender*/
         ];
 
 
