@@ -5,6 +5,7 @@ namespace App\Services\GeneralResearchAPI;
 
 
 use App\Models\Partner;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -41,6 +42,9 @@ class GeneralResearchAPIService
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
     public function makeRequest(): object
     {
         $params = http_build_query(
@@ -51,9 +55,14 @@ class GeneralResearchAPIService
 
         $url = $this->api_url . '?' . $params;
 
-        return Http::timeout($this->timeout)
+        $resp_object = Http::timeout($this->timeout)
             ->get($url)
             ->object();
+        if (!$resp_object) {
+            throw new Exception($url . ' can not be reached, 500 or smth...');
+        }
+
+        return $resp_object;
 
     }
 

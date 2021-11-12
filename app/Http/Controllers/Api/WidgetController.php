@@ -13,7 +13,6 @@ use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
 use App\Services\GeneralResearchAPI\GeneralResearchResponse;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 
 class WidgetController extends Controller
@@ -115,7 +114,7 @@ class WidgetController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'errorMessage' => Str::substr($e->getMessage(), 0, 50) . '...'
+                'errorMessage' => $e->getMessage(), //Str::substr($e->getMessage(), 0, 100) . '...'
             ]);
         }
 
