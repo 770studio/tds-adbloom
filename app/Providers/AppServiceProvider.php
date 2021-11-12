@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
-use App\Interfaces\GeneralResearchAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
 use App\Models\Conversion;
 use App\Models\ConversionsHourlyStat;
@@ -147,7 +146,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        $this->app->bind(GeneralResearchAPIServiceIF::class, function () {
+        $this->app->bind(GeneralResearchAPIService::class, function () {
             return new GeneralResearchAPIService(request());
 
         });

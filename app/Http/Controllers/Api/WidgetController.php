@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WidgetOpportunitiesCollection;
-use App\Interfaces\GeneralResearchAPIServiceIF;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use App\Models\Widget;
+use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
 use App\Services\GeneralResearchAPI\GeneralResearchResponse;
 use Exception;
 use Illuminate\Http\Request;
-use Str;
+use Illuminate\Support\Str;
+
 
 class WidgetController extends Controller
 {
@@ -67,14 +68,14 @@ class WidgetController extends Controller
         }
 
 
-/*        DB::listen(function ($query) {
-            $sql = $query->sql;
-            $bindings = $query->bindings;
-            $executionTime = $query->time;
+        /*        DB::listen(function ($query) {
+                    $sql = $query->sql;
+                    $bindings = $query->bindings;
+                    $executionTime = $query->time;
 
-            dump($sql);
+                    dump($sql);
 
-        });*/
+                });*/
 
         // override partner , by default partner is related to widget
         if ($request->partnerId) {
@@ -93,22 +94,23 @@ class WidgetController extends Controller
     /**
      * @throws Exception
      */
-    public function grl(Request                     $request, string $widget_short_id,
-                        GeneralResearchAPIServiceIF $grlService, GeneralResearchResponse $responseProcessor)
+    public function grl(Request                   $request, string $widget_short_id,
+                        GeneralResearchAPIService $grlService, GeneralResearchResponse $responseProcessor)
     {
         try {
             // partner is either in partnerId of the request or related to widget
             $partner = $request->partnerId
                 ? Partner::where('external_id', $request->partnerId)->first()
                 : Widget::where('short_id', $widget_short_id)->first()->partner;
+
+
             return response()->json(
                 $responseProcessor->setData(
-                    $grlService->request()
+                    $grlService->setPartner($partner)->makeRequest()
                 )->validate()
                     ->transformResponse($partner)
                 , 200, [], JSON_UNESCAPED_SLASHES);
-            /*      return
-                      ->toJson(JSON_UNESCAPED_SLASHES);*/
+
 
         } catch (Exception $e) {
             return response()->json([
@@ -116,6 +118,7 @@ class WidgetController extends Controller
                 'errorMessage' => Str::substr($e->getMessage(), 0, 50) . '...'
             ]);
         }
+
 
     }
 

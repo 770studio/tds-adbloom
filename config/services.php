@@ -48,6 +48,8 @@ return [
     'slack_notification' => [
         'alert_incoming_webhook' => env('SLACKALERT_INCOMING_WEBHOOK'),
     ],
-
+    'common_api' => [
+        'timeout' => env('COMMON_API_TIMEOUT'),
+    ],
 
 ];

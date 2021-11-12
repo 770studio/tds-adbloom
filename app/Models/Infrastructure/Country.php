@@ -11,7 +11,7 @@ class Country extends ArrayField
         return collect(static::all());
     }*/
 
-    public static function all()
+    public static function all(): array
     {
         return [
             'AF' => __('Afghanistan'),
