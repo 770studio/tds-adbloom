@@ -33,8 +33,7 @@ class GeneralResearchAPIService
             zip
             gender*/
         ];
-        https://fsb.generalresearch.com/6c7c06f784d14fb98a292cf1410169b1/offerwall/45b7228a7/?bpuid=generic&format
-        //=json&country_iso=US&ip=69.253.144.82&min_payout=1&n_bins=1&min_payout=1&
+
 
     }
 
