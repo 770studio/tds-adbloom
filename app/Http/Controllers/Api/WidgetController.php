@@ -9,9 +9,6 @@ use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use App\Models\Widget;
-use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
-use App\Services\GeneralResearchAPI\GeneralResearchResponse;
-use Exception;
 use Illuminate\Http\Request;
 
 
@@ -90,36 +87,6 @@ class WidgetController extends Controller
         );
     }
 
-    /**
-     * @throws Exception
-     */
-    public function grl(Request                   $request, string $widget_short_id,
-                        GeneralResearchAPIService $grlService, GeneralResearchResponse $responseProcessor)
-    {
-        try {
-            // partner is either in partnerId of the request or related to widget
-            $partner = $request->partnerId
-                ? Partner::where('external_id', $request->partnerId)->first()
-                : Widget::where('short_id', $widget_short_id)->first()->partner;
-
-
-            return response()->json(
-                $responseProcessor->setData(
-                    $grlService->setPartner($partner)->makeRequest()
-                )->validate()
-                    ->transformResponse($partner)
-                , 200, [], JSON_UNESCAPED_SLASHES);
-
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'errorMessage' => $e->getMessage(), //Str::substr($e->getMessage(), 0, 100) . '...'
-            ]);
-        }
-
-
-    }
 
 
 }

@@ -4,9 +4,11 @@
 namespace App\Services\GeneralResearchAPI;
 
 
+use App\Jobs\doPostBackJob;
 use App\Models\Partner;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class GeneralResearchAPIService
@@ -19,12 +21,16 @@ class GeneralResearchAPIService
 
     public function __construct(Request $request, $n_bins = 1)
     {
-        $this->api_url = config('services.generalresearch.api_base_url');
+        $this->api_url = sprintf("%s/%s/offerwall/45b7228a7/",
+            config('services.generalresearch.api_base_url'),
+            config('services.generalresearch.api_key')
+        );
+
         $this->timeout = config('services.common_api.timeout');
         $this->params = [
             'bpuid' => $request->userId ?? 'generic',
             'format' => 'json',
-            'ip' => $request->ip(), // '69.253.144.82' , //, //TODO setup ip for tests in service provider probably
+            'ip' => $request->ip(), // '69.253.144.82'
             'country_iso' => $request->country,
             'min_payout' => 1,
             'n_bins' => $n_bins,
@@ -78,13 +84,67 @@ class GeneralResearchAPIService
             $this->partner->external_id
         );
 
-        //TODO partner ext id для тестов. убрать!
-        // $url = "https://trk.adbloom.co/aff_c?&aff_id=2&offer_id=389&format=json";
         return Http::timeout($this->timeout)
             ->get($url)
             ->object()
             ->response->data->transaction_id; // выкинет иксепшн и дальше не пойдем
 
+
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function sendStatusToTune(string $tsid): void
+    {
+
+        $url = sprintf("%s/%s/status/%s/",
+            config('services.generalresearch.api_base_url'),
+            config('services.generalresearch.api_key'),
+            $tsid
+        );
+
+        $resp_object = Http::timeout($this->timeout)
+            ->get($url)
+            ->object();
+        if (!$resp_object) {
+            throw new Exception($url . ' can not be reached, 500 or smth...');
+        }
+        if (!isset($resp_object->status)) {
+            throw new Exception($url . ' status can not be read');
+        }
+
+        $resp_array = (array)$resp_object;
+        $back_url = 'none';
+        /*
+         *   If status=3 the survey is successful, send a conversion to Tune
+         *   If status=2 the survey is rejected, send a conversion to Tune (goal_id=389)
+         */
+        switch ($resp_object->status) {
+            case "3":
+                $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
+                    Arr::get($resp_array, 'kwargs.clicked_bucket'),
+                    Arr::get($resp_array, 'payout'),
+                    Arr::get($resp_array, 'tsid'),
+                );
+                doPostBackJob::dispatch($url)->onQueue('send_to_tune');
+
+                break;
+            case "2":
+                $back_url = sprintf("https://trk.adbloom.co/aff_goal?a=lsr&goal_id=%d&goal_name=%d&transaction_id=%s",
+                    389,
+                    $resp_object->status,
+                    Arr::get($resp_array, 'kwargs.clicked_bucket'),
+                );
+                doPostBackJob::dispatch($url)->onQueue('send_to_tune');
+
+                break;
+
+            default: // TODO log
+        }
+
+
+        var_dump($resp_object->status, $back_url);
 
     }
 }

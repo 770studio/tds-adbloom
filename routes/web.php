@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\GrlRedirectController;
+use App\Http\Controllers\GRLController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/redirect/{client:short_id}/{redirect_status}', [ClientController::class, 'trackOpportunity'])->name('track_opportunity');
 // /redirect/grl?tsid={VALUE}
 // TODO need to upgrade route service provider to 8
-Route::get('/redirect/grl', [GrlRedirectController::class, '__invoke']);
+Route::get('/redirect/grl', [GRLController::class, 'redirect']);
 
 
 Route::get('/', function () {

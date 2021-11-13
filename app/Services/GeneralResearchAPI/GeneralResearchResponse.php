@@ -29,12 +29,13 @@ class GeneralResearchResponse extends Response
         return collect($this->apiResult);
     }
 
-    public function transformResponse(Partner $partner): array
+    public function transformPayouts(Partner $partner): array
     {
         return $this->parseData()
             ->transform(function ($item, $key) use ($partner) {
-                if ($key != 'offerwall') return $item;
-
+                if ($key !== 'offerwall') {
+                    return $item;
+                }
                 $item->buckets = collect($item->buckets)->transform(function ($item, $key) use ($partner) {
                     $item->payout->max = $partner->calulateReward($item->payout->max);
                     $item->payout->min = $partner->calulateReward($item->payout->min);

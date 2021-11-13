@@ -15,12 +15,11 @@ class ClientController extends Controller
 
     public function trackOpportunity(Request $request, Client $client, string $redirect_status_str)
     {
-       //  dd($client, $redirect_status_str,  );
+        //  dd($client, $redirect_status_str,  );
 
-        if(!$redirect_status = RedirectStatus_Client::fromStr($redirect_status_str) )  {
-            Log::channel('queue')->error('unexpected incoming status:' . $redirect_status_str, ['ip' => $request->getClientIp() ]);
-        }
-        else Log::channel('queue')->debug('incoming status:' . $redirect_status_str);
+        if (!$redirect_status = RedirectStatus_Client::fromStr($redirect_status_str)) {
+            Log::channel('queue')->error('unexpected incoming status:' . $redirect_status_str, ['ip' => $request->getClientIp()]);
+        } else Log::channel('queue')->debug('incoming status:' . $redirect_status_str);
 
 
         // dd( $request, $client, $surveyID, $redirect_status);
@@ -33,9 +32,9 @@ class ClientController extends Controller
                 case RedirectStatus_Client::oq:
                 case RedirectStatus_Client::dq:
                     Log::channel('queue')->debug('sent to queue, doPostBackJob: status:' . $redirect_status);
-                doPostBackJob::dispatch(
-                    "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status}&transaction_id={$request->clickid}"
-                )->onQueue('postback_queue');
+                    doPostBackJob::dispatch(
+                        "https://trk.adbloom.co/aff_goal?a=lsr&goal_name={$redirect_status}&transaction_id={$request->clickid}"
+                    )->onQueue('postback_queue');
                     break;
                 case RedirectStatus_Client::success:
                     doPostBackJob::dispatch(

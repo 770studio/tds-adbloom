@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\WidgetController;
+use App\Http\Controllers\GRLController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,8 +26,12 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1/widget/{widget_short_id}/opportunities')->group(function () {
 
     Route::get('/', [WidgetController::class, 'opportunities']);
-    Route::get('/grl', [WidgetController::class, 'grl']);
+    Route::get('/grl', [GRLController::class, 'proxy']);
 });
+
+
+
+// /redirect/grl?tsid={VALUE}
 
 /* Route::middleware('auth:api')->group(function () {
  }) ;*/
