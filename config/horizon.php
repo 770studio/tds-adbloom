@@ -194,7 +194,7 @@ return [
             ],
             'supervisor-prod2' => [
                 'connection' => 'redis',
-                'queue' => ['postback_queue'],
+                'queue' => ['postback_queue', 'send_to_tune'],
                 'balance' => 'auto',
                 'maxProcesses' => 5,
                 'balanceMaxShift' => 1,
@@ -223,7 +223,7 @@ return [
             ],
             'supervisor-stage2' => [
                 'connection' => 'redis',
-                'queue' => ['postback_queue'],
+                'queue' => ['postback_queue', 'send_to_tune'],
                 'balance' => 'auto',
                 'maxProcesses' => 5,
                 'balanceMaxShift' => 1,
