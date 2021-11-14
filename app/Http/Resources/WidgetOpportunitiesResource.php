@@ -29,7 +29,7 @@ class WidgetOpportunitiesResource extends JsonResource
 
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
         $reward = self::$partner->calulateReward($this->payout);
-        $targeting_params = TargetingParams::collection()->only($this->targeting_params)->values();
+        $targeting_params = TargetingParams::collection()->only((array)$this->targeting_params)->values();
 
 /*  if("MIZzRZtPRlxu1SiSnghAn" == $this->short_id) {
       dd($this->platforms,
@@ -53,11 +53,13 @@ class WidgetOpportunitiesResource extends JsonResource
             //'img' => $this->image,
             'image' => $this->when($image, $image),
             'description' => $this->when($this->description, $this->description),
-            'timeToComplete' => $this->when($this->isSurvey(), $this->timeToComplete),
-            'url' => $this->when($this->link,$this->link),
-            'reward' => $this->when($reward,$reward),
+            'timeToComplete' => $this->when($this->isSurvey(),
+                ceil($this->timeToComplete / 60)
+            ),
+            'url' => $this->when($this->link, $this->link),
+            'reward' => $this->when($reward, $reward),
             'required' => $this->when($targeting_params, $targeting_params),
-            'callToAction' => $this->when($this->call_to_action,$this->call_to_action),
+            'callToAction' => $this->when($this->call_to_action, $this->call_to_action),
             'incentive' => $this->when($this->incentive, $this->incentive),
             'targeting' => [
                 $this->when((bool)$targeting, (object)$targeting)
