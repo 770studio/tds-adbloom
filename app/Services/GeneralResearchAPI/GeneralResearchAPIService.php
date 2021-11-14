@@ -5,6 +5,7 @@ namespace App\Services\GeneralResearchAPI;
 
 
 use App\Jobs\doPostBackJob;
+use App\Models\Infrastructure\RedirectStatus;
 use App\Models\Partner;
 use Exception;
 use Illuminate\Http\Request;
@@ -94,8 +95,9 @@ class GeneralResearchAPIService
 
     /**
      * @throws Exception
+     *
      */
-    public function sendStatusToTune(string $tsid): void
+    public function sendStatusToTune(string $tsid): string
     {
 
         $url = sprintf("%s/%s/status/%s/",
@@ -129,7 +131,7 @@ class GeneralResearchAPIService
                     Arr::get($resp_array, 'tsid'),
                 );
                 doPostBackJob::dispatch($url)->onQueue('send_to_tune');
-
+                return RedirectStatus::success;
                 break;
             case "2":
                 $back_url = sprintf("https://trk.adbloom.co/aff_goal?a=lsr&goal_id=%d&goal_name=%d&transaction_id=%s",
@@ -144,8 +146,9 @@ class GeneralResearchAPIService
             default: // TODO log
         }
 
+        return RedirectStatus::reject;
 
-        var_dump($resp_object->status, $back_url);
+        //var_dump($resp_object->status, $back_url);
 
     }
 }

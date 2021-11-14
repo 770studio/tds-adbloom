@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RedirectHelper;
 use App\Models\Partner;
 use App\Models\Widget;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
@@ -30,12 +31,11 @@ class GRLController extends Controller
                 return response($validator->errors(), 422);
             }
 
-
-            $grlService->sendStatusToTune(
-                $validator->validated()['tsid']
+            RedirectHelper::opportunity(
+                $grlService->sendStatusToTune(
+                    $validator->validated()['tsid']
+                )
             );
-
-            //TODO REDIRECT
 
         } catch (Exception $e) {
             //TODO refactor to an error resource like : return JsonErrorResourceCollection($errors)

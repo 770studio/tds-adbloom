@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
-    const DEFAULT_REDIRECT_DOMAIN = 'https://widget.adbloom.co';
 
     public function trackOpportunity(Request $request, Client $client, string $redirect_status_str)
     {
@@ -19,12 +18,9 @@ class ClientController extends Controller
 
         if (!$redirect_status = RedirectStatus_Client::fromStr($redirect_status_str)) {
             Log::channel('queue')->error('unexpected incoming status:' . $redirect_status_str, ['ip' => $request->getClientIp()]);
-        } else Log::channel('queue')->debug('incoming status:' . $redirect_status_str);
-
-
-        // dd( $request, $client, $surveyID, $redirect_status);
-
-        //if (!$request->clickid) abort(404, 'clickid is required');
+        } else {
+            Log::channel('queue')->debug('incoming status:' . $redirect_status_str);
+        }
 
         if ($request->clickid) {
             switch ($redirect_status) {
@@ -66,10 +62,7 @@ class ClientController extends Controller
                 Например https://widget.adbloom.co/status/?status=success
                 */
 
-        return RedirectHelper::opportunity(
-            self::DEFAULT_REDIRECT_DOMAIN //$client->redirect_to_domain ?? self::DEFAULT_REDIRECT_DOMAIN
-            , $redirect_status_str
-        );
+        return RedirectHelper::opportunity($redirect_status_str);
 
     }
 }
