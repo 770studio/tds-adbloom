@@ -16,7 +16,7 @@ use JsonSerializable;
 class WidgetOpportunitiesResource extends JsonResource
 {
 
-    private Partner $partner;
+    public static Partner $partner;
 
     /**
      * Transform the resource into an array.
@@ -26,11 +26,9 @@ class WidgetOpportunitiesResource extends JsonResource
      */
     public function toArray($request)
     {
-        $this->partner = $request->partnerId
-            ? Partner::getDefault()
-            : $this->widgets->first()->partner;
+
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
-        $reward = $this->partner->calulateReward($this->payout);
+        $reward = self::$partner->calulateReward($this->payout);
         $targeting_params = TargetingParams::collection()->only($this->targeting_params)->values();
 
 /*  if("MIZzRZtPRlxu1SiSnghAn" == $this->short_id) {

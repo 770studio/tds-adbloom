@@ -37,6 +37,13 @@ class Response implements ResponseIF
         return $this->data;
     }
 
+    public function toArray(): array
+    {
+        return method_exists($this->apiResult, 'toArray')
+            ? $this->apiResult->toArray()
+            : (array)$this->apiResult;
+    }
+
     public function parseData(): Collection
     {
         //implemented on upper level

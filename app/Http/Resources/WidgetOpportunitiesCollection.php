@@ -20,8 +20,6 @@ class WidgetOpportunitiesCollection extends ResourceCollection
 
     public function toArray($request)
     {
-
         return WidgetOpportunitiesResource::collection($this->collection);
-
     }
 }

@@ -19,10 +19,8 @@ class GRLController extends Controller
     /**
      * @throws Exception
      */
-    public function redirect(Request                   $request,
-                             GeneralResearchAPIService $grlService)
+    public function redirect(Request $request, GeneralResearchAPIService $grlService)
     {
-
         try {
             $validator = Validator::make($request->all(), [
                 'tsid' => 'required',
@@ -37,8 +35,11 @@ class GRLController extends Controller
                 $validator->validated()['tsid']
             );
 
+            //TODO REDIRECT
 
         } catch (Exception $e) {
+            //TODO refactor to an error resource like : return JsonErrorResourceCollection($errors)
+            //TODO logging
             return response()->json([
                 'status' => 'error',
                 'errorMessage' => Str::substr($e->getMessage(), 0, 50) . '...',
@@ -66,10 +67,13 @@ class GRLController extends Controller
                     $grlService->setPartner($partner)->makeRequest()
                 )->validate()
                     ->transformPayouts($partner)
+                    ->toArray()
                 , 200, [], JSON_UNESCAPED_SLASHES
             );
 
         } catch (Exception $e) {
+            //TODO refactor to an error resource like : return JsonErrorResourceCollection($errors)
+            //TODO logging
             return response()->json([
                 'status' => 'error',
                 'errorMessage' => Str::substr($e->getMessage(), 0, 50) . '...',

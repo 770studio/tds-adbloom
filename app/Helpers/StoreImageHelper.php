@@ -41,6 +41,9 @@ class StoreImageHelper
 
     public static function getCreativesCDNUrl(?string $local_path): ?string
     {
+        if (filter_var($local_path, FILTER_VALIDATE_URL)) {
+            return $local_path; // its an url already
+        }
         return Storage::disk('creatives_cdn')->exists($local_path)
             ? Storage::disk('creatives_cdn')->url($local_path)
             : null;
