@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 
-class SendPartnerSecondaryPostbackOnTTLExpire extends Command
+class SendPartnerSecondaryPostbackOnTTLExpireCommand extends Command
 {
     /**
      * The name and signature of the console command.

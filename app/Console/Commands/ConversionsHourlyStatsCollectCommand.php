@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\TuneAPIGetConversionHourlyStatPageJob;
 use App\Models\ConversionsHourlyStat;
-use App\Services\StatsAlerts\Traits\DBQueryWhereClauseExtendTrait;
 use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Carbon\Carbon;
@@ -93,7 +92,6 @@ class ConversionsHourlyStatsCollectCommand extends Command
             );
         }
     }
-
 
 
 }

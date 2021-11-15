@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\StatsAlerts;
+namespace App\Models\Infrastructure;
 
 use App\Helpers\DataTransferObject;
 use App\Services\StatsAlerts\Period24h;

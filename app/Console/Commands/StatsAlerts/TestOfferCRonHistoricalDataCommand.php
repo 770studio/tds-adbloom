@@ -5,7 +5,7 @@ namespace App\Console\Commands\StatsAlerts;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
-class TestOfferCRonHistoricalData extends Command
+class TestOfferCRonHistoricalDataCommand extends Command
 {
     /**
      * The name and signature of the console command.

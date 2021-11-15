@@ -6,7 +6,7 @@ use App\Services\StatsAlerts\StatsAlertsInventoryService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class TestIntegrationBroken extends Command
+class TestIntegrationBrokenCommand_DE extends Command
 {
     /**
      * The name and signature of the console command.
