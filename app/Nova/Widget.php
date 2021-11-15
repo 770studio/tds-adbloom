@@ -133,7 +133,7 @@ class Widget extends Resource
             Heading::make('<hr><b>Link</b>')->asHtml()->onlyOnDetail(),
             Code::make('', function () {
                 return sprintf("%s/?widgetId=%s&partnerId=%d",
-                    config('app.url'),
+                    config('app.widget_url'),
                     $this->short_id,
                     $this->partner->external_id
                 );
@@ -141,7 +141,7 @@ class Widget extends Resource
                 ->height(30)->onlyOnDetail(),
             TextCopy::make('Copy to clipboard', function () {
                 return sprintf(" %s/?widgetId=%s&partnerId=%d",
-                    config('app.url'),
+                    config('app.widget_url'),
                     $this->short_id,
                     $this->partner->external_id
                 );

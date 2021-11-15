@@ -7,7 +7,7 @@ class WidgetJSTemplateHelper
 
     public static function getTpl($partnerId, $widgetId): string
     {
-        $URL = config('app.url') . '/e.js';
+        $URL = config('app.widget_url') . '/e.js';
 
         return <<<TPL
  <!-- adblm widget code -->

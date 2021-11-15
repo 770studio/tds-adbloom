@@ -58,6 +58,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'widget_url' => env('WIDGET_BASE_URL'),
 
     'asset_url' => env('ASSET_URL', null),
 
