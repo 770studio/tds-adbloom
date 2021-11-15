@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class GeneralResearchAPIService
 {
@@ -62,6 +63,7 @@ class GeneralResearchAPIService
         );
 
         $url = $this->api_url . '?' . $params;
+        Log::channel('queue')->debug('grl api request:' . $url);
 
         $resp_object = Http::timeout($this->timeout)
             ->get($url)
@@ -106,6 +108,8 @@ class GeneralResearchAPIService
             $tsid
         );
 
+        Log::channel('queue')->debug('grl status request:' . $url);
+
         $resp_object = Http::timeout($this->timeout)
             ->get($url)
             ->object();
@@ -122,6 +126,9 @@ class GeneralResearchAPIService
          *   If status=3 the survey is successful, send a conversion to Tune
          *   If status=2 the survey is rejected, send a conversion to Tune (goal_id=389)
          */
+        Log::channel('tsid')->debug('status:' . $resp_object->status);
+
+
         switch ($resp_object->status) {
             //TODO refactor to kind of SendToTune helper/service/factory or a model method
             case "3":
