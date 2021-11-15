@@ -83,7 +83,7 @@ class GeneralResearchAPIService
      */
     private function getClickID(): string
     {
-        $url = sprintf("https://trk.adbloom.co/aff_c?&aff_id=%d&offer_id=389&format=json",
+        $url = sprintf("https://trk.adbloom.co/aff_c?&aff_id=%d&offer_id=389&format=json&source=widget",
             $this->partner->external_id
         );
 
