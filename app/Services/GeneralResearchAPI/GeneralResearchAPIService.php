@@ -119,7 +119,7 @@ class GeneralResearchAPIService
         if (!isset($resp_object->status)) {
             throw new BreakingException('external api status can not be read');
         }
-        
+
         Log::channel('queue')->debug('grl status reply:' . json_encode($resp_object));
 
         $back_url = 'none';
