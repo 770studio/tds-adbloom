@@ -34,7 +34,7 @@ class GRLController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        Log::channel('tsid')->debug('validation passed');
+        Log::channel('queue')->debug('validation passed');
 
         return RedirectHelper::opportunity(
             $grlService->sendStatusToTune(

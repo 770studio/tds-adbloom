@@ -5,14 +5,16 @@ namespace App\Helpers;
 
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 final class RedirectHelper
 {
-    public const OPPORTUNITY_REDIRECT_DOMAIN = 'https://widget.adbloom.co';
 
     public static function opportunity($status): RedirectResponse
     {
-        return redirect()->away(self::OPPORTUNITY_REDIRECT_DOMAIN . "/status/?status={$status}");
+        $url = config('app.widget_url') . "/status/?status={$status}";
+        Log::channel('queue')->debug('eventually redirected to:' . $url);
+        return redirect()->away($url);
     }
 
 }

@@ -132,8 +132,11 @@ class GeneralResearchAPIService
         switch ($resp_object->status) {
             //TODO refactor to kind of SendToTune helper/service/factory or a model method
              case "3":
+                 if (!isset($resp_object->kwargs->clickId)) {
+                     throw new BreakingException('external api data (clickId) can not be read');
+                 }
                  $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
-                     $resp_object->kwargs->clickId ?? null,
+                     $resp_object->kwargs->clickId,
                      $resp_object->payout ?? null,
                      $resp_object->tsid ?? null
                  );
