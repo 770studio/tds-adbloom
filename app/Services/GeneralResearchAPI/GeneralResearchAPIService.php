@@ -127,7 +127,7 @@ class GeneralResearchAPIService
          *   If status=3 the survey is successful, send a conversion to Tune
          *   If status=2 the survey is rejected, send a conversion to Tune (goal_id=389)
          */
-        Log::channel('tsid')->debug('status:' . $resp_object->status);
+        Log::channel('queue')->debug('status:' . $resp_object->status);
 
         switch ($resp_object->status) {
             //TODO refactor to kind of SendToTune helper/service/factory or a model method
