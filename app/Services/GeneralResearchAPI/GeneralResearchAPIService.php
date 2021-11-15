@@ -119,8 +119,9 @@ class GeneralResearchAPIService
         if (!isset($resp_object->status)) {
             throw new BreakingException('external api status can not be read');
         }
+        
+        Log::channel('queue')->debug('grl status reply:' . json_encode($resp_object));
 
-        $resp_array = (array)$resp_object;
         $back_url = 'none';
         /*
          *   If status=3 the survey is successful, send a conversion to Tune
@@ -128,8 +129,8 @@ class GeneralResearchAPIService
          */
         Log::channel('tsid')->debug('status:' . $resp_object->status);
 
-         switch ($resp_object->status) {
-             //TODO refactor to kind of SendToTune helper/service/factory or a model method
+        switch ($resp_object->status) {
+            //TODO refactor to kind of SendToTune helper/service/factory or a model method
              case "3":
                  $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
                      $resp_object->kwargs->clickId ?? null,
