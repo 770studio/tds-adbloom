@@ -123,14 +123,14 @@ class GeneralResearchAPIService
          *   If status=2 the survey is rejected, send a conversion to Tune (goal_id=389)
          */
         switch ($resp_object->status) {
-            //TODO refactor to kind of SendToTune helper/service or a model method
+            //TODO refactor to kind of SendToTune helper/service/factory or a model method
             case "3":
                 $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
                     Arr::get($resp_array, 'kwargs.clicked_bucket'),
                     Arr::get($resp_array, 'payout'),
                     Arr::get($resp_array, 'tsid'),
                 );
-                doPostBackJob::dispatch($url)->onQueue('send_to_tune');
+                doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
                 return RedirectStatus::success;
                 break;
             case "2":
@@ -139,11 +139,12 @@ class GeneralResearchAPIService
                     $resp_object->status,
                     Arr::get($resp_array, 'kwargs.clicked_bucket'),
                 );
-                doPostBackJob::dispatch($url)->onQueue('send_to_tune');
+                doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
 
                 break;
 
-            default: // TODO log
+            default:
+                throw new Exception('sendStatusToTune: wrong status:' . $resp_object->status);
         }
 
         return RedirectStatus::reject;
