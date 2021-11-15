@@ -10,7 +10,6 @@ use App\Models\Infrastructure\RedirectStatus;
 use App\Models\Partner;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -129,23 +128,22 @@ class GeneralResearchAPIService
          */
         Log::channel('tsid')->debug('status:' . $resp_object->status);
 
-
-        switch ($resp_object->status) {
-            //TODO refactor to kind of SendToTune helper/service/factory or a model method
-            case "3":
-                $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
-                    Arr::get($resp_array, 'kwargs.clickId'),
-                    Arr::get($resp_array, 'payout'),
-                    Arr::get($resp_array, 'tsid'),
-                );
-                doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
-                return RedirectStatus::success;
-                break;
+         switch ($resp_object->status) {
+             //TODO refactor to kind of SendToTune helper/service/factory or a model method
+             case "3":
+                 $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
+                     $resp_object->kwargs->clickId ?? null,
+                     $resp_object->payout ?? null,
+                     $resp_object->tsid ?? null
+                 );
+                 doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
+                 return RedirectStatus::success;
+                 break;
             case "2":
                 $back_url = sprintf("https://trk.adbloom.co/aff_goal?a=lsr&goal_id=%d&goal_name=%d&transaction_id=%s",
                     389,
                     $resp_object->status,
-                    Arr::get($resp_array, 'kwargs.clicked_bucket'),
+                    $resp_object->kwargs->clickId ?? null,
                 );
                 doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
 
