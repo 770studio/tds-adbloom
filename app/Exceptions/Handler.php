@@ -68,8 +68,8 @@ class Handler extends ExceptionHandler
                 return response()->json([
                     'status' => 'error',
                     'errorMessage' => $e instanceof BreakingException
-                        ? $e->getMessage()  //Str::substr($e->getMessage(), 0, 50) . '...',
-                        : 'unexpected error occurred'
+                        ? $e->getMessage()
+                        : 'unexpected error occurred' //Str::substr($e->getMessage(), 0, 50) . '...',
                 ], 422);
             }
 
