@@ -134,7 +134,7 @@ class GeneralResearchAPIService
             //TODO refactor to kind of SendToTune helper/service/factory or a model method
             case "3":
                 $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
-                    Arr::get($resp_array, 'kwargs.clicked_bucket'),
+                    Arr::get($resp_array, 'kwargs.clickId'),
                     Arr::get($resp_array, 'payout'),
                     Arr::get($resp_array, 'tsid'),
                 );
