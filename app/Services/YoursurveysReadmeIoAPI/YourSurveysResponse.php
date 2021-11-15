@@ -4,6 +4,7 @@
 namespace App\Services\YoursurveysReadmeIoAPI;
 
 
+use App\Exceptions\BreakingException;
 use App\Services\Response;
 use Exception;
 use Illuminate\Support\Collection;
@@ -16,7 +17,7 @@ class YourSurveysResponse extends Response
      */
     public function validate()
     {
-        if ($this->apiResult->status != 'success') throw new Exception("YoursurveysReadmeIoAPI returned an error:" . ($this->apiResult->messages ?? ''));
+        if ($this->apiResult->status != 'success') throw new BreakingException("YoursurveysReadmeIoAPI returned an error:" . ($this->apiResult->messages ?? ''));
 
     }
 

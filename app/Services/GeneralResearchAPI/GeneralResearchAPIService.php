@@ -4,6 +4,7 @@
 namespace App\Services\GeneralResearchAPI;
 
 
+use App\Exceptions\BreakingException;
 use App\Jobs\doPostBackJob;
 use App\Models\Infrastructure\RedirectStatus;
 use App\Models\Partner;
@@ -67,7 +68,7 @@ class GeneralResearchAPIService
             ->get($url)
             ->object();
         if (!$resp_object) {
-            throw new Exception($url . ' can not be reached, 500 or smth...');
+            throw new BreakingException('external api can not be reached, 500 or smth...');
         }
 
         return $resp_object;
@@ -110,10 +111,10 @@ class GeneralResearchAPIService
             ->get($url)
             ->object();
         if (!$resp_object) {
-            throw new Exception($url . ' can not be reached, 500 or smth...');
+            throw new BreakingException('external api can not be reached, 500 or smth...');
         }
         if (!isset($resp_object->status)) {
-            throw new Exception($url . ' status can not be read');
+            throw new BreakingException('external api status can not be read');
         }
 
         $resp_array = (array)$resp_object;
@@ -144,7 +145,7 @@ class GeneralResearchAPIService
                 break;
 
             default:
-                throw new Exception('sendStatusToTune: wrong status:' . $resp_object->status);
+                throw new BreakingException('sendStatusToTune: wrong status:' . $resp_object->status);
         }
 
         return RedirectStatus::reject;

@@ -4,7 +4,6 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -68,7 +67,9 @@ class Handler extends ExceptionHandler
             if ($request->is('api/*', 'redirect/*')) {
                 return response()->json([
                     'status' => 'error',
-                    'errorMessage' => Str::substr($e->getMessage(), 0, 50) . '...',
+                    'errorMessage' => $e instanceof BreakingException
+                        ? $e->getMessage()  //Str::substr($e->getMessage(), 0, 50) . '...',
+                        : 'unexpected error occurred'
                 ], 422);
             }
 

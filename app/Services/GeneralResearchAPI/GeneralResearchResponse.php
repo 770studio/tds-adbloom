@@ -4,6 +4,7 @@
 namespace App\Services\GeneralResearchAPI;
 
 
+use App\Exceptions\BreakingException;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use App\Services\Response;
@@ -19,7 +20,7 @@ class GeneralResearchResponse extends Response
     public function validate(): self
     {
         if ($this->apiResult->info->success != 'true') {
-            throw new Exception("GeneralResearchResponse is not parsable");
+            throw new BreakingException("GeneralResearchResponse is not parsable");
         }
         return $this;
 
