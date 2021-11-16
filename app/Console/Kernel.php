@@ -43,8 +43,8 @@ class Kernel extends ConsoleKernel
             //
             $schedule->command('conversions:collectHourlyStats')->hourlyAt([20, 40]);
             // $schedule->command('test:alert1')->hourlyAt([25, 45]);
-            $schedule->command('statstests:alert2 --notify')->dailyAt('10:00');
-            $schedule->command('statstests:alert3 --notify')->dailyAt('10:00');
+            $schedule->command('statstests:alert2 --notify')->dailyAt('10:00')->runInBackground();
+            $schedule->command('statstests:alert3 --notify')->dailyAt('10:00')->runInBackground();
             $schedule->command('conversionsHourlyStats:prune')->daily();
 
         }
