@@ -49,7 +49,7 @@ class GeneralResearchResponse extends Response
                     return $item;
                 })
         );
-         //test
+
         return $this;
     }
 

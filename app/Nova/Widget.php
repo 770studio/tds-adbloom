@@ -78,6 +78,11 @@ class Widget extends Resource
     public function fields(Request $request)
     {
 
+        $opportunities =
+            Multiselect::make('Opportunities', 'opportunities')
+                ->options(\App\Models\Opportunity::all())
+                ->belongsToMany(Opportunity::class);
+
         return [
             ID::make('ID', 'id')->sortable(),
             //BelongsToMany::make('opportunities'),
@@ -97,6 +102,12 @@ class Widget extends Resource
                         */
 // Must be able to specify Tags, Platforms, Countries when Dynamic is enabled.
 // In this case Opportunities for this widget will be selected based on these criteria.
+
+            // иначе иксепшн вылетает Trying to get property 'resourceClass' of non-object AssociatableController.php:25
+            $request->search
+                ? $opportunities
+                : NovaDependencyContainer::make([$opportunities])->dependsOn('dynamic_or_static', 1),
+
             NovaDependencyContainer::make([
                 Multiselect::make('Tag', 'tags')->options(
                     \App\Models\Tag::whereHas('opportunities')->pluck('name', 'id')
@@ -113,13 +124,7 @@ class Widget extends Resource
                     ->saveAsJSON(),
 
             ])->dependsOn('dynamic_or_static', 0),
-            NovaDependencyContainer::make([
-                Multiselect::make('Opportunities', 'opportunities')
-                    ->options(\App\Models\Opportunity::all())
-                    ->belongsToMany(Opportunity::class)
 
-
-            ])->dependsOn('dynamic_or_static', 1),
 
             new Panel('Integration', $this->IntegrationFields()),
 
