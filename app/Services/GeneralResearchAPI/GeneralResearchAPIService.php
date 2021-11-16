@@ -137,7 +137,7 @@ class GeneralResearchAPIService
                  }
                  $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
                      $resp_object->kwargs->clickId,
-                     $resp_object->payout ?? null,
+                     number_format(optional($resp_object)->payout / 100, 2), // in dollars
                      $resp_object->tsid ?? null
                  );
                  doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
