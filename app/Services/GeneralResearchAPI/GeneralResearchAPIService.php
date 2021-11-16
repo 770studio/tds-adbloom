@@ -6,7 +6,7 @@ namespace App\Services\GeneralResearchAPI;
 
 use App\Exceptions\BreakingException;
 use App\Jobs\doPostBackJob;
-use App\Models\Infrastructure\RedirectStatus;
+use App\Models\Infrastructure\RedirectStatus_Client;
 use App\Models\Partner;
 use Exception;
 use Illuminate\Http\Request;
@@ -141,7 +141,7 @@ class GeneralResearchAPIService
                      $resp_object->tsid ?? null
                  );
                  doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
-                 return RedirectStatus::success;
+                 return RedirectStatus_Client::success;
                  break;
             case "2":
                 $back_url = sprintf("https://trk.adbloom.co/aff_goal?a=lsr&goal_id=%d&transaction_id=%s&adv_sub=%s",
@@ -158,7 +158,7 @@ class GeneralResearchAPIService
                 throw new BreakingException('sendStatusToTune: wrong status:' . $resp_object->status);
         }
 
-        return RedirectStatus::reject;
+        return RedirectStatus_Client::reject;
 
         //var_dump($resp_object->status, $back_url);
 
