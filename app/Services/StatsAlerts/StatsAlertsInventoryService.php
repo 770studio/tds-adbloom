@@ -28,8 +28,9 @@ final class StatsAlertsInventoryService
 
     /**
      *  get click through  grouped by offer_id
+     *
      */
-    public function getConversionClicksCRValue(Period24h $period): Collection
+    public function getConversionClicksCRValue(FlexPeriod $period, callable $whereMore = null): Collection
     {
         return DB::table('conversions_hourly_stats')
             ->select('Stat_offer_id', 'OfferUrl_name', 'Offer_name',
@@ -38,22 +39,25 @@ final class StatsAlertsInventoryService
                 DB::raw('IF
                     ( sum( Stat_conversions ) = 0 OR sum(Stat_clicks ) = 0, 0,
                     ROUND(sum( Stat_conversions )*100 / sum( Stat_clicks ),2) ) AS cr_value  ')
-            )
-            //->havingRaw('(sum( Stat_conversions ) > 0  OR sum(Stat_clicks ) > 0) ')  //do not consider 0 clicks + 0
-            //->havingRaw('sum(Stat_clicks ) > ? ', [$min_clicks])  // ignore anything that is under xx clicks
-            // + 0
-            ->groupBy(
+            )->groupBy(
                 $this->groupBy->Offer()->toArray()
             )
             ->where(
                 $period->toArray()
-            )
-            ->get();
+            )->when($whereMore, function (Builder $query, callable $more) {
+                return $more($query);
+            })->get();
 
 
     }
 
-
+    public function getConversionClicksCRValueWithNoActivity(FlexPeriod $period): Collection
+    {
+        return $this->getConversionClicksCRValue($period, function (Builder $query) {
+            return $query->havingRaw('clicks = 0 and conversions = 0 '); //actually no clicks means no conversions,
+            // but thats ok i think, doesnt really matter
+        });
+    }
 
 
 }

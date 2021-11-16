@@ -5,19 +5,32 @@ namespace App\Services\StatsAlerts;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Carbon;
 
-class Period24h implements Arrayable
+class FlexPeriod implements Arrayable
 {
 
     private const DATETIME_FIELD = 'StatDateTime';
     private string $timezone;
     private Carbon $dateSrart;
     private Carbon $dateEnd;
+    private $periodCode;
 
     public function __construct($period)
     {
         $this->timezone = config('services.tune_api.stats_timezone');
+        $this->periodCode = $period;
 
         switch ($period) {
+            /*
+             * e.g. today is oct 16 , we are aiming for period
+             * from sept 15 startOfDay to oct 14 endOfDay (30 days total)
+             * to be able to compare this period to last day which is yesterday oct 16
+             */
+            case 'last30d':
+                $this->setDates(
+                    $this->getNewMutableNowInst()->subDays(32)->startOfDay(),
+                    $this->getNewMutableNowInst()->subDays(2)->endOfDay()
+                );
+                break;
             case 'prev24h':
                 $this->setDates(
                     $this->getNewMutableNowInst()->subHours(48),
@@ -92,5 +105,10 @@ class Period24h implements Arrayable
             [self::DATETIME_FIELD, '>=', $this->dateSrart->toDateTimeString()],
             [self::DATETIME_FIELD, '<', $this->dateEnd->toDateTimeString()],
         ];
+    }
+
+    public function getName()
+    {
+        return $this->periodCode;
     }
 }

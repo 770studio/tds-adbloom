@@ -5,7 +5,7 @@ namespace App\Console\Commands\StatsAlerts;
 use App\Helpers\CompareObjectValueHelper;
 use App\Models\Infrastructure\AlertDTO;
 use App\Notifications\StatsAlertNotification;
-use App\Services\StatsAlerts\Period24h;
+use App\Services\StatsAlerts\FlexPeriod;
 use App\Services\StatsAlerts\StatsAlertsInventoryService;
 use Illuminate\Console\Command;
 use Illuminate\Log\Logger;
@@ -13,6 +13,19 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use LogicException;
 
+/**
+ * we have an offer
+ * the offer has a conversion rate
+ * conversioni rate = clicks/conversions
+ * 10 clicks/1 convesion = 10% conversion rate
+ * lets say each day, offer conversion rate is average 10%
+ * on day 12
+ * conversion rate is 4%
+ * on day 13, conversion rate is 2%
+ * conversion rate has changed by more then 50% in 24 hour period
+ * we need an alert
+ *
+ */
 final class TestOfferCRCommand extends Command
 {
     public const CLICK_THROUGH_MIN_THRESHOLD = 2;
@@ -23,6 +36,8 @@ final class TestOfferCRCommand extends Command
      * The name and signature of the console command.
      *
      * @var string
+     *
+     *
      */
     protected $signature = 'statstests:alert2 {--older=} {--recent=} {--notify}';
 
@@ -58,19 +73,7 @@ final class TestOfferCRCommand extends Command
      */
     public function handle(StatsAlertsInventoryService $Service)
     {
-        /**
-         * we have an offer
-         * the offer has a conversion rate
-         * conversioni rate = clicks/conversions
-         * 10 clicks/1 convesion = 10% conversion rate
-         * lets say each day, offer conversion rate is average 10%
-         * on day 12
-         * conversion rate is 4%
-         * on day 13, conversion rate is 2%
-         * conversion rate has changed by more then 50% in 24 hour period
-         * we need an alert
-         *
-         */
+
 
         $this->line("start alert2 lookup");
         $this->logger->debug("alert2 lookup fired");
@@ -99,8 +102,8 @@ final class TestOfferCRCommand extends Command
             'older' => $older_period,
         ]);
 
-        $older_period = new Period24h($older_period);
-        $recent_period = new Period24h($recent_period);
+        $older_period = new FlexPeriod($older_period);
+        $recent_period = new FlexPeriod($recent_period);
 
         $this->logger->debug("periods decoded:", [
             'recent' => $recent_period->getDateRange(),
