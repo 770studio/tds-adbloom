@@ -15,6 +15,11 @@ use JsonSerializable;
 
 class WidgetOpportunitiesResource extends JsonResource
 {
+    /**
+     * The "data" wrapper that should be applied.
+     *
+     * @var string
+     */
 
     public static Partner $partner;
 
@@ -69,4 +74,6 @@ class WidgetOpportunitiesResource extends JsonResource
 
         ];
     }
+
+
 }

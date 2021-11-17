@@ -97,23 +97,25 @@ class WidgetController extends Controller
             ? Partner::where('external_id', $request->partnerId)->first()
             : $widget->partner;
 
-
         // подмешать временно! TODO убрать
         $mixin = $grlResponseProcessor->setData(
             $grlService->setPartner($partner)->makeRequest()
         )->validate()
             ->getBucket();
 
+        return response()->json(
+            ['items' => (new WidgetOpportunitiesCollection  (
+                $widget->opportunities()
+                    ->get()
+                    // TODO убрать временный mixin
+                    ->push(new Opportunity($mixin))
+                    ->filter(function ($collection) {
+                        return $collection->short_id;
+                    })
+            ))], 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES);
+        // ->response()
+        //  ->header('X-Value', 'True');
 
-        return new WidgetOpportunitiesCollection(
-            $widget->opportunities()
-                ->get()
-                // TODO убрать временный mixin
-                ->push(new Opportunity($mixin))
-                ->filter(function ($collection) {
-                    return $collection->short_id;
-                })
-        );
 
     }
 
