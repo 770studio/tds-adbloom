@@ -67,6 +67,7 @@ class GRLController extends Controller
             $responseProcessor->setData(
                 $grlService->setPartner($partner)->makeRequest()
             )->validate()
+                ->transformDuration()
                 ->transformPayouts($partner)
                 ->toArray()
             , 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES

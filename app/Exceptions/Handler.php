@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -65,6 +66,10 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (Throwable $e, Request $request) {
             if ($request->is('api/*', 'redirect/*')) {
+                if (App::isLocal()) {
+                    dd($e);
+                }
+
                 return response()->json([
                     'status' => 'error',
                     'errorMessage' => $e instanceof BreakingException

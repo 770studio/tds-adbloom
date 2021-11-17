@@ -26,31 +26,46 @@ class GeneralResearchResponse extends Response
 
     }
 
-    public function parseData(): Collection
-    {
-        return collect($this->apiResult);
-    }
-
     public function transformPayouts(Partner $partner): self
     {
+        $this->transformBuckets(function (&$item) use ($partner) {
+            $item->payout->max = number_format($partner->calulateReward($item->payout->max) * 0.7 / 100, 2,
+                '.', '');
+            $item->payout->min = number_format($partner->calulateReward($item->payout->min) * 0.7 / 100, 2,
+                '.', '');
+            return $item;
+        });
 
+        return $this;
+    }
+
+    private function transformBuckets(callable $callback): void
+    {
         $this->setData(
             collect($this->apiResult)
-                ->transform(function ($item, $key) use ($partner) {
+                ->transform(function ($item, $key) use ($callback) {
                     if ($key !== 'offerwall') {
                         return $item;
                     }
-                    $item->buckets = collect($item->buckets)->transform(function ($item, $key) use ($partner) {
-                        //30% took adbloom
-                        $item->payout->max = number_format($partner->calulateReward($item->payout->max) * 0.7, 2,
-                            '.', '');
-                        $item->payout->min = number_format($partner->calulateReward($item->payout->min) * 0.7, 2,
-                            '.', '');
-                        return $item;
+                    //dump($item);
+                    $item->buckets = collect($item->buckets)->transform(function ($item, $key) use ($callback) {
+                        return $callback($item);
                     });
                     return $item;
                 })
         );
+    }
+
+    public function transformDuration(): self
+    {
+        $this->transformBuckets(function (&$item) {
+            // округлить до ближайшего целого (это же минуты)
+            $item->duration->max = number_format($item->duration->max / 60, 0,
+                '.', '');
+            $item->duration->min = number_format($item->duration->min / 60, 0,
+                '.', '');
+            return $item;
+        });
 
         return $this;
     }
@@ -85,4 +100,11 @@ class GeneralResearchResponse extends Response
 
 
     }
+
+    public function parseData(): Collection
+    {
+        return collect($this->apiResult);
+    }
+
+
 }
