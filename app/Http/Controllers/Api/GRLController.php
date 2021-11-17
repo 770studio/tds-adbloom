@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Helpers\RedirectHelper;
+use App\Http\Controllers\Controller;
 use App\Models\Partner;
 use App\Models\Widget;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
@@ -68,7 +69,7 @@ class GRLController extends Controller
             )->validate()
                 ->transformPayouts($partner)
                 ->toArray()
-            , 200, [], JSON_UNESCAPED_SLASHES
+            , 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES
         );
 
 

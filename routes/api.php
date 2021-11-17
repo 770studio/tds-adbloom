@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\GRLController;
 use App\Http\Controllers\Api\WidgetController;
-use App\Http\Controllers\GRLController;
 use Illuminate\Support\Facades\Route;
 
 /*
