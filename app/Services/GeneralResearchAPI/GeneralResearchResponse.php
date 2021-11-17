@@ -67,7 +67,7 @@ class GeneralResearchResponse extends Response
                 [
                     'short_id' => $offerwall->id, // id
                     'name' => 'Paid Surveys',   // title
-                    'image' => config('app.url') . '/storage/assets/creatives/e23bae6e2e269b78738005ef8c9c8914105f4321.png',
+                    'image' => 'https://dev.tds.adbloom.co/storage/assets/creatives/e23bae6e2e269b78738005ef8c9c8914105f4321.png',
                     'description' => 'Get paid for your opinion today! Surveys take a few minutes and you\'ll earn each time you complete one.',
                     'link' => $bucket->uri, // url
                     'payout' => $bucket->payout->max, // reward
