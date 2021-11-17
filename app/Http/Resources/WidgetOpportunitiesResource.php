@@ -32,6 +32,7 @@ class WidgetOpportunitiesResource extends JsonResource
     public function toArray($request)
     {
 
+
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
         $reward = self::$partner->calulateReward($this->payout);
         $targeting_params = TargetingParams::collection()->only((array)$this->targeting_params)->values();

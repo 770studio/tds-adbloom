@@ -43,9 +43,9 @@ class GeneralResearchResponse extends Response
                     $item->buckets = collect($item->buckets)->transform(function ($item, $key) use ($partner) {
                         //30% took adbloom
                         $item->payout->max = number_format($partner->calulateReward($item->payout->max) * 0.7, 2,
-                            '', '');
+                            '.', '');
                         $item->payout->min = number_format($partner->calulateReward($item->payout->min) * 0.7, 2,
-                            '', '');
+                            '.', '');
                         return $item;
                     });
                     return $item;
