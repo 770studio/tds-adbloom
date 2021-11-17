@@ -65,6 +65,7 @@ class WidgetOpportunitiesResource extends JsonResource
             'reward' => $this->when($reward, $reward),
             'required' => $this->when($targeting_params, $targeting_params),
             'callToAction' => $this->when($this->call_to_action, $this->call_to_action),
+            'type' => $this->type,
             'incentive' => $this->when($this->incentive, $this->incentive),
             'targeting' => [
                 $this->when((bool)$targeting, (object)$targeting)
