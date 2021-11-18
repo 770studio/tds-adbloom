@@ -20,7 +20,7 @@ class GeneralResearchResponse extends Response
     public function validate(): self
     {
         if ($this->apiResult->info->success != 'true') {
-            throw new BreakingException("GeneralResearchResponse is not parsable");
+            throw new BreakingException("external api is not parsable");
         }
         return $this;
 
