@@ -110,7 +110,7 @@ class WidgetController extends Controller
                 $grlService->setPartner($partner)->makeRequest()
             )->validate()
                 ->transformPayouts($partner)
-               // ->hideUri()
+                ->transformUri()
                 ->getBucket();
 
         } catch (Throwable $e) {

@@ -70,7 +70,7 @@ class GRLController extends Controller
             )->validate()
                 ->transformDuration()
                 ->transformPayouts($partner, true)
-                //->hideUri()
+                ->transformUri()
                 ->toArray()
             , 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES
         );
