@@ -62,7 +62,7 @@ class GeneralResearchResponse extends Response
     {
         $this->transformBuckets(function (&$item) {
             if (preg_match("/\/api\/v1\/(.*)$/", $item->uri, $match)) {
-                $item->uri = route('grlgo', ['path' => $match[0]]);
+                $item->uri = route('grlgo', ['path' => $match[1]]);
             }
             return $item;
         });
