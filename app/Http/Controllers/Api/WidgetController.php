@@ -109,6 +109,7 @@ class WidgetController extends Controller
             $mixin = $grlResponseProcessor->setData(
                 $grlService->setPartner($partner)->makeRequest()
             )->validate()
+                ->transformPayouts($partner)
                 ->getBucket();
 
         } catch (Throwable $e) {

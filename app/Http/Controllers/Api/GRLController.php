@@ -48,6 +48,7 @@ class GRLController extends Controller
 
     /**
      * @throws Exception
+     * @route  api/v1/widget/{widget_short_id}/opportunities/grl
      */
     public function proxy(Request                   $request, string $widget_short_id,
                           GeneralResearchAPIService $grlService, GeneralResearchResponse $responseProcessor): JsonResponse
@@ -69,6 +70,7 @@ class GRLController extends Controller
             )->validate()
                 ->transformDuration()
                 ->transformPayouts($partner)
+                ->hideUri()
                 ->toArray()
             , 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES
         );

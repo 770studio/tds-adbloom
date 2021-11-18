@@ -29,6 +29,7 @@ class GeneralResearchResponse extends Response
     public function transformPayouts(Partner $partner): self
     {
         $this->transformBuckets(function (&$item) use ($partner) {
+            //30% took adbloom
             $item->payout->max = number_format($partner->calulateReward($item->payout->max) * 0.7 / 100, 2,
                 '.', '');
             $item->payout->min = number_format($partner->calulateReward($item->payout->min) * 0.7 / 100, 2,
@@ -39,23 +40,6 @@ class GeneralResearchResponse extends Response
         return $this;
     }
 
-    private function transformBuckets(callable $callback): void
-    {
-        $this->setData(
-            collect($this->apiResult)
-                ->transform(function ($item, $key) use ($callback) {
-                    if ($key !== 'offerwall') {
-                        return $item;
-                    }
-                    //dump($item);
-                    $item->buckets = collect($item->buckets)->transform(function ($item, $key) use ($callback) {
-                        return $callback($item);
-                    });
-                    return $item;
-                })
-        );
-    }
-
     public function transformDuration(): self
     {
         $this->transformBuckets(function (&$item) {
@@ -64,6 +48,17 @@ class GeneralResearchResponse extends Response
                 '.', '');
             $item->duration->min = number_format($item->duration->min / 60, 0,
                 '.', '');
+            return $item;
+        });
+
+        return $this;
+    }
+
+// TODO refactor transform... to a factory
+    public function hideUri(): self
+    {
+        $this->transformBuckets(function (&$item) {
+            unset($item->uri);
             return $item;
         });
 
@@ -106,5 +101,21 @@ class GeneralResearchResponse extends Response
         return collect($this->apiResult);
     }
 
+    private function transformBuckets(callable $callback): void
+    {
+        $this->setData(
+            collect($this->apiResult)
+                ->transform(function ($item, $key) use ($callback) {
+                    if ($key !== 'offerwall') {
+                        return $item;
+                    }
+                    //dump($item);
+                    $item->buckets = collect($item->buckets)->transform(function ($item, $key) use ($callback) {
+                        return $callback($item);
+                    });
+                    return $item;
+                })
+        );
+    }
 
 }
