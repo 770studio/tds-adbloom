@@ -83,7 +83,7 @@ class GRLController extends Controller
         //  dd($request->path(), $request->all());
         if (preg_match("/api\/v1\/go\/(.*)$/", $request->path(), $match)) {  // dd("https://task.generalresearch.com/" . $match[1] . "/?" . http_build_query($request->all() ));
             return redirect()->away(
-                "https://task.generalresearch.com/" . $match[1] . "/?" . http_build_query($request->all())
+                "https://task.generalresearch.com/api/v1/" . $match[1] . "/?" . http_build_query($request->all())
             );
         }
 
