@@ -69,7 +69,7 @@ class GRLController extends Controller
                 $grlService->setPartner($partner)->makeRequest()
             )->validate()
                 ->transformDuration()
-                ->transformPayouts($partner)
+                ->transformPayouts($partner, true)
                 ->hideUri()
                 ->toArray()
             , 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES

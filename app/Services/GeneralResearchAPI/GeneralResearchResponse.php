@@ -26,13 +26,16 @@ class GeneralResearchResponse extends Response
 
     }
 
-    public function transformPayouts(Partner $partner): self
+    public function transformPayouts(Partner $partner, bool $adbloom30 = false): self
     {
-        $this->transformBuckets(function (&$item) use ($partner) {
-            //30% took adbloom
-            $item->payout->max = number_format($partner->calulateReward($item->payout->max) * 0.7 / 100, 2,
+        $denom = $adbloom30
+            ? 0.7 / 100    //30% took adbloom
+            : 1 / 100;
+
+        $this->transformBuckets(function (&$item) use ($partner, $denom) {
+            $item->payout->max = number_format($partner->calulateReward($item->payout->max) * $denom, 2,
                 '.', '');
-            $item->payout->min = number_format($partner->calulateReward($item->payout->min) * 0.7 / 100, 2,
+            $item->payout->min = number_format($partner->calulateReward($item->payout->min) * $denom, 2,
                 '.', '');
             return $item;
         });
