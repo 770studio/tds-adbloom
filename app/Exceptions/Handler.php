@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -64,8 +65,23 @@ class Handler extends ExceptionHandler
 
     public function register()
     {
+
+        $this->reportable(function (Throwable $e) {
+            if (request() && request()->is('api/*', 'redirect/*')) {
+                // log api errors to a special logfile
+                Log::channel('api_errors')->error($e->getMessage(), [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]);
+                Log::channel('api_errors')->error($e->getTraceAsString());
+                return false;
+            }
+
+        });
+
         $this->renderable(function (Throwable $e, Request $request) {
             if ($request->is('api/*', 'redirect/*')) {
+
                 if (App::isLocal()) {
                     dd($e);
                 }

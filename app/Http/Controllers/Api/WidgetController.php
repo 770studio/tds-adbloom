@@ -15,6 +15,7 @@ use App\Services\GeneralResearchAPI\GeneralResearchResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Throwable;
 
 
 class WidgetController extends Controller
@@ -89,19 +90,30 @@ class WidgetController extends Controller
 
                 });*/
 
-        /**
-         * override partner , by default partner is related to widget
-         * @var Partner $partner
-         */
-        $partner = WidgetOpportunitiesResource::$partner = $request->partnerId
-            ? Partner::where('external_id', $request->partnerId)->first()
-            : $widget->partner;
+        try {
+            /**
+             *  declare mixin here
+             *  so if we get into any exception  catch it, report it (log), then return response with no mixin
+             */
+            $mixin = [];
 
-        // подмешать временно! TODO убрать
-        $mixin = $grlResponseProcessor->setData(
-            $grlService->setPartner($partner)->makeRequest()
-        )->validate()
-            ->getBucket();
+            /**
+             * override partner , by default partner is related to widget
+             * @var Partner $partner
+             */
+            $partner = WidgetOpportunitiesResource::$partner = $request->partnerId
+                ? Partner::where('external_id', $request->partnerId)->first()
+                : $widget->partner;
+
+            // подмешать временно! TODO убрать
+            $mixin = $grlResponseProcessor->setData(
+                $grlService->setPartner($partner)->makeRequest()
+            )->validate()
+                ->getBucket();
+
+        } catch (Throwable $e) {
+            report($e);
+        }
 
         return response()->json(
             ['items' => (new WidgetOpportunitiesCollection  (
