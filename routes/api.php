@@ -29,7 +29,9 @@ Route::prefix('v1/widget/{widget_short_id}/opportunities')->group(function () {
     Route::get('/grl', [GRLController::class, 'proxy']);
 });
 
-Route::get('v1/go/{path}', [GRLController::class, 'maskLink'])->where('path', '.*');
+Route::get('v1/go/{path}', [GRLController::class, 'UnmaskLink'])
+    ->where('path', '.*')
+    ->name('grlgo');
 
 // /redirect/grl?tsid={VALUE}
 
