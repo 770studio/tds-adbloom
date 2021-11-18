@@ -84,7 +84,7 @@ class GeneralResearchResponse extends Response
                     'name' => 'Paid Surveys',   // title
                     'image' => 'https://dev.tds.adbloom.co/storage/assets/creatives/e23bae6e2e269b78738005ef8c9c8914105f4321.png',
                     'description' => 'Get paid for your opinion today! Surveys take a few minutes and you\'ll earn each time you complete one.',
-                    'link' => $bucket->uri, // url
+                    //'link' => $bucket->uri, // url
                     'payout' => $bucket->payout->max, // reward
                     'call_to_action' => 'Start Now', // callToAction
                     'type' => Opportunity::TYPES['survey'], // for timeToComplete to show up
