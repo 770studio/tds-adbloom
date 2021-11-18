@@ -70,7 +70,7 @@ class GRLController extends Controller
             )->validate()
                 ->transformDuration()
                 ->transformPayouts($partner, true)
-                ->hideUri()
+                //->hideUri()
                 ->toArray()
             , 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES
         );
@@ -78,4 +78,9 @@ class GRLController extends Controller
 
     }
 
+    public function maskLink(Request $request, $path)
+    {
+        dd($path);
+        dd($request->path());
+    }
 }
