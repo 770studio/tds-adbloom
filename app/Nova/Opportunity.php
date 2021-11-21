@@ -7,7 +7,6 @@ use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Gender;
 use App\Models\Infrastructure\Platform;
 use App\Models\Infrastructure\TargetingParams;
-use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
@@ -81,8 +80,8 @@ class Opportunity extends Resource
             // }) TODO this doesnt work
             ->rules('required')
                 ->sortable(),
-            
-            Text::make('Time to Complete', 'timeToComplete')->default(0)
+
+            Text::make('Time to Complete', 'timeToComplete')->default(1),
 
             BelongsTo::make('Client'),
 
