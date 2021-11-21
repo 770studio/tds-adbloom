@@ -81,13 +81,10 @@ class Opportunity extends Resource
             // }) TODO this doesnt work
             ->rules('required')
                 ->sortable(),
-
-            NovaDependencyContainer::make([
-                Text::make('Time to Complete', 'timeToComplete')->default(0)
-            ])->dependsOn('type', 'survey'),
+            
+            Text::make('Time to Complete', 'timeToComplete')->default(0)
 
             BelongsTo::make('Client'),
-
 
             Image::make('Image')
                 ->disk('creatives')
