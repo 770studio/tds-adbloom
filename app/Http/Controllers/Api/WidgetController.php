@@ -117,6 +117,7 @@ class WidgetController extends Controller
             report($e);
         }
 
+        //dd( $widget->opportunities()->get()->merge(['id'=>342])->all() );
         return response()->json(
             ['items' => (new WidgetOpportunitiesCollection  (
                 $widget->opportunities()
