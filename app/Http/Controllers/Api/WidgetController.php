@@ -113,6 +113,12 @@ class WidgetController extends Controller
                 ->transformUri()
                 ->getBucket();
 
+            /*            // test mixin
+                          $mixin = [
+                            'id' => "test555555",
+                            'short_id' => 4343
+                        ];*/
+
         } catch (Throwable $e) {
             report($e);
         }

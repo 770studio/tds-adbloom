@@ -71,7 +71,7 @@ class WidgetOpportunitiesResource extends JsonResource
                 $this->when((bool)$targeting, (object)$targeting)
                 // targeting должен быть массивом объектов. В текущей реализации у нас только один объект будет
             ],
-            'enableGrlInventory' => $this->when(isset($widget->enable_grl_inventory) && $widget->enable_grl_inventory, $widget->enable_grl_inventory)
+            'enableGrlInventory' => $this->when(isset($widget->enable_grl_inventory), $widget->enable_grl_inventory ?? 0)
 
         ];
     }
