@@ -31,7 +31,7 @@ class WidgetOpportunitiesResource extends JsonResource
      */
     public function toArray($request)
     {
-        $widget = $this->pivot->pivotParent;
+        $widget = $this->pivot->pivotParent ?? null;
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
         $reward = self::$partner->calulateReward($this->payout);
         $targeting_params = TargetingParams::collection()->only((array)$this->targeting_params)->values();
@@ -71,7 +71,7 @@ class WidgetOpportunitiesResource extends JsonResource
                 $this->when((bool)$targeting, (object)$targeting)
                 // targeting должен быть массивом объектов. В текущей реализации у нас только один объект будет
             ],
-            'enableGrlInventory' => $this->when($widget->enable_grl_inventory, $widget->enable_grl_inventory)
+            'enableGrlInventory' => $this->when(@$widget->enable_grl_inventory, $widget->enable_grl_inventory)
 
         ];
     }
