@@ -91,6 +91,7 @@ class Widget extends Resource
             Text::make('Short Id')->exceptOnForms(),
             BelongsTo::make('Partner'),
             Toggle::make('Dynamic | Static', 'dynamic_or_static')
+                ->onColor('green')
                 ->help("Static when this is on otherwise Dynamic (by default)")
                 ->default(0),
 
@@ -128,7 +129,17 @@ class Widget extends Resource
 
             new Panel('Integration', $this->IntegrationFields()),
 
+            new Panel('Inventory', $this->InventoryFields()),
 
+
+        ];
+    }
+
+    protected function InventoryFields(): array
+    {
+        return [
+            Toggle::make('GRL Inventory', 'enable_grl_inventory')->onColor('green')
+                ->default(0),
         ];
     }
 

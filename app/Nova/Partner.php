@@ -142,7 +142,7 @@ class Partner extends Resource
             BooleanGroup::make('Send Status Postback', 'send_pending_status')->options(
                 RedirectStatus::indexes()
             ),
-            Toggle::make('Send Pending Postback', 'send_pending_postback'),
+            Toggle::make('Send Pending Postback', 'send_pending_postback')->onColor('green'),
             NovaDependencyContainer::make([
                 Number::make('Pending Postback Timeout (days, hours on dev.env)', 'pending_timeout')->min(1)->max(30),
 
@@ -163,7 +163,7 @@ class Partner extends Resource
             NovaDependencyContainer::make([
                 Number::make('Percentage, %', 'percentage')->min(1)->max(100)->step(1),
                 // ->rules('required', 'gt:0'),
-                Toggle::make('Convert to In-app Currency', 'convert_to_points'),
+                Toggle::make('Convert to In-app Currency', 'convert_to_points')->onColor('green'),
                 NovaDependencyContainer::make([
                     Number::make('Reward users this amount for each $1 earned', 'points_multiplier')->min(0.5)->max(9999999999)->step(0.5),
                     //->rules('required', 'gt:0'), Reward users [input] for each $1 earned
