@@ -10,6 +10,7 @@ use App\Models\Infrastructure\TargetingParams;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -18,6 +19,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Naif\Toggle\Toggle;
 use OptimistDigital\MultiselectField\Multiselect;
 
 class Opportunity extends Resource
@@ -119,6 +121,12 @@ class Opportunity extends Resource
                 })*/
 
             Text::make('Url', 'link')->hideFromIndex(),
+
+            Toggle::make('Use default macros', 'use_default_macros')->onColor('green'),
+            Code::make('Url default macros', function () {
+                return \App\Models\Opportunity::DEFAULT_URL_MACRO;
+            })->autoHeight()
+                ->onlyOnDetail(),
             Textarea::make('Description')->alwaysShow(),
             Text::make('Call To Action')->hideFromIndex(),
             Text::make('Incentive')->hideFromIndex(),
