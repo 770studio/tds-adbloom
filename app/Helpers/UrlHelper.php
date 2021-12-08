@@ -17,9 +17,13 @@ class UrlHelper
         parse_str($parts['query'], $query);
         parse_str($append, $append_query);
 
-        $parts['query'] = $override
-            ? array_merge($query, $append_query)
-            : array_merge($append_query, $query);
+
+        $parts['query'] = urldecode(
+            http_build_query($override
+                ? array_merge($query, $append_query)
+                : array_merge($append_query, $query)
+            )
+        );
 
         return self::reverse_parse_url($parts);
 
