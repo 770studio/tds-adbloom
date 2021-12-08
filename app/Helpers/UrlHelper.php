@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Arr;
 use LogicException;
 
 class UrlHelper
@@ -14,7 +15,7 @@ class UrlHelper
 
         $parts = parse_url($url);
 
-        parse_str($parts['query'], $query);
+        parse_str(Arr::get($parts, "query"), $query);
         parse_str($append, $append_query);
 
 
