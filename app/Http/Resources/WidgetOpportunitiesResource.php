@@ -61,7 +61,7 @@ class WidgetOpportunitiesResource extends JsonResource
             'timeToComplete' => $this->when($this->isSurvey(),
                 ceil($this->timeToComplete / 60)
             ),
-            'url' => $this->when($this->link, $this->link),
+            'url' => $this->when($this->getComputedLink(), $this->getComputedLink()),
             'reward' => $this->when($reward, $reward),
             'required' => $this->when($targeting_params, $targeting_params),
             'callToAction' => $this->when($this->call_to_action, $this->call_to_action),
