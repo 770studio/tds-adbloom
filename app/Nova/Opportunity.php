@@ -120,7 +120,7 @@ class Opportunity extends Resource
                 })*/
 
             Text::make('Url', 'link')
-                ->rules('nullable', 'url')
+               // ->rules('nullable', 'url')
                 ->hideFromIndex(),
 
             Toggle::make('Use default macros', 'use_default_macros')->onColor('green'),
