@@ -119,13 +119,15 @@ class Opportunity extends Resource
                         : null;
                 })*/
 
-            Text::make('Url', 'link')->hideFromIndex(),
+            Text::make('Url', 'link')
+                ->rules('nullable', 'url')
+                ->hideFromIndex(),
 
             Toggle::make('Use default macros', 'use_default_macros')->onColor('green'),
-/*            Code::make('Url default macros', function () {
-                return \App\Models\Opportunity::DEFAULT_URL_MACRO;
-            })->autoHeight()
-                ->onlyOnDetail(),*/
+            /*            Code::make('Url default macros', function () {
+                            return \App\Models\Opportunity::DEFAULT_URL_MACRO;
+                        })->autoHeight()
+                            ->onlyOnDetail(),*/
             Textarea::make('Description')->alwaysShow(),
             Text::make('Call To Action')->hideFromIndex(),
             Text::make('Incentive')->hideFromIndex(),
