@@ -3,14 +3,14 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Arr;
-use LogicException;
 
 class UrlHelper
 {
     public static function appendTo(string $url, string $append, $override = false): string
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new LogicException('wrong url format');
+            return $url . $append;
+            // throw new LogicException('wrong url format');
         }
 
         $parts = parse_url($url);
