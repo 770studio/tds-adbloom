@@ -7,6 +7,7 @@ use App\Helpers\StoreImageHelper;
 use App\Models\Infrastructure\Gender;
 use App\Models\Infrastructure\Platform;
 use App\Models\Infrastructure\TargetingParams;
+use App\Models\Opportunity;
 use App\Models\Partner;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -15,13 +16,11 @@ use JsonSerializable;
 
 class WidgetOpportunitiesResource extends JsonResource
 {
-    /**
-     * The "data" wrapper that should be applied.
-     *
-     * @var string
-     */
 
+
+    // TODO get rid of that
     public static Partner $partner;
+
 
     /**
      * Transform the resource into an array.
@@ -31,16 +30,20 @@ class WidgetOpportunitiesResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        /**
+         * @var Opportunity $this
+         */
         $widget = $this->pivot->pivotParent ?? null;
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
         $reward = self::$partner->calulateReward($this->payout);
         $targeting_params = TargetingParams::collection()->only((array)$this->targeting_params)->values();
 
-/*  if("MIZzRZtPRlxu1SiSnghAn" == $this->short_id) {
-      dd($this->platforms,
-          Platform::collection()->only([])
-      );
-  }*/
+        /*  if("MIZzRZtPRlxu1SiSnghAn" == $this->short_id) {
+              dd($this->platforms,
+                  Platform::collection()->only([])
+              );
+          }*/
         $targeting = ArrayHelper::stackNotEmpty(
             [
                 'platform' => Platform::collection()->only((array)$this->platforms)->values(),
@@ -61,7 +64,7 @@ class WidgetOpportunitiesResource extends JsonResource
             'timeToComplete' => $this->when($this->isSurvey(),
                 ceil($this->timeToComplete / 60)
             ),
-            'url' => $this->when($this->getComputedLink(), $this->getComputedLink()),
+            'url' => $this->getComputedLink(),
             'reward' => $this->when($reward, $reward),
             'required' => $this->when($targeting_params, $targeting_params),
             'callToAction' => $this->when($this->call_to_action, $this->call_to_action),
