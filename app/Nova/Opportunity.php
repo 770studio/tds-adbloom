@@ -123,7 +123,7 @@ class Opportunity extends Resource
                // ->rules('nullable', 'url')
                 ->hideFromIndex(),
 
-            Toggle::make('Use default macros', 'use_default_macros')->onColor('green'),
+            Toggle::make('Use default URL and macros', 'use_default_macros')->onColor('green'),
             /*            Code::make('Url default macros', function () {
                             return \App\Models\Opportunity::DEFAULT_URL_MACRO;
                         })->autoHeight()
