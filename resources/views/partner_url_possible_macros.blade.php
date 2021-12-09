@@ -15,16 +15,16 @@
 <p>{token} - </p>
 <p>{status} - </p>
 <p>{externalId} - </p>
-<p>{partnerUniqie1} - </p>
-<p>{partnerUniqie2} - </p>
-<p>{partnerUniqie3} - </p>
-<p>{partnerUniqie4} - </p>
-<p>{partnerUniqie5} - </p>
-<p>{parnterClickId} - </p>
-<p>{parnterSub2} - </p>
-<p>{parnterSub3} - </p>
-<p>{parnterSub4} - </p>
-<p>{parnterSub5} - </p>
+<p>{partnerUnique1} - </p>
+<p>{partnerUnique2} - </p>
+<p>{partnerUnique3} - </p>
+<p>{partnerUnique4} - </p>
+<p>{partnerUnique5} - </p>
+<p>{partnerClickId} - </p>
+<p>{partnerSub2} - </p>
+<p>{partnerSub3} - </p>
+<p>{partnerSub4} - </p>
+<p>{partnerSub5} - </p>
 
 
 
