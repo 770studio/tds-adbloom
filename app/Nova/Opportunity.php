@@ -7,9 +7,11 @@ use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Gender;
 use App\Models\Infrastructure\Platform;
 use App\Models\Infrastructure\TargetingParams;
+use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -18,7 +20,6 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Naif\Toggle\Toggle;
 use OptimistDigital\MultiselectField\Multiselect;
 
 class Opportunity extends Resource
@@ -119,11 +120,15 @@ class Opportunity extends Resource
                         : null;
                 })*/
 
-            Text::make('Url', 'link')
-               // ->rules('nullable', 'url')
-                ->hideFromIndex(),
 
-            Toggle::make('Use default URL and macros', 'use_default_macros')->onColor('green'),
+            NovaDependencyContainer::make([
+                Text::make('Url', 'link')
+                    // ->rules('nullable', 'url')
+                    ->hideFromIndex(),
+            ])->dependsOn('use_default_macros', 0),
+            Boolean::make('Use default macros', 'use_default_macros')
+                ->default(1),
+            //Toggle::make('Use default macros', 'use_default_macros')->onColor('green'),
             /*            Code::make('Url default macros', function () {
                             return \App\Models\Opportunity::DEFAULT_URL_MACRO;
                         })->autoHeight()
