@@ -30,7 +30,7 @@ class UrlHelper
 
     }
 
-    public static function reverse_parse_url(array $parts)
+    public static function reverse_parse_url(array $parts): string
     {
         $url = '';
         if (!empty($parts['scheme'])) {

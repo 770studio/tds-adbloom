@@ -7,6 +7,7 @@ use App\Interfaces\YoursurveysAPIServiceIF;
 use App\Models\Conversion;
 use App\Models\ConversionsHourlyStat;
 use App\Models\Dummy;
+use App\Models\Infrastructure\Click;
 use App\Models\Infrastructure\PrepareQueryBuilderWhere;
 use App\Models\Integrations\DaliaOffers;
 use App\Models\Integrations\Yoursurveys;
@@ -53,6 +54,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        $this->app->bind(Click::class, function () {
+            return new Click(
+                optional(request())->get('clickid'),
+                optional(request())->get('split') === 'true'
+            );
+
+        });
+
         $this->app->bind(ConversionsResponse::class, function ($app, $params) {
             return new  ConversionsResponse(
             // auto inject rel model
