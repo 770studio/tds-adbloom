@@ -29,7 +29,7 @@ final class RedirectHelper
     public static function widget(Widget $widget, $click_id, $status): RedirectResponse
     {
         $append = sprintf("status=%s&widgetId=%s&partnerId=%s&clickId=%s",
-            $status, $widget->short_id, $widget->Partner->short_id, $click_id);
+            $status, $widget->short_id, $widget->Partner->external_id, $click_id);
 
         $url = $widget->redirect_url
             ? UrlHelper::appendTo($widget->redirect_url, $append, true)
