@@ -21,16 +21,20 @@ class GeneralResearchAPIService
     private int $timeout;
     private Partner $partner;
     private Widget $widget;
+    private Request $request;
 
 
     public function __construct(Request $request, $n_bins = 1)
     {
+        $this->request = $request;
+
         $this->api_url = sprintf("%s/%s/offerwall/45b7228a7/",
             config('services.generalresearch.api_base_url'),
             config('services.generalresearch.api_key')
         );
 
         $this->timeout = config('services.common_api.timeout');
+
         $this->params = [
             'bpuid' => $request->userId ?? 'generic',
             'format' => 'json',
@@ -98,12 +102,24 @@ class GeneralResearchAPIService
      */
     private function getClickID(): string
     {
-        $url = sprintf("https://trk.adbloom.co/aff_c?&aff_id=%d&offer_id=389&format=json&source=widget",
-            $this->partner->external_id
-        );
+
+        $data = [
+            'aff_click_id' => $this->request->get('clickId'),
+            'aff_unique1' => $this->request->get('userId'),
+            'aff_unique2' => $this->request->get('birthdate'),
+            'aff_unique3' => $this->request->get('email'),
+            'aff_sub2' => $this->request->get('country'),
+            'aff_sub4' => $this->request->get('gender'),
+            'aff_sub5' => $this->widget->short_id,
+            'source' => 'widget',
+            'format' => 'json',
+            'offer_id' => '389',
+            'aff_id' => $this->partner->external_id,
+        ];
+
 
         return Http::timeout($this->timeout)
-            ->get($url)
+            ->get("https://trk.adbloom.co/aff_c?" . http_build_query($data))
             ->object()
             ->response->data->transaction_id; // выкинет иксепшн и дальше не пойдем
 
