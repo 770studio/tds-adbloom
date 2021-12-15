@@ -47,16 +47,21 @@ class GeneralResearchAPIService
 
     }
 
+    public function getPartner(): Partner
+    {
+        return $this->partner;
+    }
+
     public function setPartner(Partner $partner): self
     {
-        $this->partner = $partner;
+        $this->partner = $this->overridePartner() ?? $partner;
         return $this;
     }
 
     public function setWidget(Widget $widget): self
     {
         $this->widget = $widget;
-        $this->partner = $widget->partner;
+        $this->setPartner($widget->partner);
         return $this;
     }
 
@@ -172,6 +177,16 @@ class GeneralResearchAPIService
 
         //var_dump($resp_object->status, $back_url);
 
+    }
+
+    private function overridePartner(): ?Partner
+    {
+        // partner is either in partnerId of the request or related to widget
+        if (request()->partnerId && $partner = Partner::where('external_id', request()->partnerId)->first()) {
+            Log::channel('queue')->debug('partner is overridden:' . $partner->external_id);
+            return $partner;
+        }
+        return null;
     }
 
 

@@ -54,7 +54,7 @@ class GRLController extends Controller
     {
         Log::channel('queue')->debug('grl proxy accessed');
 
-        $widget = Widget::where('short_id', $widget_short_id)
+        $widget = Widget::findByShortId($widget_short_id)
             ->with('partner')
             ->firstOr(function () use ($widget_short_id) {
                 Log::channel('queue')->debug('widget not found:' . $widget_short_id);
@@ -64,10 +64,11 @@ class GRLController extends Controller
 
         return response()->json(
             $responseProcessor->setData(
-                $grlService->setWidget($widget)->makeRequest()
+                $grlService->setWidget($widget)
+                    ->makeRequest()
             )->validate()
                 ->transformDuration()
-                ->transformPayouts($partner, true)
+                ->transformPayouts($grlService->getPartner(), true)
                 ->transformUri()
                 ->toArray()
             , 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES
@@ -86,4 +87,6 @@ class GRLController extends Controller
         }
 
     }
+
+
 }

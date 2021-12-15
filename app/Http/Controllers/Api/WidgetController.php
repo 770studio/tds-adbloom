@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WidgetOpportunitiesCollection;
-use App\Http\Resources\WidgetOpportunitiesResource;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
-use App\Models\Partner;
 use App\Models\Widget;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
 use App\Services\GeneralResearchAPI\GeneralResearchResponse;
@@ -34,8 +32,9 @@ class WidgetController extends Controller
          * @var Widget $widget
          *   get widget by id
          */
-        $widget = Widget //::with('partner')
-        ::where('short_id', $widget_short_id)
+        $widget = Widget //
+        ::with('partner')
+            ->where('short_id', $widget_short_id)
             ->firstOrFail();
 
         // if widget is dynamic, get opportunities by widget dynamic params and attach these opportunities to widget
@@ -97,19 +96,11 @@ class WidgetController extends Controller
              */
             $mixin = [];
 
-            /**
-             * override partner , by default partner is related to widget
-             * @var Partner $partner
-             */
-            $partner = WidgetOpportunitiesResource::$partner = $request->partnerId
-                ? Partner::where('external_id', $request->partnerId)->first()
-                : $widget->partner;
-
             // подмешать временно! TODO убрать
             $mixin = $grlResponseProcessor->setData(
                 $grlService->setWidget($widget)->makeRequest()
             )->validate()
-                ->transformPayouts($partner)
+                ->transformPayouts($grlService->getPartner())
                 ->transformUri()
                 ->getBucket();
 
