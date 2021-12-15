@@ -17,7 +17,7 @@ final class RedirectHelper
         Log::channel('queue')->debug('eventually redirected to:' . $url);
         return redirect()->away($url);
     }
-    //TODO refactor to TRAIT
+
 
     /**
      * Based on the widgetId provided find Widget specific redirect settings configured in their profile. Forward

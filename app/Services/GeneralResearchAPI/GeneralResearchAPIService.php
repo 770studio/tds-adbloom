@@ -19,8 +19,8 @@ class GeneralResearchAPIService
     public array $params = [];
     private string $api_url;
     private int $timeout;
-    private Partner $partner;
-    private Widget $widget;
+    private ?Partner $partner = null;
+    private ?Widget $widget = null;
     private Request $request;
 
 
@@ -51,9 +51,14 @@ class GeneralResearchAPIService
 
     }
 
-    public function getPartner(): Partner
+    public function getPartner(): ?Partner
     {
         return $this->partner;
+    }
+
+    public function getWidget(): ?Widget
+    {
+        return $this->widget;
     }
 
     public function setPartner(Partner $partner): self
@@ -126,17 +131,18 @@ class GeneralResearchAPIService
 
     }
 
+
     /**
      * @throws Exception
      *
      */
-    public function sendStatusToTune(string $tsid): string
+    public function sendStatusToTune(string $trans_id): string
     {
 
         $url = sprintf("%s/%s/status/%s/",
             config('services.generalresearch.api_base_url'),
             config('services.generalresearch.api_key'),
-            $tsid
+            $trans_id
         );
 
         Log::channel('queue')->debug('grl status request:' . $url);
@@ -144,11 +150,19 @@ class GeneralResearchAPIService
         $resp_object = Http::timeout($this->timeout)
             ->get($url)
             ->object();
+
         if (!$resp_object) {
             throw new BreakingException('external api can not be reached, 500 or smth...');
         }
         if (!isset($resp_object->status)) {
             throw new BreakingException('external api status can not be read');
+        }
+
+
+        if ($resp_object->widgetId) {
+            /** @var Widget $widget */
+            $widget = Widget::findByShortId($resp_object->widgetId)->firstOrFail();
+            $this->setWidget($widget);
         }
 
         Log::channel('queue')->debug('grl status reply:' . json_encode($resp_object));

@@ -36,11 +36,14 @@ class GRLController extends Controller
         }
         Log::channel('queue')->debug('validation passed');
 
-        return RedirectHelper::opportunity(
-            $grlService->sendStatusToTune(
-                $validator->validated()['tsid']
-            )
+        $trans_id = $validator->validated()['tsid'];
+        $status = $grlService->sendStatusToTune(
+            $trans_id
         );
+
+        return $grlService->getWidget()
+            ? RedirectHelper::widget($grlService->getWidget(), $click_id, $status)
+            : RedirectHelper::opportunity();
 
 
     }
