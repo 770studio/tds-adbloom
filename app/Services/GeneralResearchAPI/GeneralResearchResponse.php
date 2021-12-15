@@ -110,6 +110,38 @@ class GeneralResearchResponse extends Response
 
     }
 
+    public function getBuckets(int $limit = 5): Collection
+    {
+        try {
+            $offerwall = $this->parseData()->get('offerwall');
+            $buckets = collect();
+            foreach (array_slice($offerwall->buckets, 0, $limit) as $bucket) {
+                $buckets->push(
+                    new Opportunity([
+                        'short_id' => $offerwall->id, // id
+                        'name' => 'Paid Surveys',   // title
+                        'image' => 'https://dev.tds.adbloom.co/storage/assets/creatives/e23bae6e2e269b78738005ef8c9c8914105f4321.png',
+                        'description' => 'Get paid for your opinion today! Surveys take a few minutes and you\'ll earn each time you complete one.',
+                        'link' => $bucket->uri, // url
+                        'payout' => $bucket->payout->max, // reward
+                        'call_to_action' => 'Start Now', // callToAction
+                        'type' => Opportunity::TYPES['survey'], // for timeToComplete to show up
+                        'timeToComplete' => $bucket->duration->max,
+
+                    ])
+                );
+            }
+
+            return $buckets;
+
+        } catch (Exception $e) {
+            //Must not add an Opportunity if GRL API doesn't return any options.
+            return collect();
+        }
+
+
+    }
+
     public function parseData(): Collection
     {
         return collect($this->apiResult);

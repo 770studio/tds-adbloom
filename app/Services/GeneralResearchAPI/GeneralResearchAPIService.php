@@ -82,6 +82,7 @@ class GeneralResearchAPIService
         );
 
         $url = $this->api_url . '?' . $params;
+
         Log::channel('queue')->debug('grl api request:' . $url);
 
         $resp_object = Http::timeout($this->timeout)

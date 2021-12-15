@@ -99,15 +99,17 @@ class WidgetController extends Controller
 
             $grlService->setWidget($widget);
 
+            //TODO static shit
             WidgetOpportunitiesResource::$partner = $grlService->getPartner();
-
             // подмешать временно! TODO убрать
+
+            /** @var  $mixin Opportunity[] */
             $mixin = $grlResponseProcessor->setData(
                 $grlService->makeRequest()
             )->validate()
                 ->transformPayouts($grlService->getPartner())
                 ->transformUri()
-                ->getBucket();
+                ->getBuckets();
 
             /*            // test mixin
                           $mixin = [
@@ -125,7 +127,7 @@ class WidgetController extends Controller
                 $widget->opportunities()
                     ->get()
                     // TODO убрать временный mixin
-                    ->push(new Opportunity($mixin))
+                    ->merge($mixin)
                     ->filter(function ($collection) {
                         return $collection->short_id;
                     })
