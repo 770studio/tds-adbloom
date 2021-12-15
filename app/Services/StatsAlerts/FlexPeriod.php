@@ -73,6 +73,12 @@ class FlexPeriod implements Arrayable
         }
     }
 
+    public function setCustomDates(Carbon $start, Carbon $end): void
+    {
+        $this->dateSrart = $start;
+        $this->dateEnd = $end;
+    }
+
     private function setDates(Carbon $start, Carbon $end): void
     {
         $this->dateSrart = $start;

@@ -9,6 +9,7 @@ use App\Services\StatsAlerts\FlexPeriod;
 use App\Services\StatsAlerts\StatsAlertsInventoryService;
 use Illuminate\Console\Command;
 use Illuminate\Log\Logger;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use LogicException;
@@ -48,6 +49,7 @@ final class TestOfferCRCommand extends Command
      */
     protected $description = 'Command description';
     private Logger $logger;
+    private Collection $alerts;
 
 
     /**
@@ -59,6 +61,7 @@ final class TestOfferCRCommand extends Command
     {
         parent::__construct();
         $this->logger = Log::channel('stats_alerts');
+        $this->alerts = collect();
     }
 
     /*    public function line($string, $style = null, $verbosity = null)
@@ -95,7 +98,7 @@ final class TestOfferCRCommand extends Command
             $older_period = 'dayBeforelastDay';
             $recent_period = 'lastDay';
         }
-        dump($older_period, $recent_period);
+        dump("periods:", $older_period, $recent_period);
 
         $this->logger->debug("periods:", [
             'recent' => $recent_period,
@@ -119,46 +122,41 @@ final class TestOfferCRCommand extends Command
 
             if (!$recent_item || $recent_item->clicks < self::CLICKS_NOISE_THRESHOLD ||
                 $older_item->clicks < self::CLICKS_NOISE_THRESHOLD) {
-                return true; // continue as one of the periods is below noise threshold
+                return true; // one of the periods is below noise threshold  continue to next one
             }
 
             $comparator = (new CompareObjectValueHelper('cr_value', self::CLICK_THROUGH_MIN_PERCENT_THRESHOLD));
             // check if we have DOWN (classic older period is greater than recent)
             //TODO refactor as following looks like shit
-            if ($diff = $comparator->compare($recent_item, $older_item)) {
-                $direction = 'DOWN';
-            } elseif ($diff = $comparator->compare($older_item, $recent_item)) {
-                $direction = 'UP';
-            }
 
-            if ($diff) {
+            if ($comparator->compareBothWays($recent_item, $older_item)->hasDiff()) {
+                $this->addAlert(
+                    $comparator->toAlert()
+                        ->setPeriods($older_period, $recent_period)
+                        ->setRecentClicks($recent_item->clicks)
+                );
+
                 $this->logger->debug('alert is about to fire',
                     [
                         'recent_period' => $recent_item,
                         'older_period' => $older_item,
                     ]);
-
-                $alertDto = AlertDTO::fromArray([
-                    'direction' => $direction,
-                    'diff_prs' => $diff,
-                    'recent_period' => $recent_period,
-                    'older_period' => $older_period,
-                    'recent_item_prs_value' => $recent_item->cr_value,
-                    'older_item_prs_value' => $older_item->cr_value,
-                    'offer_name' => $older_item->Offer_name
-                ]);
-                $this->stat_alert($alertDto);
             }
 
-
         });
+
+
+        $this->alerts->sortBy('direction')
+            ->each(fn($alertDto) => $this->stat_alert($alertDto));
         $this->line("finished");
+
+        return Command::SUCCESS;
 
     }
 
     public function stat_alert(AlertDTO $alertDTO): void
     {
-
+        dd((array)$alertDTO);
         $logAlert = sprintf("CR value of %s prs. (offer name: %s) , period: from %s to %s is greater by %s prs
                      than the value of %s prs for the same daily period from %s to %s",
             $alertDTO->older_item_prs_value,
@@ -171,12 +169,14 @@ final class TestOfferCRCommand extends Command
 
 
         //CR is %(current cr), (DOWN/UP) by %(CR % Change) from prior day average of %(yesterday CR)
-        $slackAlert = sprintf("Offer: *%s* - CR is currently *%s* %%, *%s* by *%s* %% from prior day average of *%s* %%",
+        // YouGov America - US - Conversion Rate: 25.41 %, UP by 79.65 % from prior day average of 5.17 % with X,XXX Clicks
+        $slackAlert = sprintf("*%s* - Conversion Rate: *%s* %%, *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
             $alertDTO->offer_name,
             $alertDTO->recent_item_prs_value,
             $alertDTO->direction,
             $alertDTO->diff_prs,
-            $alertDTO->older_item_prs_value
+            $alertDTO->older_item_prs_value,
+            $alertDTO->recent_clicks
         );
 
         $this->line("ALERT2:" . $logAlert);
@@ -188,6 +188,11 @@ final class TestOfferCRCommand extends Command
         }
 
 
+    }
+
+    private function addAlert(AlertDTO $alertDTO)
+    {
+        $this->alerts->push($alertDTO);
     }
 
 
