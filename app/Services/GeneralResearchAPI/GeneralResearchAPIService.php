@@ -83,6 +83,11 @@ class GeneralResearchAPIService
 
         $url = $this->api_url . '?' . $params;
 
+        //TODO for tests returns 5 buckets
+        if (app()->isLocal()) {
+            $url = "https://fsb.generalresearch.com/6c7c06f784d14fb98a292cf1410169b1/offerwall/45b7228a7/?bpuid=akjhasdhhj&format=json&ip=69.253.144.82&min_payout=1&n_bins=5&clickId=102374d48cb2af5b8059ca737aa568&widgetId=Vhf3stqbo8WNDBiBoZmVF";
+        }
+
         Log::channel('queue')->debug('grl api request:' . $url);
 
         $resp_object = Http::timeout($this->timeout)
