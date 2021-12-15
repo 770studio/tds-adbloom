@@ -8,6 +8,7 @@ use App\Exceptions\BreakingException;
 use App\Jobs\doPostBackJob;
 use App\Models\Infrastructure\RedirectStatus_Client;
 use App\Models\Partner;
+use App\Models\Widget;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -19,6 +20,7 @@ class GeneralResearchAPIService
     private string $api_url;
     private int $timeout;
     private Partner $partner;
+    private Widget $widget;
 
 
     public function __construct(Request $request, $n_bins = 1)
@@ -51,6 +53,13 @@ class GeneralResearchAPIService
         return $this;
     }
 
+    public function setWidget(Widget $widget): self
+    {
+        $this->widget = $widget;
+        $this->partner = $widget->partner;
+        return $this;
+    }
+
     /**
      * @throws Exception
      */
@@ -58,7 +67,8 @@ class GeneralResearchAPIService
     {
         $params = http_build_query(
             array_merge($this->params, [
-                'clickId' => $this->getClickID()
+                'clickId' => $this->getClickID(),
+                'widgetId' => $this->widget->short_id
             ])
         );
 
@@ -163,4 +173,6 @@ class GeneralResearchAPIService
         //var_dump($resp_object->status, $back_url);
 
     }
+
+
 }

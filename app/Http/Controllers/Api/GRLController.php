@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\RedirectHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Partner;
 use App\Models\Widget;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
 use App\Services\GeneralResearchAPI\GeneralResearchResponse;
@@ -53,20 +52,19 @@ class GRLController extends Controller
     public function proxy(Request                   $request, string $widget_short_id,
                           GeneralResearchAPIService $grlService, GeneralResearchResponse $responseProcessor): JsonResponse
     {
-
         Log::channel('queue')->debug('grl proxy accessed');
 
-        // partner is either in partnerId of the request or related to widget
-        $partner = $request->partnerId
-            ? Partner::where('external_id', $request->partnerId)->first()
-            : Widget::where('short_id', $widget_short_id)->first()->partner;
-
-        Log::channel('queue')->debug('partner found:' . $partner->external_id);
-
+        $widget = Widget::where('short_id', $widget_short_id)
+            ->with('partner')
+            ->firstOr(function () use ($widget_short_id) {
+                Log::channel('queue')->debug('widget not found:' . $widget_short_id);
+                throw new Exception('widget not found');
+            });
+        Log::channel('queue')->debug('widget found:' . $widget->short_id);
 
         return response()->json(
             $responseProcessor->setData(
-                $grlService->setPartner($partner)->makeRequest()
+                $grlService->setWidget($widget)->makeRequest()
             )->validate()
                 ->transformDuration()
                 ->transformPayouts($partner, true)

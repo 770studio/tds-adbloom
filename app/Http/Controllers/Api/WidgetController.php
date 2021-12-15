@@ -107,7 +107,7 @@ class WidgetController extends Controller
 
             // подмешать временно! TODO убрать
             $mixin = $grlResponseProcessor->setData(
-                $grlService->setPartner($partner)->makeRequest()
+                $grlService->setWidget($widget)->makeRequest()
             )->validate()
                 ->transformPayouts($partner)
                 ->transformUri()
