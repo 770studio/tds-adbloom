@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WidgetOpportunitiesCollection;
+use App\Http\Resources\WidgetOpportunitiesResource;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
@@ -96,9 +97,13 @@ class WidgetController extends Controller
              */
             $mixin = [];
 
+            $grlService->setWidget($widget);
+
+            WidgetOpportunitiesResource::$partner = $grlService->getPartner();
+
             // подмешать временно! TODO убрать
             $mixin = $grlResponseProcessor->setData(
-                $grlService->setWidget($widget)->makeRequest()
+                $grlService->makeRequest()
             )->validate()
                 ->transformPayouts($grlService->getPartner())
                 ->transformUri()
