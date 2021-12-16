@@ -24,7 +24,7 @@ class GeneralResearchAPIService
     private Request $request;
 
 
-    public function __construct(Request $request, $n_bins = 1)
+    public function __construct(Request $request, $n_bins = 5)
     {
         $this->request = $request;
 
