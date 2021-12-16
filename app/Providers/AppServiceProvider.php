@@ -161,7 +161,10 @@ class AppServiceProvider extends ServiceProvider
             if ($this->app->isLocal()) {
                 $request->server->set("REMOTE_ADDR", '69.253.144.82');
             }
-            return new GeneralResearchAPIService($request);
+            return new GeneralResearchAPIService(
+                $request,
+                $this->app->make(GeneralResearchResponse::class)
+            );
 
         });
 

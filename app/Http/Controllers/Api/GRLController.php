@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 class GRLController extends Controller
 {
 
+
     /**
      * @return JsonResponse | RedirectResponse
      * exceptions handled via Handler.php

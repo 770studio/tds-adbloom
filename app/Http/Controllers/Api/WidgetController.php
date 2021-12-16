@@ -10,7 +10,6 @@ use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
 use App\Models\Widget;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
-use App\Services\GeneralResearchAPI\GeneralResearchResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,11 +23,9 @@ class WidgetController extends Controller
      * @throws Exception
      * exceptions handled via Handler.php
      */
-    public function opportunities(Request                   $request, string $widget_short_id,
-                                  GeneralResearchAPIService $grlService,
-                                  GeneralResearchResponse   $grlResponseProcessor)
+    public function opportunities(Request $request, string $widget_short_id, GeneralResearchAPIService $grlService)
     {
-
+        dd(432, $grlService->getResponseProcessor());
         /**
          * @var Widget $widget
          *   get widget by id
@@ -102,7 +99,7 @@ class WidgetController extends Controller
             WidgetOpportunitiesResource::$partner = $grlService->getPartner();
 
             // подмешать временно! TODO убрать
-            $mixin = $grlResponseProcessor->setData(
+            $mixin = $grlService->getResponseProcessor()->setData(
                 $grlService->makeRequest()
             )->validate()
                 ->transformPayouts($grlService->getPartner())

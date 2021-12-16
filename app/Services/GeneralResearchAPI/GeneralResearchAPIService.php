@@ -7,8 +7,8 @@ namespace App\Services\GeneralResearchAPI;
 use App\Exceptions\BreakingException;
 use App\Jobs\doPostBackJob;
 use App\Models\Infrastructure\RedirectStatus_Client;
-use App\Models\Partner;
 use App\Models\Widget;
+use App\Traits\Widgetable;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -16,17 +16,21 @@ use Illuminate\Support\Facades\Log;
 
 class GeneralResearchAPIService
 {
+    use Widgetable;
+
     public array $params = [];
     private string $api_url;
     private int $timeout;
-    private ?Partner $partner = null;
-    private ?Widget $widget = null;
     private Request $request;
+    private GeneralResearchResponse $responseProcessor;
 
 
-    public function __construct(Request $request, $n_bins = 1)
+    public function __construct(Request                 $request,
+                                GeneralResearchResponse $responseProcessor,
+                                                        $n_bins = 1)
     {
         $this->request = $request;
+        $this->responseProcessor = $responseProcessor;
 
         $this->api_url = sprintf("%s/%s/offerwall/45b7228a7/",
             config('services.generalresearch.api_base_url'),
@@ -51,29 +55,10 @@ class GeneralResearchAPIService
 
     }
 
-    public function getPartner(): ?Partner
+    public function getResponseProcessor(): GeneralResearchResponse
     {
-        return $this->partner;
+        return $this->responseProcessor;
     }
-
-    public function getWidget(): ?Widget
-    {
-        return $this->widget;
-    }
-
-    public function setPartner(Partner $partner): self
-    {
-        $this->partner = $this->overridePartner() ?? $partner;
-        return $this;
-    }
-
-    public function setWidget(Widget $widget): self
-    {
-        $this->widget = $widget;
-        $this->setPartner($widget->partner);
-        return $this;
-    }
-
     /**
      * @throws Exception
      */
@@ -176,18 +161,18 @@ class GeneralResearchAPIService
 
         switch ($resp_object->status) {
             //TODO refactor to kind of SendToTune helper/service/factory or a model method
-             case "3":
-                 if (!isset($resp_object->kwargs->clickId)) {
-                     throw new BreakingException('external api data (clickId) can not be read');
-                 }
-                 $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
-                     $resp_object->kwargs->clickId,
-                     number_format(optional($resp_object)->payout / 100, 2, '.', ''), // in dollars
-                     $resp_object->tsid ?? null
-                 );
-                 doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
-                 return RedirectStatus_Client::success;
-                 break;
+            case "3":
+                if (!isset($resp_object->kwargs->clickId)) {
+                    throw new BreakingException('external api data (clickId) can not be read');
+                }
+                $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
+                    $resp_object->kwargs->clickId,
+                    number_format(optional($resp_object)->payout / 100, 2, '.', ''), // in dollars
+                    $resp_object->tsid ?? null
+                );
+                doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
+                return RedirectStatus_Client::success;
+                break;
             case "2":
                 $back_url = sprintf("https://trk.adbloom.co/aff_goal?a=lsr&goal_id=%d&transaction_id=%s&adv_sub=%s",
                     153,
@@ -207,16 +192,6 @@ class GeneralResearchAPIService
 
         //var_dump($resp_object->status, $back_url);
 
-    }
-
-    private function overridePartner(): ?Partner
-    {
-        // partner is either in partnerId of the request or related to widget
-        if (request()->partnerId && $partner = Partner::where('external_id', request()->partnerId)->first()) {
-            Log::channel('queue')->debug('partner is overridden:' . $partner->external_id);
-            return $partner;
-        }
-        return null;
     }
 
 
