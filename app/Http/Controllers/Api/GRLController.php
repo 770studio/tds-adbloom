@@ -43,7 +43,7 @@ class GRLController extends Controller
 
         $grlService->sendStatusToTune($status_object);
 
-        $widget = $grlService->getWidget();
+        $widget = $status_object->getWidget();
         return $widget
             ? RedirectHelper::widget($widget, $status_object->getClickID(), $status_object->getStatus())
             : RedirectHelper::opportunity($status_object->getStatus());
