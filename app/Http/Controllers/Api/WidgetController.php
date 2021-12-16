@@ -26,7 +26,7 @@ class WidgetController extends Controller
      */
     public function opportunities(Request $request, string $widget_short_id, GeneralResearchAPIService $grlService)
     {
-        dd(432, $grlService->getResponseProcessor());
+
         /**
          * @var Widget $widget
          *   get widget by id
@@ -107,12 +107,6 @@ class WidgetController extends Controller
                 ->transformPayouts($grlService->getPartner())
                 ->transformUri()
                 ->getBuckets(5);
-
-            /*            // test mixin
-                          $mixin = [
-                            'id' => "test555555",
-                            'short_id' => 4343
-                        ];*/
 
         } catch (Throwable $e) {
             report($e);

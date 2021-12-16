@@ -7,8 +7,7 @@ namespace App\Services\GeneralResearchAPI;
 use App\Exceptions\BreakingException;
 use App\Jobs\doPostBackJob;
 use App\Models\Infrastructure\RedirectStatus_Client;
-use App\Models\Partner;
-use App\Models\Widget;
+use App\Traits\Responseable;
 use App\Traits\Widgetable;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,20 +16,21 @@ use Illuminate\Support\Facades\Log;
 
 class GeneralResearchAPIService
 {
-    use Widgetable;
+    use Widgetable, Responseable;
 
     public array $params = [];
     private string $api_url;
     private int $timeout;
     private Request $request;
-    private GeneralResearchResponse $responseProcessor;
+    private GeneralResearchAPIStatus $status;
 
-
-    public function __construct(Request                 $request,
-                                GeneralResearchResponse $responseProcessor,
-                                                        $n_bins = 5)
+    public function __construct(Request                  $request,
+                                GeneralResearchResponse  $responseProcessor,
+                                GeneralResearchAPIStatus $status,
+                                                         $n_bins = 5)
     {
         $this->request = $request;
+        $this->status = $status;
         $this->responseProcessor = $responseProcessor;
 
         $this->api_url = sprintf("%s/%s/offerwall/45b7228a7/",
@@ -56,10 +56,17 @@ class GeneralResearchAPIService
 
     }
 
-    public function getResponseProcessor(): GeneralResearchResponse
+    public function checkStatus($trans_id): GeneralResearchAPIStatus
     {
-        return $this->responseProcessor;
+        $this->status->check($trans_id);
+        return $this->getStatus();
     }
+
+    public function getStatus(): GeneralResearchAPIStatus
+    {
+        return $this->status;
+    }
+
     /**
      * @throws Exception
      */
@@ -128,54 +135,22 @@ class GeneralResearchAPIService
      * @throws Exception
      *
      */
-    public function sendStatusToTune(string $trans_id): string
+    public function sendStatusToTune(GeneralResearchAPIStatus $status_object): string
     {
-
-        $url = sprintf("%s/%s/status/%s/",
-            config('services.generalresearch.api_base_url'),
-            config('services.generalresearch.api_key'),
-            $trans_id
-        );
-
-        Log::channel('queue')->debug('grl status request:' . $url);
-
-        $resp_object = Http::timeout($this->timeout)
-            ->get($url)
-            ->object();
-
-        if (!$resp_object) {
-            throw new BreakingException('external api can not be reached, 500 or smth...');
-        }
-        if (!isset($resp_object->status)) {
-            throw new BreakingException('external api status can not be read');
-        }
-
-
-        if ($resp_object->widgetId) {
-            /** @var Widget $widget */
-            $widget = Widget::findByShortId($resp_object->widgetId)->firstOrFail();
-            $this->setWidget($widget);
-        }
-
-        Log::channel('queue')->debug('grl status reply:' . json_encode($resp_object));
 
         $back_url = 'none';
         /*
          *   If status=3 the survey is successful, send a conversion to Tune
          *   If status=2 the survey is rejected, send a conversion to Tune (goal_id=389)
          */
-        Log::channel('queue')->debug('status:' . $resp_object->status);
+        Log::channel('queue')->debug('status:' . $status_object->getStatus());
 
-        switch ($resp_object->status) {
-            //TODO refactor to kind of SendToTune helper/service/factory or a model method
+        switch ($status_object->getStatus()) {
             case "3":
-                if (!isset($resp_object->kwargs->clickId)) {
-                    throw new BreakingException('external api data (clickId) can not be read');
-                }
                 $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
-                    $resp_object->kwargs->clickId,
-                    number_format(optional($resp_object)->payout / 100, 2, '.', ''), // in dollars
-                    $resp_object->tsid ?? null
+                    $status_object->getClickID(),
+                    number_format($status_object->getPayout() / 100, 2, '.', ''), // in dollars
+                    $status_object->getTransId()
                 );
                 doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
                 return RedirectStatus_Client::success;
@@ -183,21 +158,18 @@ class GeneralResearchAPIService
             case "2":
                 $back_url = sprintf("https://trk.adbloom.co/aff_goal?a=lsr&goal_id=%d&transaction_id=%s&adv_sub=%s",
                     153,
-                    $resp_object->kwargs->clickId ?? null,
-                    $resp_object->tsid ?? null
-
+                    $status_object->getClickID(),
+                    $status_object->getTransId()
                 );
                 doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
 
                 break;
 
             default:
-                throw new BreakingException('sendStatusToTune: wrong status:' . $resp_object->status);
+                throw new BreakingException('sendStatusToTune: wrong status:' . $status_object->getStatus());
         }
 
         return RedirectStatus_Client::reject;
-
-        //var_dump($resp_object->status, $back_url);
 
     }
 

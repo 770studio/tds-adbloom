@@ -12,7 +12,18 @@ class GeneralResearchAPIStatus
 {
     use Widgetable;
 
-    public function check(string $trans_id)
+    private object $response;
+
+    public function __construct()
+    {
+        $this->response = (object)[
+            'tsid' => null,
+            'payout' => 0,
+            'status' => null,
+        ];
+    }
+
+    public function check(string $trans_id): void
     {
 
         $url = sprintf("%s/%s/status/%s/",
@@ -44,7 +55,37 @@ class GeneralResearchAPIStatus
 
         Log::channel('queue')->debug('grl status reply:' . json_encode($resp_object));
 
+        Log::channel('queue')->debug('status:' . $resp_object->status);
+
+        $this->set($resp_object);
+    }
+
+    public function getTransId()
+    {
+        return $this->response->tsid;
+    }
+
+    public function getPayout(): float
+    {
+        return (float)$this->response->payout;
+    }
+
+    public function getStatus()
+    {
+        return $this->response->status;
+    }
+
+    public function getClickID()
+    {
+        return $this->response->kwargs->clickId ?? null;
+        //throw new BreakingException('external api data (clickId) can not be read');
 
     }
+
+    private function set(object $resp_object): void
+    {
+        $this->response = $resp_object;
+    }
+
 
 }
