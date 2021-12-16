@@ -97,7 +97,7 @@ class WidgetController extends Controller
              *  so if we get into any exception  catch it, report it (log), then return response with no mixin
              * @var $mixin Collection
              */
-            $mixin = [];
+            $mixin = collect();
 
             $grlService->setWidget($widget);
 
