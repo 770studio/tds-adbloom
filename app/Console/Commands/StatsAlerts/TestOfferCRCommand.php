@@ -156,7 +156,7 @@ final class TestOfferCRCommand extends Command
 
     public function stat_alert(AlertDTO $alertDTO): void
     {
-        dd((array)$alertDTO);
+
         $logAlert = sprintf("CR value of %s prs. (offer name: %s) , period: from %s to %s is greater by %s prs
                      than the value of %s prs for the same daily period from %s to %s",
             $alertDTO->older_item_prs_value,
@@ -170,7 +170,8 @@ final class TestOfferCRCommand extends Command
 
         //CR is %(current cr), (DOWN/UP) by %(CR % Change) from prior day average of %(yesterday CR)
         // YouGov America - US - Conversion Rate: 25.41 %, UP by 79.65 % from prior day average of 5.17 % with X,XXX Clicks
-        $slackAlert = sprintf("*%s* - Conversion Rate: *%s* %%, *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
+        $slackAlert = sprintf("%s *%s* - Conversion Rate: *%s* %%, *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
+            $alertDTO->direction === "UP" ? ":arrow_up:" : ":chart_with_downwards_trend:",
             $alertDTO->offer_name,
             $alertDTO->recent_item_prs_value,
             $alertDTO->direction,
@@ -179,7 +180,9 @@ final class TestOfferCRCommand extends Command
             $alertDTO->recent_clicks
         );
 
-        $this->line("ALERT2:" . $logAlert);
+        $this->line("ALERT2:" . $slackAlert);
+
+
         $this->logger->debug($logAlert);
 
         if ($this->option('notify')) {
@@ -190,7 +193,7 @@ final class TestOfferCRCommand extends Command
 
     }
 
-    private function addAlert(AlertDTO $alertDTO)
+    private function addAlert(AlertDTO $alertDTO): void
     {
         $this->alerts->push($alertDTO);
     }
