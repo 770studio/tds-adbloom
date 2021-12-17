@@ -6,7 +6,7 @@ use App\Helpers\RedirectHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Widget;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
-use App\Services\GeneralResearchAPI\GeneralResearchResponse;
+use App\Traits\Responseable;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 // TODO желательно как-то вынести контроллер из-под новы
 class GRLController extends Controller
 {
+    use Responseable;
 
     /**
      * @return JsonResponse | RedirectResponse
@@ -36,14 +37,16 @@ class GRLController extends Controller
         }
         Log::channel('queue')->debug('validation passed');
 
-        $trans_id = $validator->validated()['tsid'];
-        $status = $grlService->sendStatusToTune(
-            $trans_id
+        $status_object = $grlService->checkStatus(
+            $validator->validated()['tsid']
         );
 
-        return $grlService->getWidget()
-            ? RedirectHelper::widget($grlService->getWidget(), $click_id, $status)
-            : RedirectHelper::opportunity();
+        $grlService->sendStatusToTune($status_object);
+
+        $widget = $status_object->getWidget();
+        return $widget
+            ? RedirectHelper::widget($widget, $status_object->getClickID(), $status_object->getStatus())
+            : RedirectHelper::opportunity($status_object->getStatus());
 
 
     }
@@ -53,7 +56,7 @@ class GRLController extends Controller
      * @route  api/v1/widget/{widget_short_id}/opportunities/grl
      */
     public function proxy(Request                   $request, string $widget_short_id,
-                          GeneralResearchAPIService $grlService, GeneralResearchResponse $responseProcessor): JsonResponse
+                          GeneralResearchAPIService $grlService): JsonResponse
     {
         Log::channel('queue')->debug('grl proxy accessed');
 
@@ -66,7 +69,7 @@ class GRLController extends Controller
         Log::channel('queue')->debug('widget found:' . $widget->short_id);
 
         return response()->json(
-            $responseProcessor->setData(
+            $grlService->getResponseProcessor()->setData(
                 $grlService->setWidget($widget)
                     ->makeRequest()
             )->validate()

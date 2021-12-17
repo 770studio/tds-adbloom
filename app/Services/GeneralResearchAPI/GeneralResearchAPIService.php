@@ -7,8 +7,8 @@ namespace App\Services\GeneralResearchAPI;
 use App\Exceptions\BreakingException;
 use App\Jobs\doPostBackJob;
 use App\Models\Infrastructure\RedirectStatus_Client;
-use App\Models\Partner;
-use App\Models\Widget;
+use App\Traits\Responseable;
+use App\Traits\Widgetable;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -16,17 +16,22 @@ use Illuminate\Support\Facades\Log;
 
 class GeneralResearchAPIService
 {
+    use Widgetable, Responseable;
+
     public array $params = [];
     private string $api_url;
     private int $timeout;
-    private ?Partner $partner = null;
-    private ?Widget $widget = null;
     private Request $request;
+    private GeneralResearchAPIStatus $status;
 
-
-    public function __construct(Request $request, $n_bins = 1)
+    public function __construct(Request                  $request,
+                                GeneralResearchResponse  $responseProcessor,
+                                GeneralResearchAPIStatus $status,
+                                                         $n_bins = 5)
     {
         $this->request = $request;
+        $this->status = $status;
+        $this->responseProcessor = $responseProcessor;
 
         $this->api_url = sprintf("%s/%s/offerwall/45b7228a7/",
             config('services.generalresearch.api_base_url'),
@@ -51,27 +56,15 @@ class GeneralResearchAPIService
 
     }
 
-    public function getPartner(): ?Partner
+    public function checkStatus($trans_id): GeneralResearchAPIStatus
     {
-        return $this->partner;
+        $this->status->check($trans_id);
+        return $this->getStatus();
     }
 
-    public function getWidget(): ?Widget
+    public function getStatus(): GeneralResearchAPIStatus
     {
-        return $this->widget;
-    }
-
-    public function setPartner(Partner $partner): self
-    {
-        $this->partner = $this->overridePartner() ?? $partner;
-        return $this;
-    }
-
-    public function setWidget(Widget $widget): self
-    {
-        $this->widget = $widget;
-        $this->setPartner($widget->partner);
-        return $this;
+        return $this->status;
     }
 
     /**
@@ -87,6 +80,12 @@ class GeneralResearchAPIService
         );
 
         $url = $this->api_url . '?' . $params;
+
+        //TODO for tests returns 5 buckets
+        if (app()->isLocal()) {
+            $url = "https://fsb.generalresearch.com/6c7c06f784d14fb98a292cf1410169b1/offerwall/45b7228a7/?bpuid=akjhasdhhj&format=json&ip=69.253.144.82&min_payout=1&n_bins=5&clickId=102374d48cb2af5b8059ca737aa568&widgetId=Vhf3stqbo8WNDBiBoZmVF";
+        }
+
         Log::channel('queue')->debug('grl api request:' . $url);
 
         $resp_object = Http::timeout($this->timeout)
@@ -136,87 +135,43 @@ class GeneralResearchAPIService
      * @throws Exception
      *
      */
-    public function sendStatusToTune(string $trans_id): string
+    public function sendStatusToTune(GeneralResearchAPIStatus $status_object): string
     {
-
-        $url = sprintf("%s/%s/status/%s/",
-            config('services.generalresearch.api_base_url'),
-            config('services.generalresearch.api_key'),
-            $trans_id
-        );
-
-        Log::channel('queue')->debug('grl status request:' . $url);
-
-        $resp_object = Http::timeout($this->timeout)
-            ->get($url)
-            ->object();
-
-        if (!$resp_object) {
-            throw new BreakingException('external api can not be reached, 500 or smth...');
-        }
-        if (!isset($resp_object->status)) {
-            throw new BreakingException('external api status can not be read');
-        }
-
-
-        if ($resp_object->widgetId) {
-            /** @var Widget $widget */
-            $widget = Widget::findByShortId($resp_object->widgetId)->firstOrFail();
-            $this->setWidget($widget);
-        }
-
-        Log::channel('queue')->debug('grl status reply:' . json_encode($resp_object));
 
         $back_url = 'none';
         /*
          *   If status=3 the survey is successful, send a conversion to Tune
          *   If status=2 the survey is rejected, send a conversion to Tune (goal_id=389)
          */
-        Log::channel('queue')->debug('status:' . $resp_object->status);
+        Log::channel('queue')->debug('status:' . $status_object->getStatus());
 
-        switch ($resp_object->status) {
-            //TODO refactor to kind of SendToTune helper/service/factory or a model method
-             case "3":
-                 if (!isset($resp_object->kwargs->clickId)) {
-                     throw new BreakingException('external api data (clickId) can not be read');
-                 }
-                 $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
-                     $resp_object->kwargs->clickId,
-                     number_format(optional($resp_object)->payout / 100, 2, '.', ''), // in dollars
-                     $resp_object->tsid ?? null
-                 );
-                 doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
-                 return RedirectStatus_Client::success;
-                 break;
+        switch ($status_object->getStatus()) {
+            case "3":
+                $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
+                    $status_object->getClickID(),
+                    number_format($status_object->getPayout() / 100, 2, '.', ''), // in dollars
+                    $status_object->getTransId()
+                );
+                doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
+                return RedirectStatus_Client::success;
+                break;
             case "2":
                 $back_url = sprintf("https://trk.adbloom.co/aff_goal?a=lsr&goal_id=%d&transaction_id=%s&adv_sub=%s",
                     153,
-                    $resp_object->kwargs->clickId ?? null,
-                    $resp_object->tsid ?? null
-
+                    $status_object->getClickID(),
+                    $status_object->getTransId()
                 );
                 doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
 
                 break;
 
             default:
-                throw new BreakingException('sendStatusToTune: wrong status:' . $resp_object->status);
+                Log::channel('queue')->debug('wrong status:' . $status_object->getStatus());
+            // throw new BreakingException('sendStatusToTune: wrong status:' . $status_object->getStatus());
         }
 
         return RedirectStatus_Client::reject;
 
-        //var_dump($resp_object->status, $back_url);
-
-    }
-
-    private function overridePartner(): ?Partner
-    {
-        // partner is either in partnerId of the request or related to widget
-        if (request()->partnerId && $partner = Partner::where('external_id', request()->partnerId)->first()) {
-            Log::channel('queue')->debug('partner is overridden:' . $partner->external_id);
-            return $partner;
-        }
-        return null;
     }
 
 

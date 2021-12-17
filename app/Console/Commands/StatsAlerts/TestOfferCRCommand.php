@@ -31,7 +31,7 @@ final class TestOfferCRCommand extends Command
 {
     public const CLICK_THROUGH_MIN_THRESHOLD = 2;
     public const CLICK_THROUGH_MIN_PERCENT_THRESHOLD = 50;
-    public const CLICKS_NOISE_THRESHOLD = 20;
+    public const CLICKS_NOISE_THRESHOLD = 90;
 
     /**
      * The name and signature of the console command.

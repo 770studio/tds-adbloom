@@ -14,6 +14,7 @@ use App\Models\Integrations\Yoursurveys;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIServiceResponse;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
+use App\Services\GeneralResearchAPI\GeneralResearchAPIStatus;
 use App\Services\GeneralResearchAPI\GeneralResearchResponse;
 use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\ConversionsResponse;
@@ -161,7 +162,11 @@ class AppServiceProvider extends ServiceProvider
             if ($this->app->isLocal()) {
                 $request->server->set("REMOTE_ADDR", '69.253.144.82');
             }
-            return new GeneralResearchAPIService($request);
+            return new GeneralResearchAPIService(
+                $request,
+                $this->app->make(GeneralResearchResponse::class),
+                new GeneralResearchAPIStatus
+            );
 
         });
 

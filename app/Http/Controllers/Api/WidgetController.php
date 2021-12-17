@@ -10,10 +10,10 @@ use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
 use App\Models\Widget;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
-use App\Services\GeneralResearchAPI\GeneralResearchResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Throwable;
 
 
@@ -24,9 +24,7 @@ class WidgetController extends Controller
      * @throws Exception
      * exceptions handled via Handler.php
      */
-    public function opportunities(Request                   $request, string $widget_short_id,
-                                  GeneralResearchAPIService $grlService,
-                                  GeneralResearchResponse   $grlResponseProcessor)
+    public function opportunities(Request $request, string $widget_short_id, GeneralResearchAPIService $grlService)
     {
 
         /**
@@ -94,45 +92,35 @@ class WidgetController extends Controller
             /**
              *  declare mixin here
              *  so if we get into any exception  catch it, report it (log), then return response with no mixin
+             * @var $mixin Collection
              */
-            $mixin = [];
+            $mixin = collect();
 
             $grlService->setWidget($widget);
 
+            //TODO static shit
             WidgetOpportunitiesResource::$partner = $grlService->getPartner();
-
             // подмешать временно! TODO убрать
-            $mixin = $grlResponseProcessor->setData(
+            $mixin = $grlService->getResponseProcessor()->setData(
                 $grlService->makeRequest()
             )->validate()
                 ->transformPayouts($grlService->getPartner())
                 ->transformUri()
-                ->getBucket();
-
-            /*            // test mixin
-                          $mixin = [
-                            'id' => "test555555",
-                            'short_id' => 4343
-                        ];*/
+                ->getBuckets(5);
 
         } catch (Throwable $e) {
             report($e);
         }
 
-        //dd( $widget->opportunities()->get()->merge(['id'=>342])->all() );
         return response()->json(
             ['items' => (new WidgetOpportunitiesCollection  (
-                $widget->opportunities()
-                    ->get()
-                    // TODO убрать временный mixin
-                    ->push(new Opportunity($mixin))
-                    ->filter(function ($collection) {
-                        return $collection->short_id;
-                    })
+                $mixin->merge(
+                    $widget->opportunities()
+                        ->get()
+                )->filter(function ($collection) {
+                    return $collection->short_id;
+                })
             ))], 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES);
-        // ->response()
-        //  ->header('X-Value', 'True');
-
 
     }
 
