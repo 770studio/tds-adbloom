@@ -170,8 +170,8 @@ final class TestOfferCRCommand extends Command
 
         //CR is %(current cr), (DOWN/UP) by %(CR % Change) from prior day average of %(yesterday CR)
         // YouGov America - US - Conversion Rate: 25.41 %, UP by 79.65 % from prior day average of 5.17 % with X,XXX Clicks
-        $slackAlert = sprintf("%s *%s* - Conversion Rate: *%s* %%, *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
-            $alertDTO->direction === "UP" ? ":arrow_up:" : ":chart_with_downwards_trend:",
+        $slackAlert = sprintf("%s *%s* - Conversion Rate: *%s* %% *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
+            $alertDTO->direction === "UP" ? ":arrow_up:" : ":arrow_down:",
             $alertDTO->offer_name,
             $alertDTO->recent_item_prs_value,
             $alertDTO->direction,
