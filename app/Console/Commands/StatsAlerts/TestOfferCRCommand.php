@@ -93,11 +93,18 @@ final class TestOfferCRCommand extends Command
                     throw new LogicException('can not use a future period');
                 }
             }
-        } else {
+        } /*else {
             // by default we compare lastDay and dayBeforelastDay
             $older_period = 'dayBeforelastDay';
             $recent_period = 'lastDay';
+        }*/
+        else {
+            // by default we compare last24h to prev24h
+            $older_period = 'prev24h';
+            $recent_period = 'last24h';
         }
+
+
         dump("periods:", $older_period, $recent_period);
 
         $this->logger->debug("periods:", [
