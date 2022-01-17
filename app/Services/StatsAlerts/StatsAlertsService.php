@@ -2,29 +2,101 @@
 
 namespace App\Services\StatsAlerts;
 
+use App\Helpers\CompareObjectValueHelper;
+use App\Models\Infrastructure\AlertDTO;
 use App\Notifications\StatsAlertNotification;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Psr\Log\LoggerInterface;
 
 class StatsAlertsService
 {
-    public const MIN_CLICKS_REQUIRED = 50;
-    public const MIN_CONVERSIONS_REQUIRED = 1;
+    public const ALERT2_CLICK_THROUGH_MIN_THRESHOLD = 2;
+    public const ALERT2_CLICK_THROUGH_MIN_PERCENT_THRESHOLD = 50;
+    public const ALERT2_CLICKS_NOISE_THRESHOLD = 90;
+
+    public const AlERT3_MIN_CLICKS_REQUIRED = 50;
+    public const ALERT3_MIN_CONVERSIONS_REQUIRED = 1;
 
     private LoggerInterface $logger;
     private StatsAlertsInventoryService $inventory;
     private ?bool $notify = null;
+    private Collection $alerts;
 
     public function __construct(StatsAlertsInventoryService $inventory)
     {
         $this->inventory = $inventory;
         $this->logger = Log::channel('stats_alerts');
+        $this->alerts = collect();
 
     }
 
-    public function testAlert3(FlexPeriod $recent_period, FlexPeriod $older_period)
+    public function testAlert2(FlexPeriod $recent_period, FlexPeriod $older_period): void
+    {
+
+        dump("start alert2 lookup");
+        $this->logger->debug("alert2 lookup fired");
+        dump("periods:", $older_period->toArray(), $recent_period->toArray());
+
+        $this->logger->debug("periods decoded:", [
+            'recent' => $recent_period->getDateRange(),
+            'older' => $older_period->getDateRange(),
+        ]);
+
+        $Older = $this->inventory->getConversionClicksCRValue($older_period);
+        //dd($Older);
+        $Recent = $this->inventory->getConversionClicksCRValue($recent_period);
+
+        $Older->each(function ($older_item) use ($Recent, $older_period, $recent_period) {
+            $recent_item = $Recent->where("Stat_offer_id", $older_item->Stat_offer_id)->first();
+
+            if (!$recent_item || $recent_item->clicks < self::ALERT2_CLICKS_NOISE_THRESHOLD ||
+                $older_item->clicks < self::ALERT2_CLICKS_NOISE_THRESHOLD) {
+                return true; // one of the periods is below noise threshold  continue to next one
+            }
+
+            $comparator = (new CompareObjectValueHelper('cr_value', self::ALERT2_CLICK_THROUGH_MIN_PERCENT_THRESHOLD));
+            // check if we have DOWN (classic older period is greater than recent)
+            //TODO refactor as following looks like shit
+
+            if ($comparator->compareBothWays($recent_item, $older_item)->hasDiff()) {
+                $this->addAlert(
+                    $comparator->toAlert()
+                        ->setPeriods($older_period, $recent_period)
+                        ->setRecentClicks($recent_item->clicks)
+                );
+
+                $this->logger->debug('alert is about to fire',
+                    [
+                        'recent_period' => $recent_item,
+                        'older_period' => $older_item,
+                    ]);
+            }
+
+        });
+
+
+        $this->alerts->sortBy('direction')
+            ->each(function ($alertDTO) {
+                $this->slackAlert(
+                    sprintf("%s *%s* - Conversion Rate: *%s* %% *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
+                        $alertDTO->direction === "UP" ? ":arrow_up:" : ":arrow_down:",
+                        $alertDTO->offer_name,
+                        $alertDTO->recent_item_prs_value,
+                        $alertDTO->direction,
+                        $alertDTO->diff_prs,
+                        $alertDTO->older_item_prs_value,
+                        $alertDTO->recent_clicks
+                    )
+                );
+            });
+
+        dump("finished");
+    }
+
+    public function testAlert3(FlexPeriod $recent_period, FlexPeriod $older_period): void
     {
         dump("start alert3 lookup");
         $this->logger->debug("alert3 lookup fired");
@@ -39,13 +111,13 @@ class StatsAlertsService
             // TODO refactor decorate ?
             $this->logger->debug("no results for the test within older period");
             dump("no results for the test within older period");
-            return 0;
+            return;
         }
 
         $Recent = $this->inventory->getConversionClicksCRValue($recent_period, function (Builder $query) use ($Older) {
             return $query->whereIn('Stat_offer_id', $Older->pluck('Stat_offer_id'))
-                ->havingRaw('clicks >= ? or conversions >= ?', [self::MIN_CLICKS_REQUIRED,
-                        self::MIN_CONVERSIONS_REQUIRED]
+                ->havingRaw('clicks >= ? or conversions >= ?', [self::AlERT3_MIN_CLICKS_REQUIRED,
+                        self::ALERT3_MIN_CONVERSIONS_REQUIRED]
                 );
         });
 
@@ -53,7 +125,7 @@ class StatsAlertsService
             // TODO refactor decorate ?
             $this->logger->debug("no results for the test within recent period");
             dump("no results for the test within recent period");
-            return 0;
+            return;
         }
 
         $Recent->each(function ($recent_item) use ($Older, $older_period, $recent_period) {
@@ -96,5 +168,10 @@ class StatsAlertsService
     {
         $this->notify = $notify;
         return $this;
+    }
+
+    private function addAlert(AlertDTO $alertDTO): void
+    {
+        $this->alerts->push($alertDTO);
     }
 }

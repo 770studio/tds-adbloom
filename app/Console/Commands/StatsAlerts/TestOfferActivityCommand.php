@@ -58,7 +58,7 @@ final class TestOfferActivityCommand extends Command
         $alerts->notify((bool)$this->option('notify'))
             ->testAlert3($this->recent_period, $this->older_period);
 
-        return 1;
+        return Command::SUCCESS;
     }
 
 
