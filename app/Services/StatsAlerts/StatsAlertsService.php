@@ -98,6 +98,17 @@ class StatsAlertsService
 
     public function testAlert3(FlexPeriod $recent_period, FlexPeriod $older_period): void
     {
+
+        /*  DB::listen(function ($query) {
+              $sql = $query->sql;
+              $bindings = $query->bindings;
+              $executionTime = $query->time;
+
+              echo( Str::replaceArray('?', $query->bindings, $sql) );
+              dump("\n-----");
+
+          });*/
+
         dump("start alert3 lookup");
         $this->logger->debug("alert3 lookup fired");
 
