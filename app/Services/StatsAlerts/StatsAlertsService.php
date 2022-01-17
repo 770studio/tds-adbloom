@@ -15,6 +15,7 @@ class StatsAlertsService
 
     private LoggerInterface $logger;
     private StatsAlertsInventoryService $inventory;
+    private ?bool $notify;
 
     public function __construct(StatsAlertsInventoryService $inventory)
     {
@@ -79,17 +80,21 @@ class StatsAlertsService
 
     public function slackAlert(string $slackText): void
     {
+        dump("ALERT:" . $slackText);
+        $this->logger->debug("ALERT:" . $slackText);
 
-
-        dump("ALERT3:" . $slackText);
-        $this->logger->debug("ALERT3:" . $slackText);
-
-        if ($this->option('notify')) {
+        if ($this->notify) {
             //TODO can be refactored to slack log channel
             Notification::route('slack', config('services.slack_notification.alert_incoming_webhook'))
                 ->notify(new StatsAlertNotification($slackText));
         }
 
 
+    }
+
+    public function notify(?bool $notify): self
+    {
+        $this->notify = $notify;
+        return $this;
     }
 }

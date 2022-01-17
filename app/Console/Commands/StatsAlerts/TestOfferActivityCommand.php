@@ -55,7 +55,9 @@ final class TestOfferActivityCommand extends Command
      */
     public function handle(StatsAlertsService $alerts): int
     {
-        $alerts->testAlert3($this->recent_period, $this->older_period);
+        $alerts->notify($this->option('notify'))
+            ->testAlert3($this->recent_period, $this->older_period);
+
         return 1;
     }
 
