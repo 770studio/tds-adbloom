@@ -39,6 +39,8 @@ final class TestOfferActivityCommand extends Command
      */
     protected $description = 'Command description';
     private Logger $logger;
+    private FlexPeriod $recent_period;
+    private FlexPeriod $older_period;
 
 
     /**
@@ -46,10 +48,15 @@ final class TestOfferActivityCommand extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(FlexPeriod $recent_period = null, FlexPeriod $older_period = null)
     {
         parent::__construct();
         $this->logger = Log::channel('stats_alerts');
+
+        //first period is starting 30 days ago and ending day before yesterday end of the day
+        $this->older_period = $older_period ?? new FlexPeriod('last30d');
+        //second period is yesterday
+        $this->recent_period = $recent_period ?? new FlexPeriod(1);
     }
 
 
@@ -60,13 +67,11 @@ final class TestOfferActivityCommand extends Command
      */
     public function handle(StatsAlertsInventoryService $Service): int
     {
-        $this->line("start alert3 lookup");
+        dump("start alert3 lookup");
         $this->logger->debug("alert3 lookup fired");
 
-        //first period is starting 30 days ago and ending day before yesterday end of the day
-        $older_period = new FlexPeriod('last30d');
-        //second period is yesterday
-        $recent_period = new FlexPeriod(1);
+        $older_period = $this->older_period;
+        $recent_period = $this->recent_period;
 
         $this->logger->debug("periods decoded:", [
             'recent' => $recent_period->getDateRange(),
@@ -77,7 +82,7 @@ final class TestOfferActivityCommand extends Command
         if ($Older->isEmpty()) {
             // TODO refactor decorate ?
             $this->logger->debug("no results for the test within older period");
-            $this->line("no results for the test within older period");
+            dump("no results for the test within older period");
             return 0;
         }
         //dd($Older->pluck('Stat_offer_id'));
@@ -92,7 +97,7 @@ final class TestOfferActivityCommand extends Command
         if ($Recent->isEmpty()) {
             // TODO refactor decorate ?
             $this->logger->debug("no results for the test within recent period");
-            $this->line("no results for the test within recent period");
+            dump("no results for the test within recent period");
             return 0;
         }
 
@@ -118,7 +123,7 @@ final class TestOfferActivityCommand extends Command
 
         });
 
-        $this->line("finished");
+        dump("finished");
         return 1;
     }
 

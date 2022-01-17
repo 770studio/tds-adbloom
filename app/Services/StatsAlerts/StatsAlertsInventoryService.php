@@ -54,8 +54,7 @@ final class StatsAlertsInventoryService
     public function getConversionClicksCRValueWithNoActivity(FlexPeriod $period): Collection
     {
         return $this->getConversionClicksCRValue($period, function (Builder $query) {
-            return $query->havingRaw('clicks = 0 and conversions = 0 '); //actually no clicks means no conversions,
-            // but thats ok i think, doesnt really matter
+            return $query->havingRaw('conversions = 0 ');
         });
     }
 
