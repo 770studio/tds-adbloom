@@ -106,34 +106,27 @@ class StatsAlertsService
             'older' => $older_period->getDateRange(),
         ]);
 
-        $Older = $this->inventory->getConversionClicksCRValueWithNoActivity($older_period);
+
+        $Recent = $this->inventory->getConversionClicksCRValue($recent_period, function (Builder $query) {
+            return $query->havingRaw('clicks >= ? or conversions >= ?', [self::AlERT3_MIN_CLICKS_REQUIRED,
+                    self::ALERT3_MIN_CONVERSIONS_REQUIRED]
+            );
+        });
+
+        $Older = $this->inventory->getConversionClicksCRValueWithNoActivity($older_period, $Recent->pluck('Stat_offer_id'));
         if ($Older->isEmpty()) {
-            // TODO refactor decorate ?
             $this->logger->debug("no results for the test within older period");
             dump("no results for the test within older period");
             return;
         }
 
-        $Recent = $this->inventory->getConversionClicksCRValue($recent_period, function (Builder $query) use ($Older) {
-            return $query->whereIn('Stat_offer_id', $Older->pluck('Stat_offer_id'))
-                ->havingRaw('clicks >= ? or conversions >= ?', [self::AlERT3_MIN_CLICKS_REQUIRED,
-                        self::ALERT3_MIN_CONVERSIONS_REQUIRED]
-                );
-        });
 
-        if ($Recent->isEmpty()) {
-            // TODO refactor decorate ?
-            $this->logger->debug("no results for the test within recent period");
-            dump("no results for the test within recent period");
-            return;
-        }
-
-        $Recent->each(function ($recent_item) use ($Older, $older_period, $recent_period) {
-
+        $Older->each(function ($older_item) use ($Recent) {
+            $recent_item = $Recent->where('Stat_offer_id', $older_item->Stat_offer_id)->first();
             $this->logger->debug('alert is about to fire',
                 [
                     'recent_period' => $recent_item,
-                    'older_period' => $Older->where('Stat_offer_id', $recent_item->Stat_offer_id)->first(),
+                    'older_period' => $older_item,
                 ]);
 
             $this->slackAlert(
@@ -143,9 +136,8 @@ class StatsAlertsService
                     $recent_item->conversions,
                 )
             );
-
-
         });
+
 
         dump("finished");
     }

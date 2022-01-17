@@ -51,10 +51,13 @@ final class StatsAlertsInventoryService
 
     }
 
-    public function getConversionClicksCRValueWithNoActivity(FlexPeriod $period): Collection
+    public function getConversionClicksCRValueWithNoActivity(FlexPeriod $period, $offers = []): Collection
     {
-        return $this->getConversionClicksCRValue($period, function (Builder $query) {
-            return $query->havingRaw('conversions = 0 ');
+        return $this->getConversionClicksCRValue($period, function (Builder $query) use ($offers) {
+            return $query->havingRaw('conversions = 0 ')
+                ->when($offers, function (Builder $query, $offers) {
+                    return $query->whereIn('Stat_offer_id', $offers);
+                });
         });
     }
 
