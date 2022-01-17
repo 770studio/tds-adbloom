@@ -15,7 +15,7 @@ class StatsAlertsService
 
     private LoggerInterface $logger;
     private StatsAlertsInventoryService $inventory;
-    private ?bool $notify;
+    private ?bool $notify = null;
 
     public function __construct(StatsAlertsInventoryService $inventory)
     {

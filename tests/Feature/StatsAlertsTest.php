@@ -2,7 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Services\StatsAlerts\FlexPeriod;
+use App\Services\StatsAlerts\StatsAlertsInventoryService;
+use App\Services\StatsAlerts\StatsAlertsService;
+use App\Services\StatsAlerts\StatsGroupBy;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
@@ -28,6 +33,25 @@ class StatsAlertsTest extends TestCase
 
     }
 
+    public function offer_activity()
+    {
+
+        $recent = new  FlexPeriod(0);
+        $recent->setCustomDates(Carbon::parse('01.12.2021')->startOfDay(),
+            Carbon::parse('15.12.2021')->endOfDay()
+        );
+        $older = new  FlexPeriod(0);
+        $older->setCustomDates(Carbon::parse('16.12.2021')->startOfDay(),
+            Carbon::parse('16.12.2021')->endOfDay()
+        );
+
+        $s = new StatsAlertsService(
+            new StatsAlertsInventoryService(
+                new StatsGroupBy()
+            )
+        );
+        $s->testAlert3($recent, $older);
+    }
 
     /**
      * Конверсии по оферу по целе по всем партнёрам упали до 0. Это значит отвалилась интеграция. Проверить сначала прошлый час, если в прошлый час тоже было 0, нет alert, проверить прошлые 24 час, если нули, то нет alert. Если прошлый час больше 0 и болье 5 (threshold), alert.
