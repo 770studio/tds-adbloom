@@ -113,14 +113,17 @@ class WidgetController extends Controller
         }
 
         return response()->json(
-            ['items' => (new WidgetOpportunitiesCollection  (
-                $mixin->merge(
-                    $widget->opportunities()
-                        ->get()
-                )->filter(function ($collection) {
-                    return $collection->short_id;
-                })
-            ))], 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES);
+            ['options' => [
+                "enableGrlInventory" => $widget->enable_grl_inventory
+            ],
+                'items' => (new WidgetOpportunitiesCollection  (
+                    $mixin->merge(
+                        $widget->opportunities()
+                            ->get()
+                    )->filter(function ($collection) {
+                        return $collection->short_id;
+                    })
+                ))], 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES);
 
     }
 
