@@ -8,6 +8,7 @@ namespace App\Helpers;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 class StoreImageHelper
@@ -22,6 +23,15 @@ class StoreImageHelper
         }
 
         return $unique_name;
+    }
+
+    public static function getGrlRandomCreativeUrl(): string
+    {
+        return Storage::disk('creatives')->url(
+            Arr::random(
+                Storage::disk('creatives')->files('tpl')
+            )
+        );
     }
 
     public static function getOpportunityAssetUrl(Opportunity $opportunity): string

@@ -5,14 +5,20 @@ namespace App\Services\GeneralResearchAPI;
 
 
 use App\Exceptions\BreakingException;
+use App\Helpers\StoreImageHelper;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use App\Services\Response;
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class GeneralResearchResponse extends Response
 {
+
+    const RANDOM_TITLES = [
+        'Daily surveys', 'Fresh surveys', 'New survey now', 'TOP surveys', 'Paid survey'
+    ];
 
     /**
      * @throws Exception
@@ -79,36 +85,7 @@ class GeneralResearchResponse extends Response
 
         return $this;
     }
-    /**
-     *
-     * for temporary use!
-     */
-    public function getBucket(): array
-    {
-        try {
-            $offerwall = $this->parseData()->get('offerwall');
-            $bucket = $offerwall->buckets[0];
 
-            return
-                [
-                    'short_id' => $offerwall->id, // id
-                    'name' => 'Paid Surveys',   // title
-                    'image' => 'https://dev.tds.adbloom.co/storage/assets/creatives/e23bae6e2e269b78738005ef8c9c8914105f4321.png',
-                    'description' => 'Get paid for your opinion today! Surveys take a few minutes and you\'ll earn each time you complete one.',
-                    'link' => $bucket->uri, // url
-                    'payout' => $bucket->payout->max, // reward
-                    'call_to_action' => 'Start Now', // callToAction
-                    'type' => Opportunity::TYPES['survey'], // for timeToComplete to show up
-                    'timeToComplete' => $bucket->duration->max,
-
-                ];
-        } catch (Exception $e) {
-            //Must not add an Opportunity if GRL API doesn't return any options.
-            return [];
-        }
-
-
-    }
 
     public function getBuckets(int $limit = 5): Collection
     {
@@ -123,8 +100,8 @@ class GeneralResearchResponse extends Response
                 $buckets->push(
                     new Opportunity([
                         'short_id' => $offerwall->id, // id
-                        'name' => 'Paid Surveys',   // title
-                        'image' => 'https://dev.tds.adbloom.co/storage/assets/creatives/e23bae6e2e269b78738005ef8c9c8914105f4321.png',
+                        'name' => Arr::random(self::RANDOM_TITLES),   // title
+                        'image' => StoreImageHelper::getGrlRandomCreativeUrl(),
                         'description' => 'Get paid for your opinion today! Surveys take a few minutes and you\'ll earn each time you complete one.',
                         'link' => $offerwall_bucket->uri, // url
                         'payout' => $offerwall_bucket->payout->max, // reward
