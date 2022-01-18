@@ -114,7 +114,7 @@ class WidgetController extends Controller
 
         return response()->json(
             ['options' => [
-                "enableGrlInventory" => $widget->enable_grl_inventory
+                "enableGrlInventory" => (bool)$widget->enable_grl_inventory
             ],
                 'items' => (new WidgetOpportunitiesCollection  (
                     $mixin->merge(
