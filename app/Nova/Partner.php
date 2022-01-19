@@ -63,6 +63,8 @@ class Partner extends Resource
     public function fields(Request $request)
     {
         return [
+            Image::make('Logo')
+                ->prunable(),
             ID::make(__('ID'), 'id')->sortable(),
             Text::make('Name')
                 ->rules('required')
