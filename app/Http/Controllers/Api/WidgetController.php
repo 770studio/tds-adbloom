@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 
@@ -99,12 +100,12 @@ class WidgetController extends Controller
             $grlService->setWidget($widget);
 
             //TODO static shit
-            WidgetOpportunitiesResource::$partner = $grlService->getPartner();
+            WidgetOpportunitiesResource::$partner = $partner = $grlService->getPartner();
             // подмешать временно! TODO убрать
             $mixin = $grlService->getResponseProcessor()->setData(
                 $grlService->makeRequest()
             )->validate()
-                ->transformPayouts($grlService->getPartner())
+                ->transformPayouts($partner)
                 ->transformUri()
                 ->getBuckets(5);
 
@@ -114,7 +115,8 @@ class WidgetController extends Controller
 
         return response()->json(
             ['options' => [
-                "enableGrlInventory" => (bool)$widget->enable_grl_inventory
+                "enableGrlInventory" => (bool)$widget->enable_grl_inventory,
+                "logo" => Storage::url($partner->logo)
             ],
                 'items' => (new WidgetOpportunitiesCollection  (
                     $mixin->merge(
