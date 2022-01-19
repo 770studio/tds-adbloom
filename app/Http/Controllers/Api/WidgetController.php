@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\StoreImageHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WidgetOpportunitiesCollection;
 use App\Http\Resources\WidgetOpportunitiesResource;
@@ -14,7 +15,6 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 
@@ -116,7 +116,7 @@ class WidgetController extends Controller
         return response()->json(
             ['options' => [
                 "enableGrlInventory" => (bool)$widget->enable_grl_inventory,
-                "logo" => Storage::url($partner->logo)
+                "logo" => StoreImageHelper::getPartnerLogo()
             ],
                 'items' => (new WidgetOpportunitiesCollection  (
                     $mixin->merge(

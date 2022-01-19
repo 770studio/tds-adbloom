@@ -44,9 +44,17 @@ class StoreImageHelper
         return self::getCreativesCDNUrl($opportunity->image);
 
     }
+
     public static function getPartnerPointsLogoAssetCDNUrl(Partner $partner): ?string
     {
         return self::getCreativesCDNUrl($partner->points_logo);
+    }
+
+    public static function getPartnerLogo(Partner $partner)
+    {
+        return $partner->logo
+            ? Storage::url($partner->logo)
+            : '';
     }
 
     public static function getCreativesCDNUrl(?string $local_path): ?string
@@ -63,4 +71,6 @@ class StoreImageHelper
     {
         return sha1($file->getClientOriginalName() . $postfix) . '.' . $file->getClientOriginalExtension();
     }
+
+
 }
