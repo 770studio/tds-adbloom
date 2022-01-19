@@ -53,7 +53,7 @@ class StoreImageHelper
     public static function getPartnerLogo(Partner $partner)
     {
         return $partner->logo
-            ? Storage::url($partner->logo)
+            ? asset($partner->logo)
             : '';
     }
 
