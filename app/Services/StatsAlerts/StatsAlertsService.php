@@ -117,36 +117,41 @@ class StatsAlertsService
             'older' => $older_period->getDateRange(),
         ]);
 
-
+        //   group by recent period
         $Recent = $this->inventory->getConversionClicksCRValue($recent_period, function (Builder $query) {
             return $query->havingRaw('clicks >= ? or conversions >= ?', [self::AlERT3_MIN_CLICKS_REQUIRED,
                     self::ALERT3_MIN_CONVERSIONS_REQUIRED]
             );
         });
 
-        $Older = $this->inventory->getConversionClicksCRValueWithNoActivity($older_period, $Recent->pluck('Stat_offer_id'));
-        if ($Older->isEmpty()) {
-            $this->logger->debug("no results for the test within older period");
-            dump("no results for the test within older period");
+        if ($Recent->isEmpty()) {
+            dump("no results for the test within recent period");
             return;
         }
 
+        //   group by older period
+        $Older = $this->inventory->getConversionClicksCRValue($older_period, function (Builder $query) use ($Recent) {
+            return $query->whereIn('Stat_offer_id', $Recent->pluck('Stat_offer_id'));
+        });
 
-        $Older->each(function ($older_item) use ($Recent) {
-            $recent_item = $Recent->where('Stat_offer_id', $older_item->Stat_offer_id)->first();
-            $this->logger->debug('alert is about to fire',
-                [
-                    'recent_period' => $recent_item,
-                    'older_period' => $older_item,
-                ]);
 
-            $this->slackAlert(
-                sprintf("Campaign Activated: *%s* has received *%d* clicks and *%d* conversions in the last day, the first time in the previous 30 days",
-                    $recent_item->Offer_name,
-                    $recent_item->clicks,
-                    $recent_item->conversions,
-                )
-            );
+        $Recent->each(function ($recent_item) use ($Older) {
+            $older_item = $Older->where('Stat_offer_id', $recent_item->Stat_offer_id)->first();
+            if (!$older_item || $older_item->conversions == 0) {
+                $this->logger->debug('alert is about to fire',
+                    [
+                        'recent_period' => $recent_item,
+                        'older_period' => $older_item,
+                    ]);
+
+                $this->slackAlert(
+                    sprintf("Campaign Activated: *%s* has received *%d* clicks and *%d* conversions in the last day, the first time in the previous 30 days",
+                        $recent_item->Offer_name,
+                        $recent_item->clicks,
+                        $recent_item->conversions,
+                    )
+                );
+            }
         });
 
 
