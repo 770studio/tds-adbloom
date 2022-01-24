@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\StoreImageHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WidgetOpportunitiesCollection;
 use App\Http\Resources\WidgetOpportunitiesResource;
@@ -99,14 +100,17 @@ class WidgetController extends Controller
             $grlService->setWidget($widget);
 
             //TODO static shit
-            WidgetOpportunitiesResource::$partner = $grlService->getPartner();
+            WidgetOpportunitiesResource::$partner = $partner = $grlService->getPartner();
             // подмешать временно! TODO убрать
-            $mixin = $grlService->getResponseProcessor()->setData(
-                $grlService->makeRequest()
-            )->validate()
-                ->transformPayouts($grlService->getPartner())
-                ->transformUri()
-                ->getBuckets(5);
+            if ($widget->enable_grl_inventory) {
+                $mixin = $grlService->getResponseProcessor()->setData(
+                    $grlService->makeRequest()
+                )->validate()
+                    ->transformPayouts($partner)
+                    ->transformUri()
+                    ->getBuckets(5);
+            }
+
 
         } catch (Throwable $e) {
             report($e);
@@ -114,7 +118,8 @@ class WidgetController extends Controller
 
         return response()->json(
             ['options' => [
-                "enableGrlInventory" => $widget->enable_grl_inventory
+                "enableGrlInventory" => (bool)$widget->enable_grl_inventory,
+                "logo" => StoreImageHelper::getPartnerLogo($partner)
             ],
                 'items' => (new WidgetOpportunitiesCollection  (
                     $mixin->merge(
