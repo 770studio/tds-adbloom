@@ -74,9 +74,9 @@ class Response implements ResponseIF
 
     }
 
-    public function validate()
+    public function validate(): self
     {
-
+        return $this;
     }
 
 
