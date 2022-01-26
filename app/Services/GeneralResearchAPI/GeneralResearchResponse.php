@@ -5,7 +5,7 @@ namespace App\Services\GeneralResearchAPI;
 
 
 use App\Exceptions\BreakingException;
-use App\Helpers\StaticStack;
+use App\Helpers\Stack;
 use App\Helpers\StoreImageHelper;
 use App\Models\Opportunity;
 use App\Models\Partner;
@@ -103,9 +103,9 @@ class GeneralResearchResponse extends Response
             $offerwall_buckets = $offerwall->buckets;
             $buckets = collect();
 
-            $titles = new StaticStack(self::RANDOM_TITLES);
-            $descs = new StaticStack(self::RANDOM_DESCS);
-            $creatives = new StaticStack (StoreImageHelper::getGrlCreativeUrls());
+            $titles = new Stack(self::RANDOM_TITLES);
+            $descs = new Stack(self::RANDOM_DESCS);
+            $creatives = new Stack (StoreImageHelper::getGrlCreativeUrls());
 
             foreach ($offerwall_buckets->slice(0, $limit) as $key => $offerwall_bucket) {
                 $buckets->push(
