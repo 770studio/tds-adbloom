@@ -10,8 +10,9 @@ class FlexPeriod implements Arrayable
 
     private const DATETIME_FIELD = 'StatDateTime';
     private string $timezone;
-    private Carbon $dateSrart;
+    private Carbon $dateStart;
     private Carbon $dateEnd;
+    /** @var mixed */
     private $periodCode;
 
     public function __construct($period)
@@ -55,13 +56,13 @@ class FlexPeriod implements Arrayable
                     $this->getNewMutableNowInst()->subDays(2)->endOfDay()
                 );
                 break;
-            case '24n': //   n=0 is for last24h, 1 - prev24h, and so on
-                $n = (int)$period;
-                $this->setDates(
-                    $this->getNewMutableNowInst()->subHours(24 * ($n + 1)),
-                    $this->getNewMutableNowInst()->subHours(24 * $n)
-                );
-                break;
+            /*            case '24n': //   n=0 is for last24h, 1 - prev24h, and so on
+                            $n = (int)$period;
+                            $this->setDates(
+                                $this->getNewMutableNowInst()->subHours(24 * ($n + 1)),
+                                $this->getNewMutableNowInst()->subHours(24 * $n)
+                            );
+                            break;*/
 
             default: // n days ago
                 $this->setDates(
@@ -73,9 +74,15 @@ class FlexPeriod implements Arrayable
         }
     }
 
+    public function setCustomDates(Carbon $start, Carbon $end): void
+    {
+        $this->dateStart = $start;
+        $this->dateEnd = $end;
+    }
+
     private function setDates(Carbon $start, Carbon $end): void
     {
-        $this->dateSrart = $start;
+        $this->dateStart = $start;
         $this->dateEnd = $end;
     }
 
@@ -86,12 +93,12 @@ class FlexPeriod implements Arrayable
 
     public function getDateRange(): array
     {
-        return [$this->dateSrart, $this->dateEnd];
+        return [$this->dateStart, $this->dateEnd];
     }
 
     public function getStartDate(): string
     {
-        return $this->dateSrart->toDateTimeString();
+        return $this->dateStart->toDateTimeString();
     }
 
     public function getEndDate(): string
@@ -102,7 +109,7 @@ class FlexPeriod implements Arrayable
     public function toArray(): array
     {
         return [
-            [self::DATETIME_FIELD, '>=', $this->dateSrart->toDateTimeString()],
+            [self::DATETIME_FIELD, '>=', $this->dateStart->toDateTimeString()],
             [self::DATETIME_FIELD, '<', $this->dateEnd->toDateTimeString()],
         ];
     }

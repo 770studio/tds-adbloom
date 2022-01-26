@@ -33,4 +33,17 @@ class AlertDTO extends DataTransferObject
             throw new InvalidArgumentException('direction can be UP or DOWN');
         }
     }
+
+    public function setPeriods(FlexPeriod $older_period, FlexPeriod $recent_period): self
+    {
+        $this->recent_period = $recent_period;
+        $this->older_period = $older_period;
+        return $this;
+    }
+
+    public function setRecentClicks(int $clicks): self
+    {
+        $this->recent_clicks = $clicks;
+        return $this;
+    }
 }

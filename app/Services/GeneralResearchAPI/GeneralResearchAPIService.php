@@ -166,7 +166,8 @@ class GeneralResearchAPIService
                 break;
 
             default:
-                throw new BreakingException('sendStatusToTune: wrong status:' . $status_object->getStatus());
+                Log::channel('queue')->debug('wrong status:' . $status_object->getStatus());
+            // throw new BreakingException('sendStatusToTune: wrong status:' . $status_object->getStatus());
         }
 
         return RedirectStatus_Client::reject;

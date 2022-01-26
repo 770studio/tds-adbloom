@@ -2,15 +2,10 @@
 
 namespace App\Console\Commands\StatsAlerts;
 
-use App\Helpers\CompareObjectValueHelper;
-use App\Models\Infrastructure\AlertDTO;
-use App\Notifications\StatsAlertNotification;
 use App\Services\StatsAlerts\FlexPeriod;
-use App\Services\StatsAlerts\StatsAlertsInventoryService;
+use App\Services\StatsAlerts\StatsAlertsService;
 use Illuminate\Console\Command;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 use LogicException;
 
 /**
@@ -28,9 +23,7 @@ use LogicException;
  */
 final class TestOfferCRCommand extends Command
 {
-    public const CLICK_THROUGH_MIN_THRESHOLD = 2;
-    public const CLICK_THROUGH_MIN_PERCENT_THRESHOLD = 50;
-    public const CLICKS_NOISE_THRESHOLD = 90;
+
 
     /**
      * The name and signature of the console command.
@@ -47,7 +40,6 @@ final class TestOfferCRCommand extends Command
      * @var string
      */
     protected $description = 'Command description';
-    private Logger $logger;
 
 
     /**
@@ -59,6 +51,7 @@ final class TestOfferCRCommand extends Command
     {
         parent::__construct();
         $this->logger = Log::channel('stats_alerts');
+        $this->alerts = collect();
     }
 
     /*    public function line($string, $style = null, $verbosity = null)
@@ -71,13 +64,8 @@ final class TestOfferCRCommand extends Command
      *
      * @return int
      */
-    public function handle(StatsAlertsInventoryService $Service)
+    public function handle(StatsAlertsService $alerts)
     {
-
-
-        $this->line("start alert2 lookup");
-        $this->logger->debug("alert2 lookup fired");
-
         // but we also might need to compare a custom arbitrary period
         // TODO refactor somehow
         if ($this->option('older') !== null) {
@@ -91,104 +79,20 @@ final class TestOfferCRCommand extends Command
                 }
             }
         } else {
-            // by default we compare lastDay and dayBeforelastDay
-            $older_period = 'dayBeforelastDay';
-            $recent_period = 'lastDay';
-        }
-        dump($older_period, $recent_period);
-
-        $this->logger->debug("periods:", [
-            'recent' => $recent_period,
-            'older' => $older_period,
-        ]);
-
-        $older_period = new FlexPeriod($older_period);
-        $recent_period = new FlexPeriod($recent_period);
-
-        $this->logger->debug("periods decoded:", [
-            'recent' => $recent_period->getDateRange(),
-            'older' => $older_period->getDateRange(),
-        ]);
-
-        $Older = $Service->getConversionClicksCRValue($older_period);
-        //dd($Older);
-        $Recent = $Service->getConversionClicksCRValue($recent_period);
-
-        $Older->each(function ($older_item) use ($Recent, $older_period, $recent_period) {
-            $recent_item = $Recent->where("Stat_offer_id", $older_item->Stat_offer_id)->first();
-
-            if (!$recent_item || $recent_item->clicks < self::CLICKS_NOISE_THRESHOLD ||
-                $older_item->clicks < self::CLICKS_NOISE_THRESHOLD) {
-                return true; // continue as one of the periods is below noise threshold
-            }
-
-            $comparator = (new CompareObjectValueHelper('cr_value', self::CLICK_THROUGH_MIN_PERCENT_THRESHOLD));
-            // check if we have DOWN (classic older period is greater than recent)
-            //TODO refactor as following looks like shit
-            if ($diff = $comparator->compare($recent_item, $older_item)) {
-                $direction = 'DOWN';
-            } elseif ($diff = $comparator->compare($older_item, $recent_item)) {
-                $direction = 'UP';
-            }
-
-            if ($diff) {
-                $this->logger->debug('alert is about to fire',
-                    [
-                        'recent_period' => $recent_item,
-                        'older_period' => $older_item,
-                    ]);
-
-                $alertDto = AlertDTO::fromArray([
-                    'direction' => $direction,
-                    'diff_prs' => $diff,
-                    'recent_period' => $recent_period,
-                    'older_period' => $older_period,
-                    'recent_item_prs_value' => $recent_item->cr_value,
-                    'older_item_prs_value' => $older_item->cr_value,
-                    'offer_name' => $older_item->Offer_name
-                ]);
-                $this->stat_alert($alertDto);
-            }
-
-
-        });
-        $this->line("finished");
-
-    }
-
-    public function stat_alert(AlertDTO $alertDTO): void
-    {
-
-        $logAlert = sprintf("CR value of %s prs. (offer name: %s) , period: from %s to %s is greater by %s prs
-                     than the value of %s prs for the same daily period from %s to %s",
-            $alertDTO->older_item_prs_value,
-            $alertDTO->offer_name,
-            $alertDTO->older_period->getStartDate(), $alertDTO->older_period->getEndDate(), // period: from to
-            $alertDTO->diff_prs, // greater by
-            $alertDTO->recent_item_prs_value,
-            $alertDTO->recent_period->getStartDate(), $alertDTO->recent_period->getEndDate(), // period: from to
-        );
-
-
-        //CR is %(current cr), (DOWN/UP) by %(CR % Change) from prior day average of %(yesterday CR)
-        $slackAlert = sprintf("Offer: *%s* - CR is currently *%s* %%, *%s* by *%s* %% from prior day average of *%s* %%",
-            $alertDTO->offer_name,
-            $alertDTO->recent_item_prs_value,
-            $alertDTO->direction,
-            $alertDTO->diff_prs,
-            $alertDTO->older_item_prs_value
-        );
-
-        $this->line("ALERT2:" . $logAlert);
-        $this->logger->debug($logAlert);
-
-        if ($this->option('notify')) {
-            Notification::route('slack', config('services.slack_notification.alert_incoming_webhook'))
-                ->notify(new StatsAlertNotification($slackAlert));
+            // by default we compare last24h to prev24h
+            $older_period = 'prev24h';
+            $recent_period = 'last24h';
         }
 
 
+        $alerts->notify((bool)$this->option('notify'))
+            ->testAlert2(new FlexPeriod($recent_period), new FlexPeriod($older_period));
+
+        return Command::SUCCESS;
+
+
     }
+
 
 
 }
