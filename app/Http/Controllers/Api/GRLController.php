@@ -6,7 +6,6 @@ use App\Helpers\RedirectHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Widget;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
-use App\Traits\Responseable;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +16,6 @@ use Illuminate\Support\Facades\Validator;
 // TODO желательно как-то вынести контроллер из-под новы
 class GRLController extends Controller
 {
-    use Responseable;
 
     /**
      * @return JsonResponse | RedirectResponse

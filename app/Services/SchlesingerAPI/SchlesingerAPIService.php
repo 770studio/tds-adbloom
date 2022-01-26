@@ -15,7 +15,8 @@ class SchlesingerAPIService
         $this->api_url = config('services.schlesinger.url');
     }
 
-    public function BasicAPICall(): object
+
+    public function BasicAPICall(): SchlesingerResponse
     {
 
         $response = Http::withOptions(
@@ -23,8 +24,10 @@ class SchlesingerAPIService
         )->withHeaders([
             'X-MC-SUPPLY-KEY' => $this->secret,
         ])->get($this->api_url);
-        dd($response->object());
-        return $response->object();
+
+        return new SchlesingerResponse(
+            $response->object()
+        );
 
 
     }

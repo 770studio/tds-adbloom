@@ -6,9 +6,7 @@ use App\Interfaces\DaliaPublisherAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
 use App\Models\Infrastructure\Click;
 use App\Models\Infrastructure\PrepareQueryBuilderWhere;
-use App\Models\Integrations\DaliaOffers;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
-use App\Services\DaliaPublisherAPI\DaliaPublisherAPIServiceResponse;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIStatus;
 use App\Services\TuneAPI\TuneAPIService;
@@ -110,12 +108,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DaliaPublisherAPIServiceIF::class, function () {
             return new DaliaPublisherAPIService(
                 config('services.dalia.publisher_user_uuid'),
-                new  DaliaPublisherAPIServiceResponse(
-                    new DaliaOffers()
-                )
             );
-
-
         });
 
 

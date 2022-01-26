@@ -30,9 +30,6 @@ class TuneAPIService
     }
 
 
-    /**
-     * @throws Exception
-     */
     public function getConversions(array $fields, int $page): ConversionsResponse
     {
         return new ConversionsResponse(

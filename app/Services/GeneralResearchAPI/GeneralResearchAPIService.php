@@ -64,9 +64,6 @@ class GeneralResearchAPIService
         return $this->status;
     }
 
-    /**
-     * @throws Exception
-     */
     public function makeRequest(): GeneralResearchResponse
     {
         $params = http_build_query(

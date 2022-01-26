@@ -5,7 +5,6 @@ namespace App\Services\YoursurveysReadmeIoAPI;
 
 
 use App\Interfaces\YoursurveysAPIServiceIF;
-use Exception;
 use Illuminate\Support\Facades\Http;
 
 class YoursurveysAPIService implements YoursurveysAPIServiceIF
@@ -25,9 +24,6 @@ class YoursurveysAPIService implements YoursurveysAPIServiceIF
         ];
     }
 
-    /**
-     * @throws Exception
-     */
     public function BasicAPICall(): YourSurveysResponse
     {
 

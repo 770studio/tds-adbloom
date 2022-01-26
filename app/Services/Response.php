@@ -5,7 +5,6 @@ namespace App\Services;
 
 
 use App\Interfaces\ResponseIF;
-use Exception;
 use Illuminate\Support\Collection;
 
 class Response implements ResponseIF
@@ -16,9 +15,7 @@ class Response implements ResponseIF
     protected $count;
     protected object $apiResult;
 
-    /**
-     * @throws Exception
-     */
+
     public function __construct($apiResult)
     {
         $this->setData($apiResult);

@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Integrations\Schlesinger;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
-use App\Services\SchlesingerAPI\SchlesingerResponse;
 use Illuminate\Console\Command;
 
 class SchlesingerAllocatedSurveysUpdateCommand extends Command
@@ -38,11 +37,10 @@ class SchlesingerAllocatedSurveysUpdateCommand extends Command
      *
      * @return int
      */
-    public function handle(SchlesingerAPIService $service, SchlesingerResponse $responseProcessor)
+    public function handle(SchlesingerAPIService $service)
     {
-        $responseProcessor->setData(
-            $service->BasicAPICall()
-        )
+
+        $service->BasicAPICall()
             ->parseData()
             ->each(function ($record) {
                 Schlesinger::updateOrCreate(
