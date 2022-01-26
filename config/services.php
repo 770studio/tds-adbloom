@@ -35,6 +35,10 @@ return [
         'conversions_update_from_last_x_months' => env('TUNE_API_CONVERSIONS_UPDATE_STARTING_FROM_LAST_X_MONTHS'),
         'stats_timezone' => env('TUNE_STATS_TIMEZONE', 'EST'), #TODO add to env.example
     ],
+    'schlesinger' => [
+        'secret' => env('SCHLESINGER_SECRET'),
+        'url' => env('SCHLESINGER_URL'),
+    ],
     'yoursurveys_readme_io' => [
         'secret' => env('YOURSURVEYS_README_IO_SECRET'),
         'url' => env('YOURSURVEYS_README_IO_URL'),

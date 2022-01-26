@@ -69,10 +69,9 @@ class GRLController extends Controller
         Log::channel('queue')->debug('widget found:' . $widget->short_id);
 
         return response()->json(
-            $grlService->getResponseProcessor()->setData(
-                $grlService->setWidget($widget)
-                    ->makeRequest()
-            )->validate()
+            $grlService->setWidget($widget)
+                ->makeRequest()
+                ->validate()
                 ->transformDuration()
                 ->transformPayouts($grlService->getPartner(), true)
                 ->transformUri()

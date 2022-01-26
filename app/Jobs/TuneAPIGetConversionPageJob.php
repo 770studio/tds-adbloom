@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Jobs\Middleware\TuneAPIRateLimited;
 use App\Models\Conversion;
-use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -68,12 +67,10 @@ class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
      * @return void
      * @throws LimiterTimeoutException|Exception
      */
-    public function handle(TuneAPIService $tuneAPIService, ConversionsResponse $responseProcessor): void
+    public function handle(TuneAPIService $tuneAPIService): void
     {
 
-        $responseProcessor->setData(
-            $tuneAPIService->getConversions($this->fields, $this->page)
-        )
+        $tuneAPIService->getConversions($this->fields, $this->page)
             ->validate()
             ->parseData()
             ->each(function ($record) {

@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Interfaces\ResponseIF;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class Response implements ResponseIF
@@ -15,15 +14,14 @@ class Response implements ResponseIF
     protected $pageCount;
     protected $data;
     protected $count;
-    protected $apiResult;
-    protected Model $relModel;
+    protected object $apiResult;
 
     /**
      * @throws Exception
      */
-    public function __construct(Model $relModel)
+    public function __construct($apiResult)
     {
-        $this->relModel = $relModel;
+        $this->setData($apiResult);
     }
 
     public function setData(object $apiResult): self

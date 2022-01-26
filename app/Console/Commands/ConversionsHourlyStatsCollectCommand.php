@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\TuneAPIGetConversionHourlyStatPageJob;
 use App\Models\ConversionsHourlyStat;
-use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Carbon\Carbon;
 use Exception;
@@ -50,7 +49,7 @@ class ConversionsHourlyStatsCollectCommand extends Command
      * @return void
      * @throws Exception
      */
-    public function handle(TuneAPIService $tuneAPIService, ConversionsHourlyStatsResponse $responseProcessor)
+    public function handle(TuneAPIService $tuneAPIService)
     {
         // manual (configurable) stat_date
         $this->stat_date = $this->option('stat_date')
@@ -69,9 +68,7 @@ class ConversionsHourlyStatsCollectCommand extends Command
         }
 
 
-        $pagesCount = $responseProcessor->setData(
-            $tuneAPIService->getConversionsHourlyStats($this->stat_date, $this->stat_hour, 1)
-        )
+        $pagesCount = $tuneAPIService->getConversionsHourlyStats($this->stat_date, $this->stat_hour, 1)
             ->validate()
             ->parseCountPages();
 

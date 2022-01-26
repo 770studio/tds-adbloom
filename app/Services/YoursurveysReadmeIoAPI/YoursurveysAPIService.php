@@ -5,6 +5,7 @@ namespace App\Services\YoursurveysReadmeIoAPI;
 
 
 use App\Interfaces\YoursurveysAPIServiceIF;
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class YoursurveysAPIService implements YoursurveysAPIServiceIF
@@ -24,7 +25,10 @@ class YoursurveysAPIService implements YoursurveysAPIServiceIF
         ];
     }
 
-    public function BasicAPICall(): object
+    /**
+     * @throws Exception
+     */
+    public function BasicAPICall(): YourSurveysResponse
     {
 
         $params = http_build_query(
@@ -39,7 +43,9 @@ class YoursurveysAPIService implements YoursurveysAPIServiceIF
             'X-YourSurveys-Api-Key' => $this->secret,
         ])->get($url);
 
-        return $response->object();
+        return new YourSurveysResponse(
+            $response->object()
+        );
 
 
     }

@@ -2,6 +2,16 @@
 
 namespace App\Providers;
 
+use App\Nova\Client;
+use App\Nova\Conversion;
+use App\Nova\DaliaOffers;
+use App\Nova\Opportunity;
+use App\Nova\Partner;
+use App\Nova\Schlesinger;
+use App\Nova\Tag;
+use App\Nova\User;
+use App\Nova\Widget;
+use App\Nova\Yoursurveys;
 use DigitalCreative\CollapsibleResourceManager\CollapsibleResourceManager;
 use DigitalCreative\CollapsibleResourceManager\Resources\TopLevelResource;
 use Illuminate\Support\Facades\Gate;
@@ -30,9 +40,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function routes()
     {
         Nova::routes()
-                ->withAuthenticationRoutes()
-                ->withPasswordResetRoutes()
-                ->register();
+            ->withAuthenticationRoutes()
+            ->withPasswordResetRoutes()
+            ->register();
     }
 
     /**
@@ -94,21 +104,22 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         'label' => 'Resources',
                         'expanded' => true,
                         'resources' => [
-                            \App\Nova\User::class,
-                            \App\Nova\Conversion::class,
-                            \App\Nova\Client::class,
-                            \App\Nova\Opportunity::class,
-                            \App\Nova\Partner::class,
-                            \App\Nova\Widget::class,
-                            \App\Nova\Tag::class,
+                            User::class,
+                            Conversion::class,
+                            Client::class,
+                            Opportunity::class,
+                            Partner::class,
+                            Widget::class,
+                            Tag::class,
                         ]
                     ]),
                     TopLevelResource::make([
                         'label' => 'Integrations',
                         'expanded' => true,
                         'resources' => [
-                            \App\Nova\Yoursurveys::class,
-                            \App\Nova\DaliaOffers::class,
+                            Yoursurveys::class,
+                            DaliaOffers::class,
+                            Schlesinger::class,
                         ],
                     ])
 

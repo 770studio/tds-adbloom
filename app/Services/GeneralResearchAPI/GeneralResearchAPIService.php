@@ -7,7 +7,6 @@ namespace App\Services\GeneralResearchAPI;
 use App\Exceptions\BreakingException;
 use App\Jobs\doPostBackJob;
 use App\Models\Infrastructure\RedirectStatus_Client;
-use App\Traits\Responseable;
 use App\Traits\Widgetable;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class GeneralResearchAPIService
 {
-    use Widgetable, Responseable;
+    use Widgetable;
 
     public array $params = [];
     private string $api_url;
@@ -25,13 +24,11 @@ class GeneralResearchAPIService
     private GeneralResearchAPIStatus $status;
 
     public function __construct(Request                  $request,
-                                GeneralResearchResponse  $responseProcessor,
                                 GeneralResearchAPIStatus $status,
                                                          $n_bins = 5)
     {
         $this->request = $request;
         $this->status = $status;
-        $this->responseProcessor = $responseProcessor;
 
         $this->api_url = sprintf("%s/%s/offerwall/45b7228a7/",
             config('services.generalresearch.api_base_url'),
@@ -70,7 +67,7 @@ class GeneralResearchAPIService
     /**
      * @throws Exception
      */
-    public function makeRequest(): object
+    public function makeRequest(): GeneralResearchResponse
     {
         $params = http_build_query(
             array_merge($this->params, [
@@ -95,7 +92,7 @@ class GeneralResearchAPIService
             throw new BreakingException('external api can not be reached, 500 or smth...');
         }
 
-        return $resp_object;
+        return new GeneralResearchResponse($resp_object);
 
     }
 

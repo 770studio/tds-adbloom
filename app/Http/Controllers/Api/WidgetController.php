@@ -103,9 +103,8 @@ class WidgetController extends Controller
             WidgetOpportunitiesResource::$partner = $partner = $grlService->getPartner();
             // подмешать временно! TODO убрать
             if ($widget->enable_grl_inventory) {
-                $mixin = $grlService->getResponseProcessor()->setData(
-                    $grlService->makeRequest()
-                )->validate()
+                $mixin = $grlService->makeRequest()
+                    ->validate()
                     ->transformPayouts($partner)
                     ->transformUri()
                     ->getBuckets(5);

@@ -5,6 +5,7 @@ namespace App\Services\TuneAPI;
 
 
 use App\Helpers\DBFieldsHelper;
+use App\Models\Conversion;
 use App\Services\Response;
 use Exception;
 use Illuminate\Support\Collection;
@@ -18,7 +19,7 @@ class ConversionsResponse extends Response
      */
     public function parseData(): Collection
     {
-        $dbFieldsHelper = (new DBFieldsHelper($this->relModel->getTable()));
+        $dbFieldsHelper = (new DBFieldsHelper((new Conversion())->getTable()));
 
         collect($this->apiResult->response->data->data)
             ->transform(function ($items, $numkey) use (&$data, $dbFieldsHelper) {
@@ -26,7 +27,7 @@ class ConversionsResponse extends Response
                 foreach ($items as $UpperLevelKey => $item_Arr) {
                     foreach ($item_Arr as $itemkey => $val) {
                         #TODO str macro toMysqlFieldname and ViseVersa
-                        if (in_array($UpperLevelKey . '.' . $itemkey, $this->relModel::TUNE_FIELDS, false)) {
+                        if (in_array($UpperLevelKey . '.' . $itemkey, Conversion::TUNE_FIELDS, false)) {
                             $dbFieldName = $UpperLevelKey . '_' . $itemkey;
                             $data[$numkey][$dbFieldName] = $dbFieldsHelper->cast($dbFieldName, $val);
                         }

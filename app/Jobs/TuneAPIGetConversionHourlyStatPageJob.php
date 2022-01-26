@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Jobs\Middleware\TuneAPIRateLimited;
 use App\Models\ConversionsHourlyStat;
-use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Carbon\Carbon;
 use Exception;
@@ -56,32 +55,27 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
      * @return void
      * @throws LimiterTimeoutException|Exception
      */
-    public function handle(TuneAPIService                 $tuneAPIService,
-                           ConversionsHourlyStatsResponse $responseProcessor): void
+    public function handle(TuneAPIService $tuneAPIService): void
     {
         $datetime = clone($this->stat_date);
         $datetime->hour = $this->stat_hour;
         $datetime->minute = $datetime->second = 0;
-
+        $response = $tuneAPIService->getConversionsHourlyStats($this->stat_date, $this->stat_hour, $this->page) // get data with tune api (response data)
+        ->validate(); // validate api response
         // mass insert into stats
         ConversionsHourlyStat::insert(
         // set data to further process it
-            $responseProcessor->setData(
-            // get data with tune api (response data)
-                $tuneAPIService->getConversionsHourlyStats($this->stat_date, $this->stat_hour, $this->page)
-            )
-                ->validate() // validate api response
-                ->parseData() // parse api response,  map it with our formatting
-                // add StatDateTime based on Stat_date and Stat_hour
-                ->transform(function (array $item) use ($datetime) {
-                    return array_merge($item,
-                        ['StatDateTime' => $datetime->toDateTimeString()]
-                    );
-                })
+            $response->parseData() // parse api response,  map it with our formatting
+            // add StatDateTime based on Stat_date and Stat_hour
+            ->transform(function (array $item) use ($datetime) {
+                return array_merge($item,
+                    ['StatDateTime' => $datetime->toDateTimeString()]
+                );
+            })
                 ->toArray()  // insert accepts array
         );
 
-        $this->total_count = $responseProcessor->getCount();
+        $this->total_count = $response->getCount();
         Log::channel('tune_hourly_data_extractor')->debug(
             "TuneAPIGetConversionHourlyStatPageJob",
             [

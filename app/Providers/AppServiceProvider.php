@@ -4,23 +4,15 @@ namespace App\Providers;
 
 use App\Interfaces\DaliaPublisherAPIServiceIF;
 use App\Interfaces\YoursurveysAPIServiceIF;
-use App\Models\Conversion;
-use App\Models\ConversionsHourlyStat;
-use App\Models\Dummy;
 use App\Models\Infrastructure\Click;
 use App\Models\Infrastructure\PrepareQueryBuilderWhere;
 use App\Models\Integrations\DaliaOffers;
-use App\Models\Integrations\Yoursurveys;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIService;
 use App\Services\DaliaPublisherAPI\DaliaPublisherAPIServiceResponse;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIService;
 use App\Services\GeneralResearchAPI\GeneralResearchAPIStatus;
-use App\Services\GeneralResearchAPI\GeneralResearchResponse;
-use App\Services\TuneAPI\ConversionsHourlyStatsResponse;
-use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use App\Services\YoursurveysReadmeIoAPI\YoursurveysAPIService;
-use App\Services\YoursurveysReadmeIoAPI\YourSurveysResponse;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Tune\NetworkApi;
@@ -64,36 +56,6 @@ class AppServiceProvider extends ServiceProvider
 
         });
 
-        $this->app->bind(ConversionsResponse::class, function ($app, $params) {
-            return new  ConversionsResponse(
-            // auto inject rel model
-                new Conversion()
-            );
-
-        });
-
-        $this->app->bind(ConversionsHourlyStatsResponse::class, function ($app, $params) {
-            return new  ConversionsHourlyStatsResponse(
-                new ConversionsHourlyStat()
-            );
-
-        });
-
-        $this->app->bind(DaliaPublisherAPIServiceResponse::class, function ($app, $params) {
-            return new  DaliaPublisherAPIServiceResponse(
-                new DaliaOffers()
-            );
-        });
-        $this->app->bind(YourSurveysResponse::class, function ($app, $params) {
-            return new  YourSurveysResponse(
-                new Yoursurveys()
-            );
-        });
-        $this->app->bind(GeneralResearchResponse::class, function ($app, $params) {
-            return new  GeneralResearchResponse(
-                new Dummy()
-            );
-        });
 
         $this->app->when(TuneAPIService::class)
             ->needs('$dateStart')
@@ -164,7 +126,6 @@ class AppServiceProvider extends ServiceProvider
             }
             return new GeneralResearchAPIService(
                 $request,
-                $this->app->make(GeneralResearchResponse::class),
                 new GeneralResearchAPIStatus
             );
 

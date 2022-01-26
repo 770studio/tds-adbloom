@@ -7,7 +7,7 @@ namespace App\Services\TuneAPI;
 use App\Models\Conversion;
 use App\Models\ConversionsHourlyStat;
 use Carbon\Carbon;
-use stdClass;
+use Exception;
 use Tune\NetworkApi;
 use Tune\Utils\HttpQueryBuilder;
 use Tune\Utils\Operator;
@@ -30,21 +30,26 @@ class TuneAPIService
     }
 
 
-    public function getConversions(array $fields, int $page): stdClass
+    /**
+     * @throws Exception
+     */
+    public function getConversions(array $fields, int $page): ConversionsResponse
     {
-        return $this->api->report()->getConversions(function (HttpQueryBuilder $builder) use ($fields, $page) {
-            return $builder->setFields(
-            //array_slice(Conversion::FIELDS, 1,10)
-                array_merge([Conversion::ID_FIELD], $fields)
-            )->addFilter('Stat.datetime',
-                [
-                    $this->date_start->toDateString()
-                ]
-                , null, Operator::GREATER_THAN
-            )->setPage($page)
-                ->setLimit($this->perPageLimit);
+        return new ConversionsResponse(
+            $this->api->report()->getConversions(function (HttpQueryBuilder $builder) use ($fields, $page) {
+                return $builder->setFields(
+                //array_slice(Conversion::FIELDS, 1,10)
+                    array_merge([Conversion::ID_FIELD], $fields)
+                )->addFilter('Stat.datetime',
+                    [
+                        $this->date_start->toDateString()
+                    ]
+                    , null, Operator::GREATER_THAN
+                )->setPage($page)
+                    ->setLimit($this->perPageLimit);
 
-        }, /* Request options */ []);
+            }, /* Request options */ [])
+        );
     }
 
     public function setEntity($entityName): self
@@ -64,25 +69,28 @@ class TuneAPIService
         return $this->entityName;
     }
 
-    public function getConversionsHourlyStats(Carbon $stat_date, int $stat_hour, int $page = 1): object
+    /**
+     * @throws Exception
+     */
+    public function getConversionsHourlyStats(Carbon $stat_date, int $stat_hour, int $page = 1): ConversionsHourlyStatsResponse
     {
+        return new ConversionsHourlyStatsResponse(
+            $this->api
+                ->report()
+                ->getStats(function (HttpQueryBuilder $builder) use ($page, $stat_date, $stat_hour) {
+                    return $builder->setFields(ConversionsHourlyStat::TUNE_FIELDS)
+                        ->addFilter('Stat.date', [$stat_date->toDateString()],
+                            null, Operator::EQUAL_TO)
+                        ->addFilter('Stat.hour', [$stat_hour],
+                            null, Operator::EQUAL_TO)
+                        ->setLimit($this->perPageLimit);
 
+                    /*         dd( urldecode(
+                                 $builder->toString()
+                             ));*/
 
-        return $this->api
-            ->report()
-            ->getStats(function (HttpQueryBuilder $builder) use ($page, $stat_date, $stat_hour) {
-                return $builder->setFields(ConversionsHourlyStat::TUNE_FIELDS)
-                    ->addFilter('Stat.date', [$stat_date->toDateString()],
-                        null, Operator::EQUAL_TO)
-                    ->addFilter('Stat.hour', [$stat_hour],
-                        null, Operator::EQUAL_TO)
-                    ->setLimit($this->perPageLimit);
-
-                /*         dd( urldecode(
-                             $builder->toString()
-                         ));*/
-
-            }, /* Request options */ []);
+                }, /* Request options */ [])
+        );
     }
 
 

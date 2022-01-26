@@ -2,19 +2,19 @@
 
 namespace App\Console\Commands;
 
-use App\Interfaces\YoursurveysAPIServiceIF;
-use App\Models\Integrations\Yoursurveys;
-use Exception;
+use App\Models\Integrations\Schlesinger;
+use App\Services\SchlesingerAPI\SchlesingerAPIService;
+use App\Services\SchlesingerAPI\SchlesingerResponse;
 use Illuminate\Console\Command;
 
-class YourSurveysUpdateCommand extends Command
+class SchlesingerAllocatedSurveysUpdateCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'yoursurveys:update {args?*}';
+    protected $signature = 'schlesinger-surveys:update';
 
     /**
      * The console command description.
@@ -37,22 +37,20 @@ class YourSurveysUpdateCommand extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws Exception
      */
-    public function handle(YoursurveysAPIServiceIF $yoursurveysAPIService)
+    public function handle(SchlesingerAPIService $service, SchlesingerResponse $responseProcessor)
     {
-        $yoursurveysAPIService->BasicAPICall()
+        $responseProcessor->setData(
+            $service->BasicAPICall()
+        )
             ->parseData()
             ->each(function ($record) {
-                Yoursurveys::updateOrCreate(
-                    ["project_id" => $record["project_id"]],
+                Schlesinger::updateOrCreate(
+                    ["SurveyId" => $record["SurveyId"]],
                     $record
                 );
-
-
             });
 
-
-        return 0;
+        return Command::SUCCESS;
     }
 }

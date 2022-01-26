@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\TuneAPIGetConversionPageJob;
 use App\Models\Conversion;
-use App\Services\TuneAPI\ConversionsResponse;
 use App\Services\TuneAPI\TuneAPIService;
 use Exception;
 use Illuminate\Console\Command;
@@ -43,12 +42,10 @@ class ConversionsUpdateCommand extends Command
      * @return void
      * @throws Exception
      */
-    public function handle(TuneAPIService $tuneAPIService, ConversionsResponse $responseProcessor): void
+    public function handle(TuneAPIService $tuneAPIService): void
     {
 
-        $pagesCount = $responseProcessor->setData(
-            $tuneAPIService->getConversions([], 1)
-        )
+        $pagesCount = $tuneAPIService->getConversions([], 1)
             ->validate()
             ->parseCountPages();
 

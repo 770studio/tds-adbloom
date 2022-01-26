@@ -30,13 +30,15 @@ class WidgetOpportunitiesResource extends JsonResource
      */
     public function toArray($request)
     {
-
         /**
          * @var Opportunity $this
          */
         $widget = $this->pivot->pivotParent ?? null;
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
-        $reward = self::$partner->calulateReward($this->payout);
+        $reward = optional($this->mixin)
+            ? $this->payout  // for mixin it has already gone through calculation
+            : self::$partner->calulateReward($this->payout);
+
         $targeting_params = TargetingParams::collection()->only((array)$this->targeting_params)->values();
 
         /*  if("MIZzRZtPRlxu1SiSnghAn" == $this->short_id) {
