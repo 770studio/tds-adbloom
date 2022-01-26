@@ -15,9 +15,10 @@ class YourSurveysResponse extends Response
     /**
      * @throws Exception
      */
-    public function validate()
+    public function validate(): self
     {
         if ($this->apiResult->status != 'success') throw new BreakingException("YoursurveysReadmeIoAPI returned an error:" . ($this->apiResult->messages ?? ''));
+        return $this;
 
     }
 

@@ -14,10 +14,10 @@ class DaliaPublisherAPIServiceResponse extends Response
     /**
      * @throws Exception
      */
-    public function validate()
+    public function validate(): self
     {
         if ($this->apiResult->status != 'ok') throw new Exception("DaliaPublisherAPI returned an error:" . serialize($this->apiResult));
-
+        return $this;
     }
 
     public function parseData(): Collection

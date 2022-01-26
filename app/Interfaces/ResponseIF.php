@@ -8,8 +8,9 @@ use Illuminate\Support\Collection;
 
 interface ResponseIF
 {
-    function validate();
+    function validate(): self;
 
     function parseData(): Collection;
+
 
 }
