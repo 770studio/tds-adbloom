@@ -146,7 +146,7 @@ class GeneralResearchAPIService
         Log::channel('queue')->debug('status:' . $status_object->getStatus());
 
         switch ($status_object->getStatus()) {
-            case "3":
+            case RedirectStatus_Client::success :
                 $back_url = sprintf("https://trk.adbloom.co/aff_lsr?transaction_id=%s&amount=%s&adv_sub=%s",
                     $status_object->getClickID(),
                     number_format($status_object->getPayout() / 100, 2, '.', ''), // in dollars
@@ -155,7 +155,7 @@ class GeneralResearchAPIService
                 doPostBackJob::dispatch($back_url)->onQueue('send_to_tune');
                 return RedirectStatus_Client::success;
                 break;
-            case "2":
+            case RedirectStatus_Client::reject :
                 $back_url = sprintf("https://trk.adbloom.co/aff_goal?a=lsr&goal_id=%d&transaction_id=%s&adv_sub=%s",
                     153,
                     $status_object->getClickID(),

@@ -3,6 +3,7 @@
 namespace App\Services\GeneralResearchAPI;
 
 use App\Exceptions\BreakingException;
+use App\Models\Infrastructure\RedirectStatus_Client;
 use App\Models\Widget;
 use App\Traits\Widgetable;
 use Illuminate\Support\Facades\Http;
@@ -70,9 +71,13 @@ class GeneralResearchAPIStatus
         return (float)$this->response->payout;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
-        return $this->response->status;
+        switch ($this->response->status) {
+            case 3:
+                return RedirectStatus_Client::success;
+        }
+        return RedirectStatus_Client::reject;
     }
 
     public function getClickID()
