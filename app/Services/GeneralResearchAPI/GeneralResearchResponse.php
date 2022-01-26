@@ -16,8 +16,15 @@ use Illuminate\Support\Collection;
 class GeneralResearchResponse extends Response
 {
 
-    const RANDOM_TITLES = [
+    public const RANDOM_TITLES = [
         'Daily surveys', 'Fresh surveys', 'New survey now', 'TOP surveys', 'Paid survey'
+    ];
+    public const RANDOM_DESCS = [
+        'Find out if you qualify for this paid survey by answering a few brief questions',
+        'Get Paid for your opinion today. Simply answer a few questions to qualify for this paid survey',
+        'SYW Max surveys are a great way to earn SYW max points',
+        'Random survey is chosen just for you!',
+        'Your opinion is needed! Share it and earn SYW rewards',
     ];
 
     /**
@@ -102,7 +109,7 @@ class GeneralResearchResponse extends Response
                         'short_id' => $offerwall->id, // id
                         'name' => Arr::random(self::RANDOM_TITLES),   // title
                         'image' => StoreImageHelper::getGrlRandomCreativeUrl(),
-                        'description' => 'Get paid for your opinion today! Surveys take a few minutes and you\'ll earn each time you complete one.',
+                        'description' => Arr::random(self::RANDOM_DESCS),
                         'link' => $offerwall_bucket->uri, // url
                         'payout' => $offerwall_bucket->payout->max, // reward
                         'call_to_action' => 'Start Now', // callToAction
