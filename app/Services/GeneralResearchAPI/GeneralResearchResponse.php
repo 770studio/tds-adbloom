@@ -5,6 +5,8 @@ namespace App\Services\GeneralResearchAPI;
 
 
 use App\Exceptions\BreakingException;
+use App\Helpers\Stack;
+use App\Helpers\StoreImageHelper;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use App\Services\Response;
@@ -13,6 +15,17 @@ use Illuminate\Support\Collection;
 
 class GeneralResearchResponse extends Response
 {
+
+    public const RANDOM_TITLES = [
+        'Daily surveys', 'Fresh surveys', 'New survey now', 'TOP surveys', 'Paid survey'
+    ];
+    public const RANDOM_DESCS = [
+        'Find out if you qualify for this paid survey by answering a few brief questions',
+        'Get Paid for your opinion today. Simply answer a few questions to qualify for this paid survey',
+        'SYW Max surveys are a great way to earn SYW max points',
+        'Random survey is chosen just for you!',
+        'Your opinion is needed! Share it and earn SYW rewards',
+    ];
 
     /**
      * @throws Exception
@@ -79,36 +92,7 @@ class GeneralResearchResponse extends Response
 
         return $this;
     }
-    /**
-     *
-     * for temporary use!
-     */
-    public function getBucket(): array
-    {
-        try {
-            $offerwall = $this->parseData()->get('offerwall');
-            $bucket = $offerwall->buckets[0];
 
-            return
-                [
-                    'short_id' => $offerwall->id, // id
-                    'name' => 'Paid Surveys',   // title
-                    'image' => 'https://dev.tds.adbloom.co/storage/assets/creatives/e23bae6e2e269b78738005ef8c9c8914105f4321.png',
-                    'description' => 'Get paid for your opinion today! Surveys take a few minutes and you\'ll earn each time you complete one.',
-                    'link' => $bucket->uri, // url
-                    'payout' => $bucket->payout->max, // reward
-                    'call_to_action' => 'Start Now', // callToAction
-                    'type' => Opportunity::TYPES['survey'], // for timeToComplete to show up
-                    'timeToComplete' => $bucket->duration->max,
-
-                ];
-        } catch (Exception $e) {
-            //Must not add an Opportunity if GRL API doesn't return any options.
-            return [];
-        }
-
-
-    }
 
     public function getBuckets(int $limit = 5): Collection
     {
@@ -119,18 +103,23 @@ class GeneralResearchResponse extends Response
             $offerwall_buckets = $offerwall->buckets;
             $buckets = collect();
 
+            $titles = new Stack(self::RANDOM_TITLES);
+            $descs = new Stack(self::RANDOM_DESCS);
+            $creatives = new Stack (StoreImageHelper::getGrlCreativeUrls());
+
             foreach ($offerwall_buckets->slice(0, $limit) as $key => $offerwall_bucket) {
                 $buckets->push(
                     new Opportunity([
                         'short_id' => $offerwall->id, // id
-                        'name' => 'Paid Surveys',   // title
-                        'image' => 'https://dev.tds.adbloom.co/storage/assets/creatives/e23bae6e2e269b78738005ef8c9c8914105f4321.png',
-                        'description' => 'Get paid for your opinion today! Surveys take a few minutes and you\'ll earn each time you complete one.',
+                        'name' => $titles->useOne(),   // title
+                        'image' => $creatives->useOne(),
+                        'description' => $descs->useOne(),
                         'link' => $offerwall_bucket->uri, // url
                         'payout' => $offerwall_bucket->payout->max, // reward
                         'call_to_action' => 'Start Now', // callToAction
                         'type' => Opportunity::TYPES['survey'], // for timeToComplete to show up
                         'timeToComplete' => $offerwall_bucket->duration->max,
+                        'mixin' => true,
 
                     ])
                 );
@@ -166,6 +155,7 @@ class GeneralResearchResponse extends Response
                     return $item;
                 })
         );
+
     }
 
 }

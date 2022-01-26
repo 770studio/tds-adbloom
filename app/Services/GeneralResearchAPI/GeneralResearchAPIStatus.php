@@ -2,6 +2,7 @@
 
 namespace App\Services\GeneralResearchAPI;
 
+use App\Models\Infrastructure\RedirectStatus_Client;
 use App\Models\Widget;
 use App\Traits\Widgetable;
 use Illuminate\Support\Facades\Http;
@@ -52,7 +53,7 @@ class GeneralResearchAPIStatus
 
         if (isset($resp_object->kwargs->widgetId)) {
             $this->setWidget(Widget::findByShortId($resp_object->kwargs->widgetId)->firstOr(function () use ($resp_object) {
-                Log::channel('queue')->debug('widget not found:' . $resp_object->widgetId);
+                Log::channel('queue')->debug('widget not found:' . $resp_object->kwargs->widgetId);
                 //throw new BreakingException('widget not found');
             }));
         }
@@ -74,9 +75,13 @@ class GeneralResearchAPIStatus
         return (float)$this->response->payout;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
-        return $this->response->status;
+        switch ($this->response->status) {
+            case 3:
+                return RedirectStatus_Client::success;
+        }
+        return RedirectStatus_Client::reject;
     }
 
     public function getClickID()

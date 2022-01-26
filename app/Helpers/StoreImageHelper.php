@@ -8,6 +8,7 @@ namespace App\Helpers;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 class StoreImageHelper
@@ -24,6 +25,25 @@ class StoreImageHelper
         return $unique_name;
     }
 
+    public static function getGrlRandomCreativeUrl(): string
+    {
+        return Storage::disk('creatives')->url(
+            Arr::random(
+                Storage::disk('creatives')->files('tpl')
+            )
+        );
+    }
+
+    public static function getGrlCreativeUrls(): array
+    {
+        return array_map(
+            function ($path) {
+                return Storage::disk('creatives')->url($path);
+            },
+            Storage::disk('creatives')->files('tpl')
+        );
+    }
+
     public static function getOpportunityAssetUrl(Opportunity $opportunity): string
     {
         return Storage::disk('creatives')->url($opportunity->image);
@@ -34,9 +54,17 @@ class StoreImageHelper
         return self::getCreativesCDNUrl($opportunity->image);
 
     }
+
     public static function getPartnerPointsLogoAssetCDNUrl(Partner $partner): ?string
     {
         return self::getCreativesCDNUrl($partner->points_logo);
+    }
+
+    public static function getPartnerLogo(Partner $partner)
+    {
+        return $partner->logo
+            ? Storage::disk('public')->url($partner->logo)//asset($partner->logo)
+            : '';
     }
 
     public static function getCreativesCDNUrl(?string $local_path): ?string
@@ -53,4 +81,6 @@ class StoreImageHelper
     {
         return sha1($file->getClientOriginalName() . $postfix) . '.' . $file->getClientOriginalExtension();
     }
+
+
 }

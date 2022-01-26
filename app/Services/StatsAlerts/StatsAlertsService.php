@@ -46,36 +46,36 @@ class StatsAlertsService
         ]);
 
         $Older = $this->inventory->getConversionClicksCRValue($older_period);
-        //dd($Older);
+
         $Recent = $this->inventory->getConversionClicksCRValue($recent_period);
 
-        $Older->each(function ($older_item) use ($Recent, $older_period, $recent_period) {
-            $recent_item = $Recent->where("Stat_offer_id", $older_item->Stat_offer_id)->first();
+        $Recent->pluck('Stat_offer_id')
+            ->merge($Older->pluck('Stat_offer_id'))
+            ->unique()
+            ->each(function ($Stat_offer_id) use ($Recent, $Older, $older_period, $recent_period) {
+                $recent_item = $Recent->where("Stat_offer_id", $Stat_offer_id)->first();
+                $older_item = $Older->where("Stat_offer_id", $Stat_offer_id)->first();
+                if (!$recent_item || $recent_item->clicks < self::ALERT2_CLICKS_NOISE_THRESHOLD
+                    || !$older_item || $older_item->clicks < self::ALERT2_CLICKS_NOISE_THRESHOLD) {
+                    return true; // one of the periods is below noise threshold  continue to next one
+                }
+                $comparator = (new CompareObjectValueHelper('cr_value', self::ALERT2_CLICK_THROUGH_MIN_PERCENT_THRESHOLD));
+                // check if we have DOWN (classic older period is greater than recent)
 
-            if (!$recent_item || $recent_item->clicks < self::ALERT2_CLICKS_NOISE_THRESHOLD ||
-                $older_item->clicks < self::ALERT2_CLICKS_NOISE_THRESHOLD) {
-                return true; // one of the periods is below noise threshold  continue to next one
-            }
+                if ($comparator->compareBothWays($recent_item, $older_item)->hasDiff()) {
+                    $this->addAlert(
+                        $comparator->toAlert()
+                            ->setPeriods($older_period, $recent_period)
+                            ->setRecentClicks($recent_item->clicks)
+                    );
 
-            $comparator = (new CompareObjectValueHelper('cr_value', self::ALERT2_CLICK_THROUGH_MIN_PERCENT_THRESHOLD));
-            // check if we have DOWN (classic older period is greater than recent)
-            //TODO refactor as following looks like shit
-
-            if ($comparator->compareBothWays($recent_item, $older_item)->hasDiff()) {
-                $this->addAlert(
-                    $comparator->toAlert()
-                        ->setPeriods($older_period, $recent_period)
-                        ->setRecentClicks($recent_item->clicks)
-                );
-
-                $this->logger->debug('alert is about to fire',
-                    [
-                        'recent_period' => $recent_item,
-                        'older_period' => $older_item,
-                    ]);
-            }
-
-        });
+                    $this->logger->debug('alert is about to fire',
+                        [
+                            'recent_period' => $recent_item,
+                            'older_period' => $older_item,
+                        ]);
+                }
+            });
 
 
         $this->alerts->sortBy('direction')
@@ -117,36 +117,41 @@ class StatsAlertsService
             'older' => $older_period->getDateRange(),
         ]);
 
-
+        //   group by recent period
         $Recent = $this->inventory->getConversionClicksCRValue($recent_period, function (Builder $query) {
             return $query->havingRaw('clicks >= ? or conversions >= ?', [self::AlERT3_MIN_CLICKS_REQUIRED,
                     self::ALERT3_MIN_CONVERSIONS_REQUIRED]
             );
         });
 
-        $Older = $this->inventory->getConversionClicksCRValueWithNoActivity($older_period, $Recent->pluck('Stat_offer_id'));
-        if ($Older->isEmpty()) {
-            $this->logger->debug("no results for the test within older period");
-            dump("no results for the test within older period");
+        if ($Recent->isEmpty()) {
+            dump("no results for the test within recent period");
             return;
         }
 
+        //   group by older period
+        $Older = $this->inventory->getConversionClicksCRValue($older_period, function (Builder $query) use ($Recent) {
+            return $query->whereIn('Stat_offer_id', $Recent->pluck('Stat_offer_id'));
+        });
 
-        $Older->each(function ($older_item) use ($Recent) {
-            $recent_item = $Recent->where('Stat_offer_id', $older_item->Stat_offer_id)->first();
-            $this->logger->debug('alert is about to fire',
-                [
-                    'recent_period' => $recent_item,
-                    'older_period' => $older_item,
-                ]);
 
-            $this->slackAlert(
-                sprintf("Campaign Activated: *%s* has received *%d* clicks and *%d* conversions in the last day, the first time in the previous 30 days",
-                    $recent_item->Offer_name,
-                    $recent_item->clicks,
-                    $recent_item->conversions,
-                )
-            );
+        $Recent->each(function ($recent_item) use ($Older) {
+            $older_item = $Older->where('Stat_offer_id', $recent_item->Stat_offer_id)->first();
+            if (!$older_item || $older_item->conversions == 0) {
+                $this->logger->debug('alert is about to fire',
+                    [
+                        'recent_period' => $recent_item,
+                        'older_period' => $older_item,
+                    ]);
+
+                $this->slackAlert(
+                    sprintf("Campaign Activated: *%s* has received *%d* clicks and *%d* conversions in the last day, the first time in the previous 30 days",
+                        $recent_item->Offer_name,
+                        $recent_item->clicks,
+                        $recent_item->conversions,
+                    )
+                );
+            }
         });
 
 
