@@ -2,7 +2,6 @@
 
 namespace App\Services\GeneralResearchAPI;
 
-use App\Exceptions\BreakingException;
 use App\Models\Infrastructure\RedirectStatus_Client;
 use App\Models\Widget;
 use App\Traits\Widgetable;
@@ -54,7 +53,7 @@ class GeneralResearchAPIStatus
 
         if (isset($resp_object->kwargs->widgetId)) {
             $this->setWidget(Widget::findByShortId($resp_object->kwargs->widgetId)->firstOr(function () use ($resp_object) {
-                Log::channel('queue')->debug('widget not found:' . $resp_object->widgetId);
+                Log::channel('queue')->debug('widget not found:' . $resp_object->kwargs->widgetId);
                 //throw new BreakingException('widget not found');
             }));
         }

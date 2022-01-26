@@ -34,6 +34,16 @@ class StoreImageHelper
         );
     }
 
+    public static function getGrlCreativeUrls(): array
+    {
+        return array_map(
+            function ($path) {
+                return Storage::disk('creatives')->url($path);
+            },
+            Storage::disk('creatives')->files('tpl')
+        );
+    }
+
     public static function getOpportunityAssetUrl(Opportunity $opportunity): string
     {
         return Storage::disk('creatives')->url($opportunity->image);
