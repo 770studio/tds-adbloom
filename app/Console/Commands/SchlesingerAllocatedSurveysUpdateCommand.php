@@ -40,16 +40,18 @@ class SchlesingerAllocatedSurveysUpdateCommand extends Command
     public function handle(SchlesingerAPIService $service)
     {
 
-        dd(
-            $service->BasicAPICall()
-                ->parseData()
-        );
+        /*        DB::listen(function ($query) {
+                    $sql = $query->sql;
+                    echo( Str::replaceArray('?', $query->bindings, $sql) );
+                    dump("-----");
+                });*/
+
         $service->BasicAPICall()
             ->parseData()
             ->each(function ($record) {
                 Schlesinger::updateOrCreate(
-                    ["SurveyId" => $record["SurveyId"]],
-                    $record
+                    ["SurveyId" => $record->SurveyId],
+                    (array)$record
                 );
             });
 

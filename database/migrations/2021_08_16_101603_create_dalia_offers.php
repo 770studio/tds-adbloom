@@ -22,7 +22,7 @@ class CreateDaliaOffers extends Migration
             $table->json('json')->nullable();
             $table->timestamps();
 
-            if(!app()->runningUnitTests()) {
+            if (!app()->runningUnitTests()) { //sqlite workaround
                 $table->index([DB::raw('info(100)')]);
                 $table->index([DB::raw('info_short(100)')]);
                 $table->index([DB::raw('title(100)')]);

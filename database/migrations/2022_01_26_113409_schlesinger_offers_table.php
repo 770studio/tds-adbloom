@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class SchlesingerOffersTable extends Migration
 {
@@ -12,33 +14,34 @@ class SchlesingerOffersTable extends Migration
     public function up()
     {
 
-        Schema::table('partners', function (Blueprint $table) {
-            $table->string('logo')->nullable();
+        Schema::create('schlesinger_surveys', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('SurveyId')->unique();
+            $table->integer('LanguageId');
+            $table->integer('BillingEntityId')->nullable();
+            $table->decimal('CPI');
+            $table->integer('LOI');
+            $table->decimal('IR');
+            $table->integer('IndustryId');
+            $table->integer('StudyTypeId');
+            $table->boolean('IsMobileAllowed')->default(0);
+            $table->boolean('IsNonMobileAllowed')->default(0);
+            $table->boolean('IsTabletAllowed')->default(0);
+            $table->boolean('IsSurveyGroupExist')->default(0);
+            $table->boolean('CollectPII')->default(0);
+            $table->integer('AccountId');
+            $table->integer('UrlTypeId');
+            $table->dateTime('UpdateTimeStamp');
+            $table->boolean('IsManualInc')->default(0);
+            $table->boolean('IsQuotaLevelCPI')->default(0);
+            $table->string('LiveLink');
+            $table->dateTime('Qual_UpdateTimeStamp');
+            $table->dateTime('Quota_UpdateTimeStamp');
+            $table->dateTime('Group_UpdateTimeStamp');
+            $table->timestamps();
+
         });
-        #items: array:68 [
-        0 => {#1462
-        +"SurveyId": 1046465
-        + "LanguageId": 3
-        + "BillingEntityId": null
-        + "CPI": 1.0
-        + "LOI": 13
-        + "IR": 45.0
-        + "IndustryId": 30
-        + "StudyTypeId": 1
-        + "IsMobileAllowed": false
-        + "IsNonMobileAllowed": true
-        + "IsTabletAllowed": true
-        + "IsSurveyGroupExist": false
-        + "CollectPII": false
-        + "AccountId": 1
-        + "UrlTypeId": 0
-        + "UpdateTimeStamp": "2021-11-09T10:39:13.7733333"
-        + "IsManualInc": false
-        + "IsQuotaLevelCPI": false
-        + "LiveLink": "https://qa-surveys.sample-cube.com?VID=30&SID=D2D40FDB-8876-40E0-9B39-FFA7BED894CF&LID=3&vsid=[#scid#]"
-        + "Qual_UpdateTimeStamp": "2020-11-16T17:20:23.267"
-        + "Quota_UpdateTimeStamp": "2020-06-23T10:21:15.047"
-        + "Group_UpdateTimeStamp": "2022-01-22T23:55:06.433"
+
 
     }
 
@@ -49,6 +52,7 @@ class SchlesingerOffersTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('schlesinger_surveys');
+
     }
 }

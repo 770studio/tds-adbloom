@@ -35,7 +35,6 @@ class SchlesingerResponse extends Response
 
     public function getCount(): int
     {
-        return (int)$this->apiResult->TotalCount;
-
+        return (int)$this->apiResult->Result->TotalCount;
     }
 }

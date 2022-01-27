@@ -7,7 +7,7 @@ use App\Nova\Conversion;
 use App\Nova\DaliaOffers;
 use App\Nova\Opportunity;
 use App\Nova\Partner;
-use App\Nova\Schlesinger;
+use App\Nova\SchlesingerSurveys;
 use App\Nova\Tag;
 use App\Nova\User;
 use App\Nova\Widget;
@@ -119,7 +119,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         'resources' => [
                             Yoursurveys::class,
                             DaliaOffers::class,
-                            Schlesinger::class,
+                            SchlesingerSurveys::class,
                         ],
                     ])
 

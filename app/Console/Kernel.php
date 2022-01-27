@@ -35,13 +35,15 @@ class Kernel extends ConsoleKernel
         }
 
         if (App::environment('staging')) {
-            $schedule->command('conversions:update')->hourlyAt(15);
+            $schedule->command('conversions:update')->hourlyAt(15)->runInBackground();
+            $schedule->command('schlesinger-surveys:update')->hourlyAt(20)->runInBackground();
+
             //$schedule->command('yoursurveys:update 500 CA')->everyFourHours();
             // $schedule->command('yoursurveys:update 500 US')->everyFourHours();
             // $schedule->command('dalia_publisher_api:update')->daily();
             // $schedule->command('telescope:prune --hours=240')->daily();
             //
-            $schedule->command('conversions:collectHourlyStats')->hourlyAt([20, 40]);
+            $schedule->command('conversions:collectHourlyStats')->hourlyAt([20, 40])->runInBackground();
             // $schedule->command('test:alert1')->hourlyAt([25, 45]);
             $schedule->command('statstests:alert2', ['--notify'])->timezone('EST')->twiceDaily(5, 17)->runInBackground();
             $schedule->command('statstests:alert3', ['--notify'])->timezone('EST')->twiceDaily(5, 17)->runInBackground();
@@ -50,16 +52,18 @@ class Kernel extends ConsoleKernel
         }
 
         if (App::environment('production')) {
-            $schedule->command('conversions:update')->everyThirtyMinutes();
-           // $schedule->command('yoursurveys:update 1000 CA')->hourly();
-           // $schedule->command('yoursurveys:update 1000 US')->hourly();
+            $schedule->command('conversions:update')->everyThirtyMinutes()->runInBackground();
+            $schedule->command('schlesinger-surveys:update')->hourlyAt(20)->runInBackground();
+
+            // $schedule->command('yoursurveys:update 1000 CA')->hourly();
+            // $schedule->command('yoursurveys:update 1000 US')->hourly();
             // $schedule->command('dalia_publisher_api:update')->daily();
 
         }
 
 
-        $schedule->command('partner:send_pb2')->everyTwoMinutes();
-        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+        $schedule->command('partner:send_pb2')->everyTwoMinutes()->runInBackground();
+        $schedule->command('horizon:snapshot')->everyFiveMinutes()->runInBackground();
 
     }
 
