@@ -11,6 +11,12 @@ class Schlesinger extends Model
 
     protected $table = 'schlesinger_surveys';
     protected $guarded = [];
+    protected $casts = [
+        'UpdateTimeStamp' => 'datetime',
+        'Qual_UpdateTimeStamp' => 'datetime',
+        'Quota_UpdateTimeStamp' => 'datetime',
+        'Group_UpdateTimeStamp' => 'datetime',
+    ];
 
 
 }

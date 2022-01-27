@@ -4,8 +4,11 @@ namespace App\Nova;
 
 use App\Models\Integrations\Schlesinger;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
 
 class SchlesingerSurveys extends Resource
 {
@@ -49,24 +52,27 @@ class SchlesingerSurveys extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(__('ID'), 'id')->sortable(),
-            /*   Text::make('uuid'),
-               Text::make('title'),
-               Text::make('info'),
-               Text::make('info_short'),
-               JSON::make("json", [
-                   Text::make('reward_dollar'),
-                   Text::make('tag_list'),
-                   Text::make('target_groups'),
-                   Text::make('device_kinds'),
-                   Number::make('total_entries'),
-                   Number::make('total_completions'),
-                   Number::make('estimated_duration_minutes'),
-                   Number::make('max_duration_minutes'),
-                   Text::make('url'),
-
-
-               ]),*/
+            ID::make(__('ID'), 'SurveyId')->sortable(),
+            Number::make('', 'LanguageId'),
+            Number::make('', 'BillingEntityId')->nullable(),
+            Number::make('', 'CPI'),
+            Number::make('', 'LOI'),
+            Number::make('', 'IR'),
+            Number::make('', 'IndustryId'),
+            Number::make('', 'StudyTypeId'),
+            Boolean::make('', 'IsMobileAllowed'),
+            Boolean::make('', 'IsNonMobileAllowed'),
+            Boolean::make('', 'IsSurveyGroupExist'),
+            Boolean::make('', 'CollectPII'),
+            Number::make('', 'AccountId'),
+            Number::make('', 'UrlTypeId'),
+            DateTime::make('', 'UpdateTimeStamp'),
+            Boolean::make('', 'IsManualInc'),
+            Boolean::make('', 'IsQuotaLevelCPI'),
+            Text::make('', 'LiveLink'),
+            DateTime::make('', 'Qual_UpdateTimeStamp'),
+            DateTime::make('', 'Quota_UpdateTimeStamp'),
+            DateTime::make('', 'Group_UpdateTimeStamp'),
 
             DateTime::make('Created at')->sortable()->exceptOnForms(),
             DateTime::make('Updated at')->sortable()->exceptOnForms(),
