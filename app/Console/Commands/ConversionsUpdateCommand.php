@@ -46,7 +46,6 @@ class ConversionsUpdateCommand extends Command
     {
 
         $pagesCount = $tuneAPIService->getConversions([], 1)
-            ->validate()
             ->parseCountPages();
 
         /*          (new ConversionsResponse(

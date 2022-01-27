@@ -18,7 +18,8 @@ class Response implements ResponseIF
 
     public function __construct($apiResult)
     {
-        $this->setData($apiResult);
+        $this->setData($apiResult)
+            ->validate();
     }
 
     public function setData(object $apiResult): self

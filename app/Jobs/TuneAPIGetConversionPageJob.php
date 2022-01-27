@@ -71,7 +71,6 @@ class TuneAPIGetConversionPageJob implements ShouldQueue, ShouldBeUnique
     {
 
         $tuneAPIService->getConversions($this->fields, $this->page)
-            ->validate()
             ->parseData()
             ->each(function ($record) {
                 Conversion::updateOrCreate(

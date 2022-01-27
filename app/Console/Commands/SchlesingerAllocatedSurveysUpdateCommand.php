@@ -40,6 +40,10 @@ class SchlesingerAllocatedSurveysUpdateCommand extends Command
     public function handle(SchlesingerAPIService $service)
     {
 
+        dd(
+            $service->BasicAPICall()
+                ->parseData()
+        );
         $service->BasicAPICall()
             ->parseData()
             ->each(function ($record) {
