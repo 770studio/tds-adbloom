@@ -156,7 +156,7 @@ class Widget extends Resource
                 );
             })->language('javascript')
                 ->height(30)->onlyOnDetail(),
-            TextCopy::make('Copy to clipboard', function () {
+            TextCopy::make('', function () {
                 return sprintf(" %s/?widgetId=%s&partnerId=%d",
                     config('app.widget_url'),
                     $this->short_id,
@@ -171,7 +171,7 @@ class Widget extends Resource
             Code::make('Add this code right before the </head> tag of the HTML page. ', function () {
                 return WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id);
             })->language('javascript')->onlyOnDetail(),
-            TextCopy::make('Copy to clipboard', function () {
+            TextCopy::make('', function () {
                 return WidgetJSTemplateHelper::getTpl($this->partner->external_id, $this->short_id);
             })->truncate(1)
                 ->copyValue(function ($value) {
@@ -181,7 +181,7 @@ class Widget extends Resource
                 return '<div id="adblm-widget"></div>';
             })->language('javascript')
                 ->height(10)->onlyOnDetail(),
-            TextCopy::make('Copy to clipboard', function () {
+            TextCopy::make('', function () {
                 return ' <div id="adblm-widget"></div>';
             })->truncate(1)
                 ->copyValue(function ($value) {

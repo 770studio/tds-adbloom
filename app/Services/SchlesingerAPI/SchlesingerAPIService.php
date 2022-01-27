@@ -4,6 +4,9 @@ namespace App\Services\SchlesingerAPI;
 
 use Illuminate\Support\Facades\Http;
 
+/**
+ * https://developer-beta.market-cube.com/api-details#api=supply-api-v2&operation=get-api-v2-survey-allocated-surveys&definition=SampleCube.SupplyAPI.Core.Models.APIResult
+ */
 class SchlesingerAPIService
 {
     private $secret;
