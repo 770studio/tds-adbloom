@@ -5,12 +5,12 @@ namespace App\Services\GeneralResearchAPI;
 
 
 use App\Exceptions\BreakingException;
+use App\Helpers\Stack;
 use App\Helpers\StoreImageHelper;
 use App\Models\Opportunity;
 use App\Models\Partner;
 use App\Services\Response;
 use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class GeneralResearchResponse extends Response
@@ -103,13 +103,17 @@ class GeneralResearchResponse extends Response
             $offerwall_buckets = $offerwall->buckets;
             $buckets = collect();
 
+            $titles = new Stack(self::RANDOM_TITLES);
+            $descs = new Stack(self::RANDOM_DESCS);
+            $creatives = new Stack (StoreImageHelper::getGrlCreativeUrls());
+
             foreach ($offerwall_buckets->slice(0, $limit) as $key => $offerwall_bucket) {
                 $buckets->push(
                     new Opportunity([
                         'short_id' => $offerwall->id, // id
-                        'name' => Arr::random(self::RANDOM_TITLES),   // title
-                        'image' => StoreImageHelper::getGrlRandomCreativeUrl(),
-                        'description' => Arr::random(self::RANDOM_DESCS),
+                        'name' => $titles->useOne(),   // title
+                        'image' => $creatives->useOne(),
+                        'description' => $descs->useOne(),
                         'link' => $offerwall_bucket->uri, // url
                         'payout' => $offerwall_bucket->payout->max, // reward
                         'call_to_action' => 'Start Now', // callToAction
