@@ -125,5 +125,13 @@ class Schlesinger extends Resource
         return [];
     }
 
+    public static function label()
+    {
+        return 'Schlesinger';
+    }
 
+    public static function uriKey()
+    {
+        return "schlesinger";
+    }
 }
