@@ -40,6 +40,7 @@ class WidgetJSTemplateHelper
     // gender: 'male',
     // clickSub: 'clickSub'
   }
+  adblm('init', 'adblm-widget', options)
 </script>
 TPL;
 
