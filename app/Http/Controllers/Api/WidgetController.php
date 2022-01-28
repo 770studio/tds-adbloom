@@ -118,7 +118,7 @@ class WidgetController extends Controller
         return response()->json(
             ['options' => [
                 "enableGrlInventory" => (bool)$widget->enable_grl_inventory,
-                "logo" => StoreImageHelper::getPartnerLogo($partner)
+                "logoUrl" => StoreImageHelper::getPartnerLogo($partner)
             ],
                 'items' => (new WidgetOpportunitiesCollection  (
                     $mixin->merge(
