@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Helpers\GoogleFontsHelper;
 use App\Helpers\WidgetJSTemplateHelper;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
@@ -12,6 +13,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
@@ -202,7 +204,9 @@ class Widget extends Resource
             Text::make('Font size', 'fontSize')->nullable(),
             Color::make('Primary color', 'primaryColor')->slider()->nullable(),
             Color::make('Secondary color', 'secondaryColor')->slider()->nullable(),
-
+            Select::make('Font family', 'fontFamily')->options(
+                GoogleFontsHelper::getLabels()
+            )
 
         ];
     }

@@ -20,6 +20,7 @@ class AddLooknFeelToWidgets extends Migration
             $table->string('fontSize')->nullable();
             $table->string('primaryColor')->nullable();
             $table->string('secondaryColor')->nullable();
+            $table->string('fontFamily')->nullable();
 
 
         });
@@ -33,7 +34,8 @@ class AddLooknFeelToWidgets extends Migration
     public function down()
     {
         Schema::table('widgets', function (Blueprint $table) {
-            $table->dropColumn('showHead', 'partnerName', 'fontColor', 'fontSize', 'primaryColor', 'secondaryColor');
+            $table->dropColumn('showHead', 'partnerName', 'fontColor', 'fontSize', 'primaryColor',
+                'secondaryColor', 'fontFamily');
         });
     }
 }

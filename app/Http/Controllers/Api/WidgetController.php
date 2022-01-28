@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers\StoreImageHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OpportunitiesCollection;
+use App\Http\Resources\WidgetOptionsCollection;
+use App\Http\Resources\WidgetOptionsResourse;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
@@ -112,18 +113,8 @@ class WidgetController extends Controller
         }
 
         return response()->json(
-            ['options' => [
-                "enableGrlInventory" => (bool)$widget->enable_grl_inventory,
-                "logoUrl" => StoreImageHelper::getPartnerLogo($partner),
-                "showHead" => (bool)$widget->showHead,
-                "partnerName" => $widget->partnerName,
-                //"fontFamily" => $widget->fontFamily ,
-                "fontColor" => $widget->fontColor,
-                "fontSize" => $widget->fontSize,
-                "primaryColor" => $widget->primaryColor,
-                "secondaryColor" => $widget->secondaryColor,
-                //"inAppCurrencySymbolUrl" =>  $widget->inAppCurrencySymbolUrl  ,
-            ],
+            [
+                'options' => (new WidgetOptionsResourse ($widget)),
                 'items' => (new OpportunitiesCollection  (
                     $mixin->merge(
                         $widget->opportunities()
@@ -131,7 +122,8 @@ class WidgetController extends Controller
                     )->filter(function ($collection) {
                         return $collection->short_id;
                     })
-                ))], 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES);
+                ))
+            ], 200, ["Cache-Control" => "no-store"], JSON_UNESCAPED_SLASHES);
 
     }
 
