@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\StoreImageHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\WidgetOpportunitiesCollection;
-use App\Http\Resources\WidgetOpportunitiesResource;
+use App\Http\Resources\OpportunitiesCollection;
 use App\Models\Infrastructure\Country;
 use App\Models\Infrastructure\Platform;
 use App\Models\Opportunity;
@@ -21,7 +20,7 @@ use Throwable;
 class WidgetController extends Controller
 {
     /**
-     * @return WidgetOpportunitiesCollection | JsonResponse
+     * @return OpportunitiesCollection | JsonResponse
      * @throws Exception
      * exceptions handled via Handler.php
      */
@@ -97,12 +96,9 @@ class WidgetController extends Controller
              */
             $mixin = collect();
 
-            $grlService->setWidget($widget);
-
-            //TODO static shit
-            WidgetOpportunitiesResource::$partner = $partner = $grlService->getPartner();
+            $partner = $grlService->setWidget($widget)->getPartner();
             // подмешать временно! TODO убрать
-            if ($widget->enable_grl_inventory) {
+            if ($widget->getAttribute('enable_grl_inventory')) {
                 $mixin = $grlService->makeRequest()
                     ->validate()
                     ->transformPayouts($partner)
@@ -118,9 +114,17 @@ class WidgetController extends Controller
         return response()->json(
             ['options' => [
                 "enableGrlInventory" => (bool)$widget->enable_grl_inventory,
-                "logoUrl" => StoreImageHelper::getPartnerLogo($partner)
+                "logoUrl" => StoreImageHelper::getPartnerLogo($partner),
+                "showHead" => (bool)$widget->showHead,
+                "partnerName" => $widget->partnerName,
+                //"fontFamily" => $widget->fontFamily ,
+                "fontColor" => $widget->fontColor,
+                "fontSize" => $widget->fontSize,
+                "primaryColor" => $widget->primaryColor,
+                "secondaryColor" => $widget->secondaryColor,
+                //"inAppCurrencySymbolUrl" =>  $widget->inAppCurrencySymbolUrl  ,
             ],
-                'items' => (new WidgetOpportunitiesCollection  (
+                'items' => (new OpportunitiesCollection  (
                     $mixin->merge(
                         $widget->opportunities()
                             ->get()

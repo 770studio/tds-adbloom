@@ -8,18 +8,13 @@ use App\Models\Infrastructure\Gender;
 use App\Models\Infrastructure\Platform;
 use App\Models\Infrastructure\TargetingParams;
 use App\Models\Opportunity;
-use App\Models\Partner;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
 
-class WidgetOpportunitiesResource extends JsonResource
+class OpportunitiesResource extends JsonResource
 {
-
-
-    // TODO get rid of that
-    public static Partner $partner;
 
 
     /**
@@ -33,11 +28,9 @@ class WidgetOpportunitiesResource extends JsonResource
         /**
          * @var Opportunity $this
          */
-        $widget = $this->pivot->pivotParent ?? null;
+
+
         $image = StoreImageHelper::getCreativesCDNUrl($this->image);
-        $reward = optional($this->mixin)
-            ? $this->payout  // for mixin it has already gone through calculation
-            : self::$partner->calulateReward($this->payout);
 
         $targeting_params = TargetingParams::collection()->only((array)$this->targeting_params)->values();
 
@@ -67,7 +60,7 @@ class WidgetOpportunitiesResource extends JsonResource
                 ceil($this->timeToComplete / 60)
             ),
             'url' => $this->getComputedLink(),
-            'reward' => $this->when($reward, $reward),
+            'reward' => $this->getReward(),
             'required' => $this->when($targeting_params, $targeting_params),
             'callToAction' => $this->when($this->call_to_action, $this->call_to_action),
             'type' => $this->type,

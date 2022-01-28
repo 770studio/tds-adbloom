@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use JsonSerializable;
 
-class WidgetOpportunitiesCollection extends ResourceCollection
+class OpportunitiesCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -20,6 +20,6 @@ class WidgetOpportunitiesCollection extends ResourceCollection
 
     public function toArray($request)
     {
-        return WidgetOpportunitiesResource::collection($this->collection);
+        return OpportunitiesResource::collection($this->collection);
     }
 }
