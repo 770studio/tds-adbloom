@@ -27,7 +27,7 @@ class WidgetOptionsResourse extends JsonResource
             "logoUrl" => StoreImageHelper::getPartnerLogo($this->partner),
             "showHead" => (bool)$this->showHead,
             "partnerName" => $this->partnerName,
-            "fontFamily" => GoogleFontsHelper::getLongName($this->fontFamily),
+            "fontFamily" => GoogleFontsHelper::getLongName($this->fontFamily ?? 'Work Sans'),
             "fontColor" => $this->fontColor,
             "fontSize" => $this->fontSize,
             "primaryColor" => $this->primaryColor,
