@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30f6a0e3d25b61030b40b6f6bf39606e",
+    "content-hash": "5615cf1c9b728aaec10bf1b04ffc9852",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3208,54 +3208,6 @@
                 "source": "https://github.com/nette/utils/tree/v3.2.5"
             },
             "time": "2021-09-20T10:50:11+00:00"
-        },
-        {
-            "name": "nibri10/nova-grid",
-            "version": "1.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nibri10/nova-grid.git",
-                "reference": "ea787c7a7f26649ce6735a963e577f3101926f39"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nibri10/nova-grid/zipball/ea787c7a7f26649ce6735a963e577f3101926f39",
-                "reference": "ea787c7a7f26649ce6735a963e577f3101926f39",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "require-dev": {
-                "nibri10/nova-grid": "dev-master"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Nibri10\\NovaGrid\\ToolServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Nibri10\\NovaGrid\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Add coluns to create and Update resources",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/nibri10/nova-grid/issues",
-                "source": "https://github.com/nibri10/nova-grid/tree/1.0.5"
-            },
-            "time": "2021-07-15T03:08:15+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -7160,6 +7112,53 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.3"
             },
             "time": "2020-07-13T06:12:54+00:00"
+        },
+        {
+            "name": "timothyasp/nova-color-field",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/timothyasp/nova-color-field.git",
+                "reference": "6cc39bab252070d57019360ab3eb6b6637f994f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/timothyasp/nova-color-field/zipball/6cc39bab252070d57019360ab3eb6b6637f994f6",
+                "reference": "6cc39bab252070d57019360ab3eb6b6637f994f6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Timothyasp\\Color\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Timothyasp\\Color\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova Color Picker field.",
+            "keywords": [
+                "color picker",
+                "field",
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/timothyasp/nova-color-field/issues",
+                "source": "https://github.com/timothyasp/nova-color-field/tree/1.0.4"
+            },
+            "time": "2020-10-26T16:36:00+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

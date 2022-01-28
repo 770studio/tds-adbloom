@@ -17,8 +17,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Naif\Toggle\Toggle;
 use OptimistDigital\MultiselectField\Multiselect;
-
-//use Everestmx\BelongsToManyField\BelongsToManyField;
+use Timothyasp\Color\Color;
 
 
 class Widget extends Resource
@@ -131,6 +130,8 @@ class Widget extends Resource
 
             new Panel('Inventory', $this->InventoryFields()),
 
+            new Panel('Look & Feel', $this->LooknFeelFields()),
+
 
         ];
     }
@@ -186,6 +187,21 @@ class Widget extends Resource
                          ->copyValue(function ($value) {
                              return trim($value);
                          })->copyButtonTitle('Copy the code into clipboard')->onlyOnDetail(),*/
+
+
+        ];
+    }
+
+    protected function LooknFeelFields(): array
+    {
+        return [
+            Toggle::make('Show head', 'showHead')->onColor('green')
+                ->default(0),
+            Text::make('Partner name', 'partnerName')->nullable(),
+            Color::make('Font color', 'fontColor')->slider()->nullable(),
+            Text::make('Font size', 'fontSize')->nullable(),
+            Color::make('Primary color', 'primaryColor')->slider()->nullable(),
+            Color::make('Secondary color', 'secondaryColor')->slider()->nullable(),
 
 
         ];
