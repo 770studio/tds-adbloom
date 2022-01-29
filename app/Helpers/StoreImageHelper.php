@@ -11,7 +11,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
-class StoreImageHelper
+final class StoreImageHelper
 {
     public static function getCreativeAssetUniqueName(UploadedFile $file): string
     {
@@ -60,11 +60,11 @@ class StoreImageHelper
         return self::getCreativesCDNUrl($partner->points_logo);
     }
 
-    public static function getPartnerLogo(Partner $partner)
+    public static function getPublicImageResource($path): ?string
     {
-        return $partner->logo
-            ? Storage::disk('public')->url($partner->logo)//asset($partner->logo)
-            : '';
+        return Storage::disk('public')->exists($path)
+            ? Storage::disk('public')->url($path)
+            : null;
     }
 
     public static function getCreativesCDNUrl(?string $local_path): ?string

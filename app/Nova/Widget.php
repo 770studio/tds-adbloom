@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Heading;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -206,7 +207,10 @@ class Widget extends Resource
             Color::make('Secondary color', 'secondaryColor')->slider()->nullable(),
             Select::make('Font family', 'fontFamily')->options(
                 GoogleFont::getLabels()
-            )
+            ),
+            Image::make('Currency icon', 'inAppCurrencySymbolUrl')
+                ->nullable()
+                ->prunable(),
 
         ];
     }

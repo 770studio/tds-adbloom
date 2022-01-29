@@ -24,7 +24,7 @@ class WidgetOptionsResourse extends JsonResource
         /** @var Widget $this */
         return [
             "enableGrlInventory" => (bool)$this->enable_grl_inventory,
-            "logoUrl" => StoreImageHelper::getPartnerLogo($this->partner),
+            "logoUrl" => StoreImageHelper::getPublicImageResource($this->partner->logo),
             "showHead" => (bool)$this->showHead,
             "partnerName" => $this->partnerName,
             "fontFamily" => GoogleFont::getLongName($this->fontFamily ?? GoogleFont::DEFAULT_FONT),
@@ -32,7 +32,7 @@ class WidgetOptionsResourse extends JsonResource
             "fontSize" => $this->fontSize,
             "primaryColor" => $this->primaryColor,
             "secondaryColor" => $this->secondaryColor,
-            //"inAppCurrencySymbolUrl" =>  $widget->inAppCurrencySymbolUrl  ,
+            "inAppCurrencySymbolUrl" => StoreImageHelper::getPublicImageResource($this->inAppCurrencySymbolUrl),
         ];
     }
 }

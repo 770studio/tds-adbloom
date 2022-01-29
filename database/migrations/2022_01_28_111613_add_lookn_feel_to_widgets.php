@@ -21,6 +21,7 @@ class AddLooknFeelToWidgets extends Migration
             $table->string('primaryColor')->nullable();
             $table->string('secondaryColor')->nullable();
             $table->string('fontFamily')->nullable();
+            $table->string('inAppCurrencySymbolUrl')->nullable();
 
 
         });
@@ -35,7 +36,7 @@ class AddLooknFeelToWidgets extends Migration
     {
         Schema::table('widgets', function (Blueprint $table) {
             $table->dropColumn('showHead', 'partnerName', 'fontColor', 'fontSize', 'primaryColor',
-                'secondaryColor', 'fontFamily');
+                'secondaryColor', 'fontFamily', 'inAppCurrencySymbolUrl');
         });
     }
 }
