@@ -3,8 +3,8 @@
 namespace App\Http\Resources;
 
 
-use App\Helpers\GoogleFontsHelper;
 use App\Helpers\StoreImageHelper;
+use App\Models\Infrastructure\GoogleFont;
 use App\Models\Widget;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class WidgetOptionsResourse extends JsonResource
             "logoUrl" => StoreImageHelper::getPartnerLogo($this->partner),
             "showHead" => (bool)$this->showHead,
             "partnerName" => $this->partnerName,
-            "fontFamily" => GoogleFontsHelper::getLongName($this->fontFamily ?? 'Work Sans'),
+            "fontFamily" => GoogleFont::getLongName($this->fontFamily ?? GoogleFont::DEFAULT_FONT),
             "fontColor" => $this->fontColor,
             "fontSize" => $this->fontSize,
             "primaryColor" => $this->primaryColor,

@@ -2,9 +2,9 @@
 
 namespace App\Nova;
 
-use App\Helpers\GoogleFontsHelper;
 use App\Helpers\WidgetJSTemplateHelper;
 use App\Models\Infrastructure\Country;
+use App\Models\Infrastructure\GoogleFont;
 use App\Models\Infrastructure\Platform;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Database\Eloquent\Builder;
@@ -205,7 +205,7 @@ class Widget extends Resource
             Color::make('Primary color', 'primaryColor')->slider()->nullable(),
             Color::make('Secondary color', 'secondaryColor')->slider()->nullable(),
             Select::make('Font family', 'fontFamily')->options(
-                GoogleFontsHelper::getLabels()
+                GoogleFont::getLabels()
             )
 
         ];
