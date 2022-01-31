@@ -24,15 +24,33 @@ class WidgetOptionsResourse extends JsonResource
         /** @var Widget $this */
         return [
             "enableGrlInventory" => (bool)$this->enable_grl_inventory,
-            "logoUrl" => StoreImageHelper::getPublicImageResource($this->partner->logo),
-            "showHead" => (bool)$this->showHead,
+            "partnerId" => $this->partner->short_id,
             "partnerName" => $this->partnerName,
-            "fontFamily" => GoogleFont::getLongName($this->fontFamily ?? GoogleFont::DEFAULT_FONT),
-            "fontColor" => $this->fontColor,
-            "fontSize" => $this->fontSize,
-            "primaryColor" => $this->primaryColor,
-            "secondaryColor" => $this->secondaryColor,
-            "inAppCurrencySymbolUrl" => StoreImageHelper::getPublicImageResource($this->inAppCurrencySymbolUrl),
+            "cta" => $this->cta,
+            "themeConfig" => [
+                "logoUrl" => StoreImageHelper::getPublicImageResource($this->partner->logo),
+                "showHead" => (bool)$this->showHead,
+                "textColor" => $this->textColor,
+                "primaryColor" => $this->primaryColor,
+                "secondaryColor" => $this->secondaryColor,
+                "inAppCurrencySymbolUrl" => StoreImageHelper::getPublicImageResource($this->inAppCurrencySymbolUrl),
+                "fonts" => [
+                    "heading" => [
+                        "fontFamily" => GoogleFont::getFont($this->headingFontFamily),
+                        "fontWeight" => $this->headingfontWeight
+                    ],
+                    "cta" => [
+                        "fontFamily" => GoogleFont::getFont($this->ctaFontFamily),
+                        "fontWeight" => $this->ctaFontWeight
+                    ],
+                    "body" => [
+                        "fontFamily" => GoogleFont::getFont($this->bodyFontFamily),
+                        "fontWeight" => $this->bodyFontWeight
+                    ],
+                ]
+            ]
+
+
         ];
     }
 }

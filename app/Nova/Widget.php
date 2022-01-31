@@ -201,16 +201,33 @@ class Widget extends Resource
             Toggle::make('Show head', 'showHead')->onColor('green')
                 ->default(0),
             Text::make('Partner name', 'partnerName')->nullable(),
-            Color::make('Font color', 'fontColor')->slider()->nullable(),
-            Text::make('Font size', 'fontSize')->nullable(),
-            Color::make('Primary color', 'primaryColor')->slider()->nullable(),
-            Color::make('Secondary color', 'secondaryColor')->slider()->nullable(),
-            Select::make('Font family', 'fontFamily')->options(
+            /*            Color::make('Font color', 'fontColor')->slider()->nullable(),
+                        Text::make('Font size', 'fontSize')->nullable(),
+                        Select::make('Font family', 'fontFamily')->options(
+                            GoogleFont::getLabels()
+                        ),*/
+            Text::make('Cta')->nullable(),
+            Select::make('Heading font family', 'headingFontFamily')->options(
                 GoogleFont::getLabels()
             ),
+            Text::make('Heading font weight', 'headingfontWeight')->default(700),
+            Select::make('Cta font family', 'ctaFontFamily')->options(
+                GoogleFont::getLabels()
+            ),
+            Text::make('Cta font weight', 'ctaFontWeight')->default(700),
+            Select::make('Body font family', 'bodyFontFamily')->options(
+                GoogleFont::getLabels()
+            ),
+            Text::make('Body font weight', 'bodyFontWeight')->default(700),
+
+            Color::make('Text color', 'textColor')->slider()->nullable(),
+            Color::make('Primary color', 'primaryColor')->slider()->nullable(),
+            Color::make('Secondary color', 'secondaryColor')->slider()->nullable(),
+
             Image::make('Currency icon', 'inAppCurrencySymbolUrl')
                 ->nullable()
                 ->prunable(),
+
 
         ];
     }

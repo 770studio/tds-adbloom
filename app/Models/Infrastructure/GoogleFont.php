@@ -36,4 +36,12 @@ class GoogleFont extends ArrayDataStruct
         'Work Sans' => "'Work Sans', sans-serif;",
     ];
 
+    /**
+     * @param mixed $fontID
+     * @return string
+     */
+    public static function getFont($fontID): string
+    {
+        return self::getLongName($fontID ?? self::DEFAULT_FONT);
+    }
 }
