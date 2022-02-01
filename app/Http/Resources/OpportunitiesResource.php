@@ -49,7 +49,7 @@ class OpportunitiesResource extends JsonResource
         );
 
 
-        //TODO remove unnecessary `when`
+        //TODO remove unnecessary `when` used to hide an element
         return [
             'id' => $this->short_id,
             'title' => $this->when($this->name, $this->name),
@@ -64,7 +64,7 @@ class OpportunitiesResource extends JsonResource
             'required' => $this->when($targeting_params->isNotEmpty(), $targeting_params),
             'callToAction' => $this->when($this->call_to_action, $this->call_to_action),
             'type' => $this->type,
-            'incentive' => $this->incentive,
+            'incentive' => (bool)$this->incentive,
             'incentiveCallToAction' => $this->when($this->incentive_call_to_action, $this->incentive_call_to_action),
             'targeting' => [
                 $this->when((bool)$targeting, (object)$targeting)
