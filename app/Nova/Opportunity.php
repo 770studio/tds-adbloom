@@ -20,6 +20,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Naif\Toggle\Toggle;
 use OptimistDigital\MultiselectField\Multiselect;
 
 class Opportunity extends Resource
@@ -77,11 +78,11 @@ class Opportunity extends Resource
                 ->sortable(),
             Select::make('Type')->options(
                 self::$model::TYPES
-            )//->resolveUsing(function () {
-            // return $this->type ?? 'offer';
-            // }) TODO this doesnt work
-            ->rules('required')
+            )
+                ->rules('required')
                 ->sortable(),
+            Toggle::make('incentive')->onColor('green')
+                ->default(0),
 
             Text::make('Time to Complete', 'timeToComplete')->default(1),
 
@@ -135,7 +136,7 @@ class Opportunity extends Resource
                             ->onlyOnDetail(),*/
             Textarea::make('Description')->alwaysShow(),
             Text::make('Call To Action')->hideFromIndex(),
-            Text::make('Incentive')->hideFromIndex(),
+            Text::make('Incentive Call To Action')->hideFromIndex(),
             Multiselect::make('Platform', 'platforms')->hideFromIndex()
                 ->options(
                     Platform::all_flipped()

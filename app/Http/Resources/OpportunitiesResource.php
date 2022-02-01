@@ -59,12 +59,13 @@ class OpportunitiesResource extends JsonResource
             'timeToComplete' => $this->when($this->isSurvey(),
                 ceil($this->timeToComplete / 60)
             ),
-            'url' => $this->getComputedLink(),
-            'reward' => $this->getReward(),
-            'required' => $this->when($targeting_params, $targeting_params),
+            'url' => $this->computed_link,
+            'reward' => $this->when($this->isRewarding(), $this->reward),
+            'required' => $this->when($targeting_params->isNotEmpty(), $targeting_params),
             'callToAction' => $this->when($this->call_to_action, $this->call_to_action),
             'type' => $this->type,
-            'incentive' => $this->when($this->incentive, $this->incentive),
+            'incentive' => $this->incentive,
+            'incentiveCallToAction' => $this->when($this->incentive_call_to_action, $this->incentive_call_to_action),
             'targeting' => [
                 $this->when((bool)$targeting, (object)$targeting)
                 // targeting должен быть массивом объектов. В текущей реализации у нас только один объект будет

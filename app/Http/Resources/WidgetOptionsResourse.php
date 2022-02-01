@@ -27,6 +27,7 @@ class WidgetOptionsResourse extends JsonResource
             "partnerId" => $this->partner->short_id,
             "partnerName" => $this->partnerName,
             "cta" => $this->cta,
+            "incentive" => $this->partner->isIncentive(),
             "themeConfig" => [
                 "logoUrl" => StoreImageHelper::getPublicImageResource($this->partner->logo),
                 "showHead" => (bool)$this->showHead,
