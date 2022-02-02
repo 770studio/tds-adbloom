@@ -128,7 +128,7 @@ class Opportunity extends Resource
                     ->hideFromIndex(),
             ])->dependsOn('use_default_macros', 0),
             Boolean::make('Use default URL and macros', 'use_default_macros')
-                ->default(1),
+                ->default(1)->onlyOnForms(),
             //Toggle::make('Use default macros', 'use_default_macros')->onColor('green'),
             /*            Code::make('Url default macros', function () {
                             return \App\Models\Opportunity::DEFAULT_URL_MACRO;
