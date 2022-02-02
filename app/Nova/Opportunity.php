@@ -81,7 +81,7 @@ class Opportunity extends Resource
             )
                 ->rules('required')
                 ->sortable(),
-            Toggle::make('incentive')->onColor('green')
+            Toggle::make('Incentive')->onColor('green')
                 ->default(0),
 
             Text::make('Time to Complete', 'timeToComplete')->default(1),

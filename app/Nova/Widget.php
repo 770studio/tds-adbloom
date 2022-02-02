@@ -199,32 +199,32 @@ class Widget extends Resource
     {
         return [
             Toggle::make('Show head', 'showHead')->onColor('green')
-                ->default(0),
-            Text::make('Partner name', 'partnerName')->nullable(),
+                ->default(0)->onlyOnForms(),
+            Text::make('Partner name', 'partnerName')->nullable()->onlyOnForms(),
             /*            Color::make('Font color', 'fontColor')->slider()->nullable(),
                         Text::make('Font size', 'fontSize')->nullable(),
                         Select::make('Font family', 'fontFamily')->options(
                             GoogleFont::getLabels()
                         ),*/
-            Text::make('Cta')->nullable(),
+            Text::make('Cta')->nullable()->onlyOnForms(),
             Select::make('Heading font family', 'headingFontFamily')->options(
                 GoogleFont::getLabels()
-            ),
-            Text::make('Heading font weight', 'headingfontWeight')->default(700),
+            )->onlyOnForms(),
+            Text::make('Heading font weight', 'headingfontWeight')->default(700)->onlyOnForms(),
             Select::make('Cta font family', 'ctaFontFamily')->options(
                 GoogleFont::getLabels()
-            ),
-            Text::make('Cta font weight', 'ctaFontWeight')->default(700),
+            )->onlyOnForms(),
+            Text::make('Cta font weight', 'ctaFontWeight')->default(700)->onlyOnForms(),
             Select::make('Body font family', 'bodyFontFamily')->options(
                 GoogleFont::getLabels()
-            ),
-            Text::make('Body font weight', 'bodyFontWeight')->default(700),
+            )->onlyOnForms(),
+            Text::make('Body font weight', 'bodyFontWeight')->default(700)->onlyOnForms(),
 
-            Color::make('Text color', 'textColor')->slider()->nullable(),
-            Color::make('Primary color', 'primaryColor')->slider()->nullable(),
-            Color::make('Secondary color', 'secondaryColor')->slider()->nullable(),
+            Color::make('Text color', 'textColor')->slider()->nullable()->onlyOnForms(),
+            Color::make('Primary color', 'primaryColor')->slider()->nullable()->onlyOnForms(),
+            Color::make('Secondary color', 'secondaryColor')->slider()->nullable()->onlyOnForms(),
 
-            Image::make('Currency icon', 'inAppCurrencySymbolUrl')
+            Image::make('Currency icon', 'inAppCurrencySymbolUrl')->onlyOnForms()
                 ->nullable()
                 ->prunable(),
 
