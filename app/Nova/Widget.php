@@ -127,7 +127,7 @@ class Widget extends Resource
 
             ])->dependsOn('dynamic_or_static', 0),
 
-            Text::make('Widget specific redirect', 'redirect_url'),
+            Text::make('Widget specific redirect', 'redirect_url')->onlyOnForms(),
 
             new Panel('Integration', $this->IntegrationFields()),
 
