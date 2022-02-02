@@ -65,7 +65,8 @@ class OpportunitiesResource extends JsonResource
             'callToAction' => $this->when($this->call_to_action, $this->call_to_action),
             'type' => $this->type,
             'incentive' => (bool)$this->incentive,
-            'incentiveCallToAction' => $this->when($this->incentive_call_to_action, $this->incentive_call_to_action),
+            'incentiveCallToAction' => $this->when($this->incentive_call_to_action && !$this->isRewarding(),
+                $this->incentive_call_to_action),
             'targeting' => [
                 $this->when((bool)$targeting, (object)$targeting)
                 // targeting должен быть массивом объектов. В текущей реализации у нас только один объект будет
