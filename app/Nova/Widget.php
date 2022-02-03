@@ -91,8 +91,8 @@ class Widget extends Resource
             //AttachMany::make('name', 'relationshipName', RelatedResource::class);
             Text::make('Short Id')->exceptOnForms(),
             BelongsTo::make('Partner'),
-            Toggle::make('Dynamic | Static', 'dynamic_or_static')
-                ->onColor('green')
+            Toggle::make('Static', 'dynamic_or_static') // Dynamic |
+            ->onColor('green')
                 ->help("Static when this is on otherwise Dynamic (by default)")
                 ->default(0),
 
