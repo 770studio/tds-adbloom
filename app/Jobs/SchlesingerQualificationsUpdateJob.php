@@ -10,7 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class SchlesingerQualificationsUpdateJob implements ShouldQueue
@@ -38,40 +37,35 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
     {
         $Schlesinger->getQualificationsByLangID($this->LanguageId)
             ->parseData()
-            ->each(function (object $record) {
-                $record = (array)$record;
-                $answers = Arr::pull($record, "qualificationAnswers");
-                /** @var SchlesingerSurveyQualificationQuestion $qualification */
-                $qualification = SchlesingerSurveyQualificationQuestion::updateOrcreate(
-                    ["LanguageId" => $this->LanguageId, "qualificationId" => Arr::get($record, "qualificationId")],
-                    $record
+            ->transform(function ($item) {
+                $item->LanguageId = $this->LanguageId;
+                return $item;
+            })
+            ->chunk(500)
+            ->each(function (Collection $qualificationChunk) {
+
+                SchlesingerSurveyQualificationQuestion::upsert(
+                    $qualificationChunk->toArray(),
+                    ['LanguageId', 'qualificationId'],
+                    ['name', 'text', 'qualificationCategoryId', 'qualificationTypeId', 'qualificationCategoryGDPRId']
                 );
 
-                collect($answers)
-                    ->chunk(500)
-                    ->transform(function ($item) use ($qualification) {
-                        $item->qualification_internalId = $qualification->id;
-                        return $item;
-                    })
-                    ->each(function (Collection $answersChunk) {
-                        SchlesingerSurveyQualificationAnswer::upsert(
-                            $answersChunk->toArray(),
-                            ["qualification_internalId", "answerId"],
-                            array_keys((array)$answersChunk->first())
-                        );
-                        /*
-                                              SchlesingerSurveyQualificationAnswer::updateOrcreate(
-                                                  ["qualification_internalId" => $question->id, "answerId" => $record->answerId ],
-                                                  $record
-                                              );*/
-                    });
 
+            })
+            ->transform(function (object $item) {
+                // remove anything except qualificationAnswers
+                $newItem = $item->qualificationAnswers;
+                // add qualificationId
+                $newItem->qualificationId = $item->qualificationId;
+                return $newItem;
+            })
+            ->each(function (Collection $answersChunk) {
+                SchlesingerSurveyQualificationAnswer::upsert(
+                    $answersChunk->toArray(),
+                    ["qualification_internalId", "answerId"],
+                    array_keys((array)$answersChunk->first())
+                );
 
-                /*           SchlesingerSurveyQualificationQuestion::upsert(
-                               $records->toArray() ,
-                               ['LanguageId', 'qualificationId'],
-                               ['name', 'text', 'qualificationCategoryId', 'qualificationTypeId', 'qualificationCategoryGDPRId' ]
-                           );*/
             });
 
 
