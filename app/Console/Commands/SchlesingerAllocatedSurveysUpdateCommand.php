@@ -46,7 +46,7 @@ class SchlesingerAllocatedSurveysUpdateCommand extends Command
                     dump("-----");
                 });*/
 
-        $service->BasicAPICall()
+        $service->getSurveys()
             ->parseData()
             ->each(function ($record) {
                 Schlesinger::updateOrCreate(

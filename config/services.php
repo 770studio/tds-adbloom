@@ -36,8 +36,13 @@ return [
         'stats_timezone' => env('TUNE_STATS_TIMEZONE', 'EST'), #TODO add to env.example
     ],
     'schlesinger' => [
-        'secret' => env('SCHLESINGER_SECRET'),
-        'url' => env('SCHLESINGER_URL'),
+        'survey_api' => [
+            'secret' => env('SCHLESINGER_SURVEY_API_SECRET'),
+            'survey_list_url' => env('SCHLESINGER_API_SURVEY_LIST_URL'),
+            'industry_list_url' => env('SCHLESINGER_API_INDUSTRY_LIST_URL'),
+            'qualification-answers_list_url' => env('SCHLESINGER_API_QUALIFICATION_ANSWERS_LIST_URL'),
+            'survey-qualification_list_url' => env('SCHLESINGER_API_SURVEY_QUALIFICATIONS_LIST_URL'),
+        ]
     ],
     'yoursurveys_readme_io' => [
         'secret' => env('YOURSURVEYS_README_IO_SECRET'),
