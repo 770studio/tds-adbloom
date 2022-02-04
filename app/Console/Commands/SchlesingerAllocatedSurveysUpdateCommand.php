@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Integrations\Schlesinger;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class SchlesingerAllocatedSurveysUpdateCommand extends Command
 {
@@ -46,14 +47,26 @@ class SchlesingerAllocatedSurveysUpdateCommand extends Command
                     dump("-----");
                 });*/
 
-        $service->getSurveys()
-            ->parseData()
-            ->each(function ($record) {
-                Schlesinger::updateOrCreate(
-                    ["SurveyId" => $record->SurveyId],
-                    (array)$record
-                );
-            });
+        DB::transaction(function () use ($service) {
+            $table = (new Schlesinger)->getTable();
+            DB::table($table)->delete();//TODO prune (truncate) once per e.g week
+            DB::table($table)->insert(
+                $service->getSurveys()
+                    ->parseData()
+                    ->toArray()
+            );
+
+            /*    $service->getSurveys()
+                    ->parseData()
+                    ->each(function ($record) {
+
+                        Schlesinger::updateOrCreate(
+                            ["SurveyId" => $record->SurveyId],
+                            (array)$record
+                        );
+                    });*/
+
+        });
 
         return Command::SUCCESS;
     }

@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\SchlesingerSurveyQualificationAnswer;
 use App\Models\SchlesingerSurveyQualificationQuestion;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class TestSchlesingerQualificationsUpdate extends TestCase
@@ -90,6 +90,7 @@ class TestSchlesingerQualificationsUpdate extends TestCase
 
             });
 
+
         $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable()
             , 10);
         $this->assertDatabaseCount((new SchlesingerSurveyQualificationAnswer)->getTable()
@@ -98,40 +99,49 @@ class TestSchlesingerQualificationsUpdate extends TestCase
 
     }
 
-    public function dfdfnndf()
+    /**
+     *
+     */
+    public function test_can_add_to_db_another_way()
     {
-        parseData()
-            ->transform(function ($item) {
-                dd($item);
-                $item->LanguageId = $this->LanguageId;
-                return $item;
-            })
-            ->chunk(500)
-            ->each(function (Collection $qualificationChunk) {
+        $this->questions_table = DB::table((new SchlesingerSurveyQualificationQuestion)->getTable());
+        $this->answers_table = DB::table((new SchlesingerSurveyQualificationAnswer)->getTable());
+        $json = json_decode(
+            file_get_contents("tests/Schlesinger/qualifications.json")
+        );
+        collect($json->qualifications)
+            ->take(10)
+            ->each(function (object $qualification) {
 
-                SchlesingerSurveyQualificationQuestion::upsert(
-                    $qualificationChunk->toArray(),
-                    ['LanguageId', 'qualificationId'],
-                    ['name', 'text', 'qualificationCategoryId', 'qualificationTypeId', 'qualificationCategoryGDPRId']
-                );
+                DB::transaction(function () use ($qualification) {
 
+                    $answers = $qualification->qualificationAnswers;
+                    unset($qualification->qualificationAnswers);
+                    $this->questions_table->where('qualificationId', $qualification->qualificationId)
+                        ->delete();
+                    $qualificationModel = SchlesingerSurveyQualificationQuestion::create(
+                        array_merge((array)$qualification, ['LanguageId' => 3])
+                    );
+                    $this->answers_table->where("qualification_internalId", $qualificationModel->id)->delete();
 
-            })
-            ->transform(function (object $item) {
-                // remove anything except qualificationAnswers
-                $newItem = $item->qualificationAnswers;
-                // add qualificationId
-                $newItem->qualificationId = $item->qualificationId;
-                return $newItem;
-            })
-            ->each(function (Collection $answersChunk) {
-                SchlesingerSurveyQualificationAnswer::upsert(
-                    $answersChunk->toArray(),
-                    ["qualification_internalId", "answerId"],
-                    array_keys((array)$answersChunk->first())
-                );
+                    collect($answers)
+                        ->transform(function (object $item) use ($qualificationModel) {
+                            $item->qualification_internalId = $qualificationModel->id;
+                            return (array)$item;
+                        })
+                        ->chunk(500)
+                        ->each(function ($answersChunk) {
+                            $this->answers_table->insert($answersChunk->toArray());
 
+                        });
+                });
             });
+
+        $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable()
+            , 10);
+        $this->assertDatabaseCount((new SchlesingerSurveyQualificationAnswer)->getTable()
+            , 241);
+
     }
 
 

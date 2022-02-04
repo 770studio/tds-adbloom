@@ -10,11 +10,10 @@ class SchlesingerSurveyListResponse extends SchlesingerV2Response
 
     public function parseData(): Collection
     {
-
-        return collect($this->apiResult->Surveys);
-        /* ->transform(function ($survey, $key) {
-             return $survey;
-         });*/
+        return collect($this->apiResult->Surveys)
+            ->transform(function (object $survey) {
+                return (array)$survey;
+            });
 
     }
 

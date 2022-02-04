@@ -7,10 +7,12 @@ use App\Models\SchlesingerSurveyQualificationQuestion;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class SchlesingerQualificationsUpdateJob implements ShouldQueue
 {
@@ -31,6 +33,9 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
      */
     public int $timeout = 120;
 
+    private Builder $answers_table;
+    private Builder $questions_table;
+
     /**
      * Create a new job instance.
      *
@@ -45,9 +50,13 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
      * Execute the job.
      *  TODO the procedure takes several minutes might be refactored to do it in less time
      * @return void
+     * @throws Throwable
      */
     public function handle(SchlesingerAPIService $Schlesinger)
     {
+        $this->questions_table = DB::table((new SchlesingerSurveyQualificationQuestion)->getTable());
+        $this->answers_table = DB::table((new SchlesingerSurveyQualificationAnswer)->getTable());
+
         $Schlesinger->getQualificationsByLangID($this->LanguageId)
             ->parseData()
             ->each(function (object $qualification) {
@@ -56,11 +65,12 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
 
                     $answers = $qualification->qualificationAnswers;
                     unset($qualification->qualificationAnswers);
-                    /** @var SchlesingerSurveyQualificationQuestion $qualificationModel */
-                    $qualificationModel = SchlesingerSurveyQualificationQuestion::updateOrCreate(
-                        ['LanguageId' => $this->LanguageId, 'qualificationId' => $qualification->qualificationId],
-                        (array)$qualification
+                    $this->questions_table->where('qualificationId', $qualification->qualificationId)
+                        ->delete();
+                    $qualificationModel = SchlesingerSurveyQualificationQuestion::create(
+                        array_merge((array)$qualification, ['LanguageId' => $this->LanguageId])
                     );
+                    $this->answers_table->where("qualification_internalId", $qualificationModel->id)->delete();
 
                     collect($answers)
                         ->transform(function (object $item) use ($qualificationModel) {
@@ -69,12 +79,22 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
                         })
                         ->chunk(500)
                         ->each(function ($answersChunk) {
-                            SchlesingerSurveyQualificationAnswer::upsert(
-                                $answersChunk->toArray(),
-                                ["qualification_internalId", "answerId"],
-                                array_keys($answersChunk->first())
-                            );
+                            $this->answers_table->insert($answersChunk->toArray());
+
                         });
+                    /*
+
+                                SchlesingerSurveyQualificationAnswer::upsert(
+                                            $answersChunk->toArray(),
+                                            ["qualification_internalId", "answerId"],
+                                            array_keys($answersChunk->first())
+                                        );
+
+                                      $qualificationModel = SchlesingerSurveyQualificationQuestion::updateOrCreate(
+                                    ['LanguageId' => $this->LanguageId, 'qualificationId' => $qualification->qualificationId],
+                                    (array)$qualification
+                                );*/
+
 
                 });
             });
