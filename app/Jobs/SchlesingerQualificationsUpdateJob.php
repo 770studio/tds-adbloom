@@ -10,13 +10,26 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class SchlesingerQualificationsUpdateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private int $LanguageId;
+
+    /**
+     * The number of times the job may be attempted.
+     */
+    public int $tries = 3;
+    /**
+     * The maximum number of unhandled exceptions to allow before failing.
+     */
+    public int $maxExceptions = 1;
+    /**
+     * The number of seconds the job can run before timing out.
+     */
+    public int $timeout = 120;
 
     /**
      * Create a new job instance.
@@ -30,44 +43,67 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
+     *  TODO the procedure takes several minutes might be refactored to do it in less time
      * @return void
      */
     public function handle(SchlesingerAPIService $Schlesinger)
     {
         $Schlesinger->getQualificationsByLangID($this->LanguageId)
             ->parseData()
-            ->transform(function ($item) {
-                $item->LanguageId = $this->LanguageId;
-                return $item;
-            })
-            ->chunk(500)
-            ->each(function (Collection $qualificationChunk) {
+            ->each(function (object $qualification) {
 
-                SchlesingerSurveyQualificationQuestion::upsert(
-                    $qualificationChunk->toArray(),
-                    ['LanguageId', 'qualificationId'],
-                    ['name', 'text', 'qualificationCategoryId', 'qualificationTypeId', 'qualificationCategoryGDPRId']
-                );
+                DB::transaction(function () use ($qualification) {
 
+                    $answers = $qualification->qualificationAnswers;
+                    unset($qualification->qualificationAnswers);
+                    /** @var SchlesingerSurveyQualificationQuestion $qualificationModel */
+                    $qualificationModel = SchlesingerSurveyQualificationQuestion::updateOrCreate(
+                        ['LanguageId' => $this->LanguageId, 'qualificationId' => $qualification->qualificationId],
+                        (array)$qualification
+                    );
 
-            })
-            ->transform(function (object $item) {
-                // remove anything except qualificationAnswers
-                $newItem = $item->qualificationAnswers;
-                // add qualificationId
-                $newItem->qualificationId = $item->qualificationId;
-                return $newItem;
-            })
-            ->each(function (Collection $answersChunk) {
-                SchlesingerSurveyQualificationAnswer::upsert(
-                    $answersChunk->toArray(),
-                    ["qualification_internalId", "answerId"],
-                    array_keys((array)$answersChunk->first())
-                );
+                    collect($answers)
+                        ->transform(function (object $item) use ($qualificationModel) {
+                            $item->qualification_internalId = $qualificationModel->id;
+                            return (array)$item;
+                        })
+                        ->chunk(500)
+                        ->each(function ($answersChunk) {
+                            SchlesingerSurveyQualificationAnswer::upsert(
+                                $answersChunk->toArray(),
+                                ["qualification_internalId", "answerId"],
+                                array_keys($answersChunk->first())
+                            );
+                        });
 
+                });
             });
 
 
+    }
+
+    /**
+     * Calculate the number of seconds to wait before retrying the job.
+     *
+     * @return int
+     */
+    public function backoff()
+    {
+        return 60;
+    }
+
+    /**
+     * Get the tags that should be assigned to the job.
+     *
+     * @return array
+     */
+    public function tags()
+    {
+        return [
+            'Schlesinger',
+            'SchlesingerQualificationsUpdateJob',
+            'SchlesingerQualificationsUpdateJob_languageID#' . $this->LanguageId,
+
+        ];
     }
 }

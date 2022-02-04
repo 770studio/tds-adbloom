@@ -40,6 +40,7 @@ class SchlesingerQualificationsUpdateCommand extends Command
      */
     public function handle()
     {
+        // get all languages
         DB::table((new Schlesinger)->getTable())
             ->select('LanguageId')
             ->groupBy('LanguageId')

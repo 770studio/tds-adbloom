@@ -37,6 +37,9 @@ class Kernel extends ConsoleKernel
         if (App::environment('staging')) {
             $schedule->command('conversions:update')->hourlyAt(15)->runInBackground();
             $schedule->command('schlesinger-surveys:update')->hourlyAt(20)->runInBackground();
+            $schedule->command('schlesinger-survey-qualifications:update')->timezone('EST')
+                ->weeklyOn(1, '03:00')->runInBackground();
+
 
             //$schedule->command('yoursurveys:update 500 CA')->everyFourHours();
             // $schedule->command('yoursurveys:update 500 US')->everyFourHours();

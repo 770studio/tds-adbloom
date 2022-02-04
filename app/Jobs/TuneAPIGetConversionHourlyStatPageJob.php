@@ -99,6 +99,7 @@ class TuneAPIGetConversionHourlyStatPageJob implements ShouldQueue, ShouldBeUniq
     public function tags()
     {
         return [
+            'TuneAPI',
             'TuneAPIGetConversionHourlyStatPageJob',
             'TuneAPIGetConversionHourlyStatPageJob_page#' . $this->page,
             //'TuneAPIGetConversionPageJob_' . app()->environment(),
