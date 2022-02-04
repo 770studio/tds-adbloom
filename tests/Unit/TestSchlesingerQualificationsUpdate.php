@@ -144,5 +144,36 @@ class TestSchlesingerQualificationsUpdate extends TestCase
 
     }
 
+    public function test_can_delete_related_answers()
+    {
+        $this->questions_table = DB::table((new SchlesingerSurveyQualificationQuestion)->getTable());
+        $this->answers_table = DB::table((new SchlesingerSurveyQualificationAnswer)->getTable());
+        $json = json_decode(
+            file_get_contents("tests/Schlesinger/qualifications.json")
+        );
+        collect($json->qualifications)
+            ->take(10)
+            ->each(function (object $qualification) {
 
+                DB::transaction(function () use ($qualification) {
+
+                    $answers = $qualification->qualificationAnswers;
+                    unset($qualification->qualificationAnswers);
+                    $this->questions_table->where('qualificationId', $qualification->qualificationId)
+                        ->delete();
+                    $qualificationModel = SchlesingerSurveyQualificationQuestion::create(
+                        array_merge((array)$qualification, ['LanguageId' => 3])
+                    );
+
+                    $qualificationModel->answers()->dd();
+
+                });
+            });
+
+        $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable()
+            , 10);
+        $this->assertDatabaseCount((new SchlesingerSurveyQualificationAnswer)->getTable()
+            , 241);
+
+    }
 }

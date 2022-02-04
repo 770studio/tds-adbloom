@@ -42,9 +42,11 @@ class SchlesingerQualificationsUpdateCommand extends Command
     {
         // get all languages
         DB::table((new Schlesinger)->getTable())
-            ->select('LanguageId')
-            ->groupBy('LanguageId')
-            ->pluck('LanguageId')
+            ->selectRaw('distinct (LanguageId)')
+            ->get()
+            ->map(function ($values) {
+                return current($values);
+            })
             ->each(function ($lang_id) {
                 SchlesingerQualificationsUpdateJob::dispatch($lang_id)->onQueue('Schlesinger');
             });
