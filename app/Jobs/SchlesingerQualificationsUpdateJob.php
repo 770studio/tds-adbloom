@@ -67,9 +67,12 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
                     unset($qualification->qualificationAnswers);
                     $this->questions_table->where('qualificationId', $qualification->qualificationId)
                         ->delete();
+
                     $qualificationModel = SchlesingerSurveyQualificationQuestion::create(
                         array_merge((array)$qualification, ['LanguageId' => $this->LanguageId])
                     );
+
+
                     $this->answers_table->where("qualification_internalId", $qualificationModel->id)->delete();
 
                     collect($answers)
@@ -82,18 +85,6 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
                             $this->answers_table->insert($answersChunk->toArray());
 
                         });
-                    /*
-
-                                SchlesingerSurveyQualificationAnswer::upsert(
-                                            $answersChunk->toArray(),
-                                            ["qualification_internalId", "answerId"],
-                                            array_keys($answersChunk->first())
-                                        );
-
-                                      $qualificationModel = SchlesingerSurveyQualificationQuestion::updateOrCreate(
-                                    ['LanguageId' => $this->LanguageId, 'qualificationId' => $qualification->qualificationId],
-                                    (array)$qualification
-                                );*/
 
 
                 });
