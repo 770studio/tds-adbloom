@@ -35,23 +35,17 @@ class SchlesingerAPIService
 
     public function getIndustries()
     {
-        return new SchlesingerSurveyListResponse(
+
+        return new SchlesingerIndustryListResponse(
             $this->api
                 ->get(config('services.schlesinger.survey_api.industry_list_url'))
-                ->object()
+                ->json()
         );
 
     }
 
     public function getQualificationsByLangID(int $languageId): SchlesingerQualificationsListResponse
     {
-
-        if (app()->isLocal()) {
-            return new SchlesingerQualificationsListResponse(json_decode(
-                file_get_contents("tests/Schlesinger/qualifications.json")
-            ));
-        }
-
 
         return new SchlesingerQualificationsListResponse(
             $this->api

@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class SchlesingerIndustriesUpdateCommand extends Command
 {
@@ -35,8 +37,29 @@ class SchlesingerIndustriesUpdateCommand extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(SchlesingerAPIService $service)
     {
+
+        DB::transaction(function () use ($service) {
+
+            dd(
+                $service->getIndustries()
+                    ->parseData()
+                    ->chunk(500)
+
+            );
+
+
+            $table = (new Schlesinger)->getTable();
+            DB::table($table)->delete();//TODO prune (truncate) once per e.g week
+            DB::table($table)->insert(
+                $service->getSurveys()
+                    ->parseData()
+                    ->toArray()
+            );
+
+
+        });
         return 0;
     }
 }

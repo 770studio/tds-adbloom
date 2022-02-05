@@ -15,7 +15,7 @@ class SchlesingerV1Response extends Response
     public function validate(): self
     {
 
-        if ($this->apiResult->result->success !== true) throw new BreakingException("SchlesingerAPI error:" .
+        if (data_get($this->apiResult, 'result.success') !== true) throw new BreakingException("SchlesingerAPI error:" .
             $this->apiResult);
 
         if ($this->getCount() > 5000) throw new BreakingException("SchlesingerAPI error: total count is way too big");
@@ -26,6 +26,6 @@ class SchlesingerV1Response extends Response
 
     public function getCount(): int
     {
-        return (int)$this->apiResult->result->totalCount;
+        return (int)data_get($this->apiResult, 'result.totalCount', 0);
     }
 }

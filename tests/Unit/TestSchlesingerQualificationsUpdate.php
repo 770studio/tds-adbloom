@@ -99,7 +99,7 @@ class TestSchlesingerQualificationsUpdate extends TestCase
 
     }
 
-    public function load_data()
+    public function load_data_into_db(): void
     {
 
 
@@ -142,7 +142,7 @@ class TestSchlesingerQualificationsUpdate extends TestCase
     public function test_can_add_to_db_the_right_way()
     {
 
-        $this->load_data();
+        $this->load_data_into_db();
         $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable()
             , 10);
         $this->assertDatabaseCount((new SchlesingerSurveyQualificationAnswer)->getTable()
@@ -152,7 +152,7 @@ class TestSchlesingerQualificationsUpdate extends TestCase
 
     public function test_answers_relation_is_ok()
     {
-        $this->load_data();
+        $this->load_data_into_db();
         $qualificationModel = SchlesingerSurveyQualificationQuestion::first();
         $this->assertEquals(17, $qualificationModel->answers()->count());
 
@@ -171,7 +171,7 @@ class TestSchlesingerQualificationsUpdate extends TestCase
     public function test_can_delete_related_answers()
     {
 
-        $this->load_data();
+        $this->load_data_into_db();
         $qualificationModel = SchlesingerSurveyQualificationQuestion::first();
         $this->assertEquals(17, $qualificationModel->answers()->count());
 

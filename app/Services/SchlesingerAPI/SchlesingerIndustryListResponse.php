@@ -10,11 +10,9 @@ class SchlesingerIndustryListResponse extends SchlesingerV1Response
 
     public function parseData(): Collection
     {
-        return collect($this->apiResult->industries)
-            ->transform(function (object $industry) {
-                return (array)$industry;
-            });
-
+        return collect(
+            data_get($this->apiResult, "industries")
+        );
     }
 
 }

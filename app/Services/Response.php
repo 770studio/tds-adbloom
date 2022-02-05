@@ -13,16 +13,26 @@ class Response implements ResponseIF
     protected $pageCount;
     protected $data;
     protected $count;
-    protected object $apiResult;
+    /**
+     * @var object|array
+     */
+    protected $apiResult;
 
-
+    /**
+     * @param object|array $apiResult
+     */
     public function __construct($apiResult)
     {
+
         $this->setData($apiResult)
             ->validate();
     }
 
-    public function setData(object $apiResult): self
+    /**
+     * @param object|array $apiResult
+     * @return $this
+     */
+    public function setData($apiResult): self
     {
         $this->apiResult = $apiResult;
         return $this;
