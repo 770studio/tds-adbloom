@@ -1,0 +1,137 @@
+{
+    "result": {
+        "success": true,
+        "message": "API call successful",
+        "totalCount": 32
+    },
+    "industries": [
+        {
+            "industryId": 1,
+            "description": "Automotive"
+        },
+        {
+            "industryId": 2,
+            "description": "Beauty/Cosmetics"
+        },
+        {
+            "industryId": 3,
+            "description": "Beverages - Alcoholic"
+        },
+        {
+            "industryId": 4,
+            "description": "Beverages - Non Alcoholic"
+        },
+        {
+            "industryId": 5,
+            "description": "Education"
+        },
+        {
+            "industryId": 6,
+            "description": "Electronics/Computer/Software"
+        },
+        {
+            "industryId": 7,
+            "description": "Entertainment (Movies, Music, TV, etc)"
+        },
+        {
+            "industryId": 8,
+            "description": "Fashion/Clothing"
+        },
+        {
+            "industryId": 9,
+            "description": "Financial Services/Insurance"
+        },
+        {
+            "industryId": 10,
+            "description": "Food/Snacks"
+        },
+        {
+            "industryId": 11,
+            "description": "Gambling/Lottery"
+        },
+        {
+            "industryId": 12,
+            "description": "Healthcare/Pharmaceuticals"
+        },
+        {
+            "industryId": 13,
+            "description": "Home (Utilities, Appliances, ...)"
+        },
+        {
+            "industryId": 14,
+            "description": "Home Entertainment"
+        },
+        {
+            "industryId": 15,
+            "description": "Home Improvement/RealEstates/Construction"
+        },
+        {
+            "industryId": 16,
+            "description": "IT (Servers, Databases, etc)"
+        },
+        {
+            "industryId": 17,
+            "description": "Personal Care/Toiletries"
+        },
+        {
+            "industryId": 18,
+            "description": "Pets"
+        },
+        {
+            "industryId": 19,
+            "description": "Politics"
+        },
+        {
+            "industryId": 20,
+            "description": "Publishing(Newspapers,magazines,Books)"
+        },
+        {
+            "industryId": 21,
+            "description": "Restaurants"
+        },
+        {
+            "industryId": 22,
+            "description": "Sports"
+        },
+        {
+            "industryId": 23,
+            "description": "Telecommunications"
+        },
+        {
+            "industryId": 24,
+            "description": "Tobacco"
+        },
+        {
+            "industryId": 25,
+            "description": "Toys"
+        },
+        {
+            "industryId": 26,
+            "description": "Transportation/Shipping"
+        },
+        {
+            "industryId": 27,
+            "description": "Travel"
+        },
+        {
+            "industryId": 28,
+            "description": "Video Games"
+        },
+        {
+            "industryId": 29,
+            "description": "Websites/Internet/Ecommerce"
+        },
+        {
+            "industryId": 30,
+            "description": "Other"
+        },
+        {
+            "industryId": 31,
+            "description": "Sensitive Content"
+        },
+        {
+            "industryId": 32,
+            "description": "Explicit Content"
+        }
+    ]
+}
