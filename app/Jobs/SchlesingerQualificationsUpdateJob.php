@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\SchlesingerSurveyQualificationAnswer;
 use App\Models\SchlesingerSurveyQualificationQuestion;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Bus\Queueable;
@@ -11,6 +10,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -48,43 +48,34 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *  TODO the procedure takes several minutes might be refactored to do it in less time
+     *  TODO the procedure takes several minutes , might worth refactoring to do it in less time
      * @return void
      * @throws Throwable
      */
     public function handle(SchlesingerAPIService $Schlesinger)
     {
-        $this->questions_table = DB::table((new SchlesingerSurveyQualificationQuestion)->getTable());
-        $this->answers_table = DB::table((new SchlesingerSurveyQualificationAnswer)->getTable());
 
         $Schlesinger->getQualificationsByLangID($this->LanguageId)
             ->parseData()
             ->each(function (object $qualification) {
 
                 DB::transaction(function () use ($qualification) {
-
-                    $answers = $qualification->qualificationAnswers;
-                    unset($qualification->qualificationAnswers);
-                    $this->questions_table->where('qualificationId', $qualification->qualificationId)
-                        ->delete();
+                    SchlesingerSurveyQualificationQuestion::where('qualificationId', $qualification->qualificationId)
+                        ->delete(); // related answers deleted by mysql delete cascade
 
                     $qualificationModel = SchlesingerSurveyQualificationQuestion::create(
-                        array_merge((array)$qualification, ['LanguageId' => $this->LanguageId])
+                        array_merge(
+                            Arr::except((array)$qualification, "qualificationAnswers"), //remove answers
+                            ['LanguageId' => $this->LanguageId]  // mixin language
+                        )
                     );
 
-
-                    $this->answers_table->where("qualification_internalId", $qualificationModel->id)->delete();
-
-                    collect($answers)
-                        ->transform(function (object $item) use ($qualificationModel) {
-                            $item->qualification_internalId = $qualificationModel->id;
-                            return (array)$item;
-                        })
-                        ->chunk(500)
-                        ->each(function ($answersChunk) {
-                            $this->answers_table->insert($answersChunk->toArray());
-
-                        });
+                    $qualificationModel->answers()->createMany(
+                        array_map(function ($answer) {
+                            return (array)$answer;
+                        },
+                            $qualification->qualificationAnswers)
+                    );
 
 
                 });

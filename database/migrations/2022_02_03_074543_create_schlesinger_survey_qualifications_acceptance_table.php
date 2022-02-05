@@ -23,8 +23,11 @@ class CreateSchlesingerSurveyQualificationsAcceptanceTable extends Migration
             $table->json('AnswerCodes');
 
             $table->unique(['qualification_internalId', 'survey_internalId'], 'unique_survey_qualification');
-            $table->foreign('survey_internalId', 'acceptance_survey')->references('id')->on('schlesinger_surveys');
-            $table->foreign('qualification_internalId', 'acceptance_qualification')->references('id')->on('schlesinger_survey_qualification_questions');
+
+            $table->foreign('survey_internalId', 'acceptance_survey')->references('id')
+                ->on('schlesinger_surveys')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('qualification_internalId', 'acceptance_qualification')->references('id')
+                ->on('schlesinger_survey_qualification_questions')->onDelete('cascade')->onUpdate('cascade');
 
         });
     }

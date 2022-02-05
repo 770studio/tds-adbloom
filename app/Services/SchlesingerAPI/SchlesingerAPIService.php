@@ -46,10 +46,11 @@ class SchlesingerAPIService
     public function getQualificationsByLangID(int $languageId): SchlesingerQualificationsListResponse
     {
 
-
-        return new SchlesingerQualificationsListResponse(json_decode(
-            file_get_contents("tests/Schlesinger/qualifications.json")
-        ));
+        if (app()->isLocal()) {
+            return new SchlesingerQualificationsListResponse(json_decode(
+                file_get_contents("tests/Schlesinger/qualifications.json")
+            ));
+        }
 
 
         return new SchlesingerQualificationsListResponse(

@@ -22,8 +22,9 @@ class CreateSchlesingerQualificationsAnswersTable extends Migration
             $table->string('answerCode');
 
             $table->unique(['qualification_internalId', 'answerId'], 'unique_answer');
-            $table->foreign('qualification_internalId', 'qId_foreign')->references('id')->on('schlesinger_survey_qualification_questions');
 
+            $table->foreign('qualification_internalId', 'qId_foreign')->references('id')
+                ->on('schlesinger_survey_qualification_questions')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
