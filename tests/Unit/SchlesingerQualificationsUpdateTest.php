@@ -2,37 +2,48 @@
 
 namespace Tests\Unit;
 
+use App\Helpers\DisablesForeignKeys;
 use App\Models\SchlesingerSurveyQualificationAnswer;
 use App\Models\SchlesingerSurveyQualificationQuestion;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class TestSchlesingerQualificationsUpdate extends TestCase
+class SchlesingerQualificationsUpdateTest extends TestCase
 {
+    use DisablesForeignKeys;
 
+    public function load_json()
+    {
+
+        return json_decode(
+            file_get_contents("tests/Schlesinger/qualifications.json"), true
+        );
+
+
+    }
 
     public function test_json_is_valid()
     {
 
-        $json = json_decode(
-            file_get_contents("tests/Schlesinger/qualifications.json")
-        );
+        $json = $this->load_json();
 
-        $this->assertEquals(true, $json->result->success);
-        $this->assertLessThan(5000, $json->result->totalCount);
+        $this->assertEquals(true, data_get($json, "result.success"));
+        $this->assertLessThan(5000, data_get($json, "result.totalCount"));
         return $json;
     }
 
     /**
-     * @depends test_json_is_valid
+     *
      */
-    public function test_can_parse_data($json)
+    public function test_can_parse_data()
     {
-        $this->assertCount($json->result->totalCount,
-            $json->qualifications
+        $json = $this->load_json();
+
+        $this->assertCount(data_get($json, "result.totalCount"),
+            data_get($json, "qualifications")
         );
 
-        return $json->qualifications;
+        return data_get($json, "qualifications");
     }
 
     /**
@@ -59,25 +70,26 @@ class TestSchlesingerQualificationsUpdate extends TestCase
     }
 
     /**
-     * @depends test_can_parse_data
+     *
      */
-    public function test_can_add_questions_to_db($qualifications)
+    public function test_can_add_questions_to_db()
     {
-        collect($qualifications)
+        $json = $this->load_json();
+        collect(data_get($json, "qualifications"))
             ->take(10)
             ->each(function ($qualification) {
-                $answers = $qualification->qualificationAnswers;
-                unset($qualification->qualificationAnswers);
+                $answers = data_get($qualification, "qualificationAnswers");
+                unset($qualification["qualificationAnswers"]);
                 /** @var SchlesingerSurveyQualificationQuestion $qualificationModel */
                 $qualificationModel = SchlesingerSurveyQualificationQuestion::updateOrCreate(
-                    ['LanguageId' => 3, 'qualificationId' => $qualification->qualificationId],
+                    ['LanguageId' => 3, 'qualificationId' => data_get($qualification, "qualificationId")],
                     (array)$qualification
                 );
 
                 collect($answers)
-                    ->transform(function (object $item) use ($qualificationModel) {
-                        $item->qualification_internalId = $qualificationModel->id;
-                        return (array)$item;
+                    ->transform(function (array $item) use ($qualificationModel) {
+                        data_set($item, "qualification_internalId", $qualificationModel->id);
+                        return $item;
                     })
                     ->chunk(500)
                     ->each(function ($answersChunk) {
@@ -102,33 +114,26 @@ class TestSchlesingerQualificationsUpdate extends TestCase
     public function load_data_into_db(): void
     {
 
+        $json = $this->load_json();
 
-        $json = json_decode(
-            file_get_contents("tests/Schlesinger/qualifications.json")
-        );
-        collect($json->qualifications)
+        collect(data_get($json, "qualifications"))
             ->take(10)
-            ->each(function (object $qualification) {
+            ->each(function (array $qualification) {
 
                 DB::transaction(function () use ($qualification) {
 
-                    $answers = $qualification->qualificationAnswers;
+                    $answers = data_get($qualification, "qualificationAnswers");
 
-                    unset($qualification->qualificationAnswers);
+                    unset($qualification["qualificationAnswers"]);
                     /*                 $this->questions_table->where('qualificationId', $qualification->qualificationId)
                                          ->delete();*/
 
                     // SchlesingerSurveyQualificationQuestion::recreate()
                     $qualificationModel = SchlesingerSurveyQualificationQuestion::create(
-                        array_merge((array)$qualification, ['LanguageId' => 3])
+                        array_merge($qualification, ['LanguageId' => 3])
                     );
                     $qualificationModel->answers()->delete();
-                    $qualificationModel->answers()->createMany(
-                        array_map(function ($answer) {
-                            return (array)$answer;
-                        },
-                            $answers)
-                    );
+                    $qualificationModel->answers()->createMany($answers);
 
 
                 });
@@ -185,6 +190,27 @@ class TestSchlesingerQualificationsUpdate extends TestCase
             ->where('qualification_internalId', $id)
             ->count(), 0);
 
+
+    }
+
+    public function test_prune()
+    {
+        $this->load_data_into_db();
+        $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable(), 10);
+
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // DB::statement('PRAGMA foreign_keys = ON;');
+        $this->disableForeignKeys();
+
+        SchlesingerSurveyQualificationQuestion::truncate();
+        $this->enableForeignKeys();
+        // supposed to only apply to a single connection and reset it's self
+        // but I like to explicitly undo what I've done for clarity
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // DB::statement('PRAGMA foreign_keys = ON;');
+
+
+        $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable(), 0);
 
     }
 }

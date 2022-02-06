@@ -2,10 +2,17 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\DisablesForeignKeys;
+use App\Models\Integrations\Schlesinger;
+use App\Models\SchlesingerIndustry;
+use App\Models\SchlesingerSurveyQualificationAnswer;
+use App\Models\SchlesingerSurveyQualificationQuestion;
 use Illuminate\Console\Command;
 
-class SchlesingerPrune extends Command
+class SchlesingerPruneCommand extends Command
 {
+    use DisablesForeignKeys;
+
     /**
      * The name and signature of the console command.
      *
@@ -37,14 +44,17 @@ class SchlesingerPrune extends Command
      */
     public function handle()
     {
-        //TODO TRUNCATE
+
         //disable foreign key check for this connection before running seeders
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $this->disableForeignKeys();
 
-
+        Schlesinger::truncate();
+        SchlesingerSurveyQualificationQuestion::truncate();
+        SchlesingerSurveyQualificationAnswer::truncate();
+        SchlesingerIndustry::truncate();
         // supposed to only apply to a single connection and reset it's self
         // but I like to explicitly undo what I've done for clarity
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $this->enableForeignKeys();
 
         return 0;
     }

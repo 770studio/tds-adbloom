@@ -57,24 +57,21 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
 
         $Schlesinger->getQualificationsByLangID($this->LanguageId)
             ->parseData()
-            ->each(function (object $qualification) {
-
+            ->each(function (array $qualification) {
                 DB::transaction(function () use ($qualification) {
-                    SchlesingerSurveyQualificationQuestion::where('qualificationId', $qualification->qualificationId)
+                    SchlesingerSurveyQualificationQuestion::
+                    where('qualificationId', data_get($qualification, "qualificationId"))
                         ->delete(); // related answers deleted by mysql delete cascade
 
                     $qualificationModel = SchlesingerSurveyQualificationQuestion::create(
                         array_merge(
-                            Arr::except((array)$qualification, "qualificationAnswers"), //remove answers
+                            Arr::except($qualification, "qualificationAnswers"), //remove answers
                             ['LanguageId' => $this->LanguageId]  // mixin language
                         )
                     );
 
                     $qualificationModel->answers()->createMany(
-                        array_map(function ($answer) {
-                            return (array)$answer;
-                        },
-                            $qualification->qualificationAnswers)
+                        data_get($qualification, "qualificationAnswers")
                     );
 
 
