@@ -1,4 +1,4 @@
-<p class="text-danger">* Available substitutions:</p>
+<p class="text-danger">* Available macros:</p>
 <br>
 <p>{eventId} - </p>
 <p>{date} - </p>
