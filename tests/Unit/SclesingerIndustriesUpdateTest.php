@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
-class TestSclesingerIndustriesUpdate extends TestCase
+class SclesingerIndustriesUpdateTest extends TestCase
 {
     public function load_json(): array
     {
@@ -29,7 +29,6 @@ class TestSclesingerIndustriesUpdate extends TestCase
         collect(data_get($json, "industries"))
             ->chunk(500)
             ->each(function (Collection $industryChunk) {
-
                 DB::transaction(function () use ($industryChunk) {
                     DB::table((new SchlesingerIndustry)->getTable())->delete();
                     SchlesingerIndustry::insert(
@@ -65,7 +64,6 @@ class TestSclesingerIndustriesUpdate extends TestCase
     {
         $this->load_data_into_db();
         $this->assertDatabaseCount((new SchlesingerIndustry)->getTable(), 32);
-
 
         $this->assertEmpty(
             array_diff([

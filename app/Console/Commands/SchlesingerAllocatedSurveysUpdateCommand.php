@@ -56,15 +56,6 @@ class SchlesingerAllocatedSurveysUpdateCommand extends Command
                     ->toArray()
             );
 
-            /*    $service->getSurveys()
-                    ->parseData()
-                    ->each(function ($record) {
-
-                        Schlesinger::updateOrCreate(
-                            ["SurveyId" => $record->SurveyId],
-                            (array)$record
-                        );
-                    });*/
 
         });
 

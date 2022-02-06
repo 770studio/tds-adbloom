@@ -53,7 +53,7 @@ class SchlesingerAPIService
                     "{languageId}"
                     , $languageId
                     , config('services.schlesinger.survey_api.qualification-answers_list_url'))
-                )->object()
+                )->json()
         );
     }
 
