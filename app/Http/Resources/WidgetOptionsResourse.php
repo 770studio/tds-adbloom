@@ -26,9 +26,9 @@ class WidgetOptionsResourse extends JsonResource
             "enableGrlInventory" => (bool)$this->enable_grl_inventory,
             "partnerId" => $this->partner->short_id,
             "partnerName" => $this->partnerName,
-            "cta" => $this->cta,
             "incentive" => $this->partner->isIncentive(),
             "themeConfig" => [
+                "cta" => $this->cta,
                 "logoUrl" => StoreImageHelper::getPublicImageResource($this->partner->logo),
                 "showHead" => (bool)$this->showHead,
                 "textColor" => $this->textColor,
