@@ -40,8 +40,8 @@ class GoogleFont extends ArrayDataStruct
      * @param mixed $fontID
      * @return string
      */
-    public static function getFont($fontID): string
+    public static function getFont($fontID, $default = null): string
     {
-        return self::getLongName($fontID ?? self::DEFAULT_FONT);
+        return self::getLongName($fontID ?? $default ?? self::DEFAULT_FONT);
     }
 }

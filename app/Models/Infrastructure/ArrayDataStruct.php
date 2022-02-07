@@ -36,7 +36,7 @@ abstract class ArrayDataStruct implements Arrayable
         return static::$BASE_ARRAY[$shortName] ?? null;
     }
 
-    public static function getLabels(): array
+    public static function getList(): array
     {
         $keys = array_keys(static::$BASE_ARRAY);
         return array_combine($keys, $keys);
