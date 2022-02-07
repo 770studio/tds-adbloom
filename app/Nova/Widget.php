@@ -243,7 +243,7 @@ class Widget extends Resource
                             return $this->inAppCurrencySymbolUrl_type ?? 'text';
                         })->hideFromIndex(),*/
 
-            RadioButton::make('Currency icon type')
+            RadioButton::make('Currency icon type', 'inAppCurrencySymbolUrl_type')
                 ->options([
                     'text' => 'text',
                     'image' => 'image',

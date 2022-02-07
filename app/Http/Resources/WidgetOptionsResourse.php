@@ -40,7 +40,7 @@ class WidgetOptionsResourse extends JsonResource
                     'variant' => $this->inAppCurrencySymbolUrl_type,
                     'value' => $this->inAppCurrencySymbolUrl_type === 'image'
                         ? StoreImageHelper::getPublicImageResource($this->inAppCurrencySymbolUrl)
-                        : $this->inAppCurrencySymbolUrl
+                        : $this->inAppCurrencySymbolUrl_text
                 ],
                 "fonts" => [
                     "heading" => [
