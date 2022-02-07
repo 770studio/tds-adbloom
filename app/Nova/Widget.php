@@ -210,17 +210,25 @@ class Widget extends Resource
             Select::make('Heading font family', 'headingFontFamily')->options(
                 GoogleFont::getList()
             )->hideFromIndex()
-                ->withMeta(['value' => 'Lato'])->default('Lato'),
+                ->resolveUsing(function () {
+                    return $this->headingFontFamily ?? 'Lato';
+                }),
             Text::make('Heading font weight', 'headingfontWeight')->default(700)->hideFromIndex(),
-            Select::make('Cta font family', 'ctaFontFamily')->options(
-                GoogleFont::getList()
-            )->hideFromIndex()
-                ->withMeta(['value' => 'Roboto'])->default('Roboto'),
+
+
+            Select::make('Cta font family', 'ctaFontFamily')->hideFromIndex()
+                ->options(
+                    GoogleFont::getList()
+                )->resolveUsing(function () {
+                    return $this->ctaFontFamily ?? 'Roboto';
+                }),
+
             Text::make('Cta font weight', 'ctaFontWeight')->default(700)->hideFromIndex(),
             Select::make('Body font family', 'bodyFontFamily')->options(
                 GoogleFont::getList()
-            )->hideFromIndex()
-                ->withMeta(['value' => 'Roboto'])->default('Roboto'),
+            )->hideFromIndex()->resolveUsing(function () {
+                return $this->bodyFontFamily ?? 'Roboto';
+            }),
             Text::make('Body font weight', 'bodyFontWeight')->default(700)->hideFromIndex(),
 
             Color::make('Text color', 'textColor')->slider()->nullable()->hideFromIndex(),
@@ -230,7 +238,9 @@ class Widget extends Resource
             Select::make('Currency icon type', 'inAppCurrencySymbolUrl_type')->options([
                 'text' => 'text',
                 'image' => 'image',
-            ])->default('text')->withMeta(['value' => 'text'])->hideFromIndex(),
+            ])->resolveUsing(function () {
+                return $this->inAppCurrencySymbolUrl_type ?? 'text';
+            })->hideFromIndex(),
 
             NovaDependencyContainer::make([
                 Image::make('Currency icon', 'inAppCurrencySymbolUrl')->hideFromIndex()
