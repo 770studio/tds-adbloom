@@ -127,7 +127,7 @@ class Widget extends Resource
 
             ])->dependsOn('dynamic_or_static', 0),
 
-            Text::make('Widget specific redirect', 'redirect_url')->onlyOnForms(),
+            Text::make('Widget specific redirect', 'redirect_url')->hideFromIndex(),
 
             new Panel('Integration', $this->IntegrationFields()),
 
@@ -200,51 +200,51 @@ class Widget extends Resource
         return [
             Toggle::make('Show head', 'showHead')->onColor('green')
                 ->default(0)->onlyOnForms(),
-            Text::make('Partner name', 'partnerName')->nullable()->onlyOnForms(),
+            Text::make('Partner name', 'partnerName')->nullable()->hideFromIndex(),
             /*            Color::make('Font color', 'fontColor')->slider()->nullable(),
                         Text::make('Font size', 'fontSize')->nullable(),
                         Select::make('Font family', 'fontFamily')->options(
                             GoogleFont::getLabels()
                         ),*/
-            Text::make('Cta')->nullable()->onlyOnForms(),
+            Text::make('Cta')->nullable()->hideFromIndex(),
             Select::make('Heading font family', 'headingFontFamily')->options(
                 GoogleFont::getList()
-            )->onlyOnForms()
+            )->hideFromIndex()
                 ->withMeta(['value' => 'Lato'])->default('Lato'),
-            Text::make('Heading font weight', 'headingfontWeight')->default(700)->onlyOnForms(),
+            Text::make('Heading font weight', 'headingfontWeight')->default(700)->hideFromIndex(),
             Select::make('Cta font family', 'ctaFontFamily')->options(
                 GoogleFont::getList()
-            )->onlyOnForms()
+            )->hideFromIndex()
                 ->withMeta(['value' => 'Roboto'])->default('Roboto'),
-            Text::make('Cta font weight', 'ctaFontWeight')->default(700)->onlyOnForms(),
+            Text::make('Cta font weight', 'ctaFontWeight')->default(700)->hideFromIndex(),
             Select::make('Body font family', 'bodyFontFamily')->options(
                 GoogleFont::getList()
-            )->onlyOnForms()
+            )->hideFromIndex()
                 ->withMeta(['value' => 'Roboto'])->default('Roboto'),
-            Text::make('Body font weight', 'bodyFontWeight')->default(700)->onlyOnForms(),
+            Text::make('Body font weight', 'bodyFontWeight')->default(700)->hideFromIndex(),
 
-            Color::make('Text color', 'textColor')->slider()->nullable()->onlyOnForms(),
-            Color::make('Button Background', 'buttonBackground')->slider()->nullable()->onlyOnForms(),
-            Color::make('Reward Background', 'rewardBackground')->slider()->nullable()->onlyOnForms(),
+            Color::make('Text color', 'textColor')->slider()->nullable()->hideFromIndex(),
+            Color::make('Button Background', 'buttonBackground')->slider()->nullable()->hideFromIndex(),
+            Color::make('Reward Background', 'rewardBackground')->slider()->nullable()->hideFromIndex(),
 
             Select::make('Currency icon type', 'inAppCurrencySymbolUrl_type')->options([
                 'text' => 'text',
                 'image' => 'image',
-            ])->default('text')->withMeta(['value' => 'text'])->onlyOnForms(),
+            ])->default('text')->withMeta(['value' => 'text'])->hideFromIndex(),
 
             NovaDependencyContainer::make([
-                Image::make('Currency icon', 'inAppCurrencySymbolUrl')->onlyOnForms()
+                Image::make('Currency icon', 'inAppCurrencySymbolUrl')->hideFromIndex()
                     ->nullable()
                     ->prunable(),
             ])->dependsOn('inAppCurrencySymbolUrl_type', 'image'),
 
             NovaDependencyContainer::make([
-                Text::make('Currency icon', 'inAppCurrencySymbolUrl')->onlyOnForms()
+                Text::make('Currency icon', 'inAppCurrencySymbolUrl')->hideFromIndex()
                     ->nullable()
             ])->dependsOn('inAppCurrencySymbolUrl_type', 'text'),
 
-            Color::make('Button Text', 'buttonTextColor')->slider()->nullable()->onlyOnForms(),
-            Color::make('Reward Text', 'rewardTextColor')->slider()->nullable()->onlyOnForms(),
+            Color::make('Button Text', 'buttonTextColor')->slider()->nullable()->hideFromIndex(),
+            Color::make('Reward Text', 'rewardTextColor')->slider()->nullable()->hideFromIndex(),
 
 
         ];
