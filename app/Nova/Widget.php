@@ -20,6 +20,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 use Naif\Toggle\Toggle;
 use OptimistDigital\MultiselectField\Multiselect;
+use OwenMelbz\RadioField\RadioButton;
 use Timothyasp\Color\Color;
 
 
@@ -235,23 +236,39 @@ class Widget extends Resource
             Color::make('Button Background', 'buttonBackground')->slider()->nullable()->hideFromIndex(),
             Color::make('Reward Background', 'rewardBackground')->slider()->nullable()->hideFromIndex(),
 
-            Select::make('Currency icon type', 'inAppCurrencySymbolUrl_type')->options([
-                'text' => 'text',
-                'image' => 'image',
-            ])->resolveUsing(function () {
-                return $this->inAppCurrencySymbolUrl_type ?? 'text';
-            })->hideFromIndex(),
+            /*            Select::make('Currency icon type', 'inAppCurrencySymbolUrl_type')->options([
+                            'text' => 'text',
+                            'image' => 'image',
+                        ])->resolveUsing(function () {
+                            return $this->inAppCurrencySymbolUrl_type ?? 'text';
+                        })->hideFromIndex(),*/
 
-            NovaDependencyContainer::make([
-                Image::make('Currency icon', 'inAppCurrencySymbolUrl')->hideFromIndex()
-                    ->nullable()
-                    ->prunable(),
-            ])->dependsOn('inAppCurrencySymbolUrl_type', 'image'),
+            RadioButton::make('Currency icon type')
+                ->options([
+                    'text' => 'text',
+                    'image' => 'image',
+                ])
+                ->default($this->inAppCurrencySymbolUrl_type) // optional
+                ->toggle([  // optional
+                    'text' => ['inAppCurrencySymbolUrl'],
+                    'image' => ['inAppCurrencySymbolUrl_text'],
 
-            NovaDependencyContainer::make([
-                Text::make('Currency icon', 'inAppCurrencySymbolUrl')->hideFromIndex()
-                    ->nullable()
-            ])->dependsOn('inAppCurrencySymbolUrl_type', 'text'),
+                ]),
+
+            Image::make('Currency icon', 'inAppCurrencySymbolUrl')->hideFromIndex()
+                ->disk('public')
+
+                // ->path( 'currency_icons')
+                ->storeAs(function (Request $request) {
+                    $file = $request->file('inAppCurrencySymbolUrl');
+                    return $file->hashName();
+                })
+                ->nullable()
+                ->prunable(),
+
+            Text::make('Currency icon', 'inAppCurrencySymbolUrl_text')->hideFromIndex()
+                ->nullable(),
+
 
             Color::make('Button Text', 'buttonTextColor')->slider()->nullable()->hideFromIndex(),
             Color::make('Reward Text', 'rewardTextColor')->slider()->nullable()->hideFromIndex(),

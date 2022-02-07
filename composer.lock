@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5615cf1c9b728aaec10bf1b04ffc9852",
+    "content-hash": "c32923ad6f0311093c113f440be88857",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3443,6 +3443,51 @@
                 "source": "https://github.com/optimistdigital/nova-translations-loader/tree/3.1.3"
             },
             "time": "2022-01-21T14:28:05+00:00"
+        },
+        {
+            "name": "owenmelbz/nova-radio-field",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OwenMelbz/nova-radio-field.git",
+                "reference": "28bb17d59af3c5ab944e78db7c0ae974ce42c903"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OwenMelbz/nova-radio-field/zipball/28bb17d59af3c5ab944e78db7c0ae974ce42c903",
+                "reference": "28bb17d59af3c5ab944e78db7c0ae974ce42c903",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "OwenMelbz\\RadioField\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "OwenMelbz\\RadioField\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova radio button field type with the ability to toggle other field visibility.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/OwenMelbz/nova-radio-field/issues",
+                "source": "https://github.com/OwenMelbz/nova-radio-field/tree/1.0.1"
+            },
+            "time": "2021-07-27T16:26:18+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
