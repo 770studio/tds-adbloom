@@ -89,10 +89,10 @@ class SclesingerIndustriesUpdateTest extends TestCase
                 );
         });
         // mock (new SchlesingerAPIService)->getIndustries()
-        $this->artisan("schlesinger-survey-industries:update");
+        $this->artisan("schlesinger-industries:update");
 
+        $this->assertDatabaseCount((new SchlesingerIndustry)->getTable(), 32);
 
-        //TODO .....
 
     }
 }

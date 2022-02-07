@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Sclesinger;
 
 use App\Models\SchlesingerIndustry;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
@@ -16,7 +16,7 @@ class SchlesingerIndustriesUpdateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'schlesinger-survey-industries:update';
+    protected $signature = 'schlesinger-industries:update';
 
     /**
      * The console command description.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Sclesinger;
 
 use App\Helpers\DisablesForeignKeys;
 use App\Models\Integrations\Schlesinger;

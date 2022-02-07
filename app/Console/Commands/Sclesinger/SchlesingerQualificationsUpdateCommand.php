@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Sclesinger;
 
 use App\Jobs\SchlesingerQualificationsUpdateJob;
 use App\Models\Integrations\Schlesinger;
@@ -14,7 +14,7 @@ class SchlesingerQualificationsUpdateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'schlesinger-survey-qualifications:update';
+    protected $signature = 'schlesinger-qualifications:update';
 
     /**
      * The console command description.

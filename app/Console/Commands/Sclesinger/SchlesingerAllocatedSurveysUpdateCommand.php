@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Sclesinger;
 
 use App\Models\Integrations\Schlesinger;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;

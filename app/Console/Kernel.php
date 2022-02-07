@@ -38,9 +38,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('conversions:update')->hourlyAt(15)->runInBackground();
             $schedule->command('schlesinger-surveys:update')->timezone('EST')
                 ->dailyAt('02:00')->runInBackground();
-            $schedule->command('schlesinger-survey-qualifications:update')->timezone('EST')
+            $schedule->command('schlesinger-qualifications:update')->timezone('EST')
                 ->weeklyOn(1, '02:10')->runInBackground();
-            $schedule->command('schlesinger-survey-industries:update')->timezone('EST')
+            $schedule->command('schlesinger-industries:update')->timezone('EST')
                 ->weeklyOn(1, '02:20')->runInBackground();
 
 
