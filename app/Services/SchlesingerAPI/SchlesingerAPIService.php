@@ -57,15 +57,16 @@ class SchlesingerAPIService
         );
     }
 
-    public function getQualificationAnswersBySurvey(int $SurveyId): SchlesingerSurveyListResponse
+    public function getQualificationAdmitCriteria(int $SurveyId): SchlesingerSurveyQualificationsListResponse
     {
-        return new SchlesingerSurveyListResponse(
+
+        return new SchlesingerSurveyQualificationsListResponse(
             $this->api
                 ->get(Str::replace(
                     "{surveyId}"
                     , $SurveyId
                     , config('services.schlesinger.survey_api.survey-qualification_list_url'))
-                )->object()
+                )->json()
         );
     }
 }

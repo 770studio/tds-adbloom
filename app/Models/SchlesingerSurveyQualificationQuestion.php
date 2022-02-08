@@ -49,4 +49,15 @@ class SchlesingerSurveyQualificationQuestion extends Model
     {
         return $this->hasMany(SchlesingerSurveyQualificationAnswer::class, 'qualification_internalId', 'id');
     }
+
+    /**
+     * @param Builder $query
+     * @return void
+     */
+    public function scopeByExternalId($query, $id)
+    {
+        //   return $this->whereQualificationid($id)->getKey()
+
+    }
+
 }

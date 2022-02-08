@@ -8,7 +8,7 @@ use App\Models\SchlesingerSurveyQualificationQuestion;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class SchlesingerQualificationsUpdateTest extends TestCase
+class SchlesingerQualificationTest extends TestCase
 {
     use DisablesForeignKeys;
 
@@ -104,9 +104,9 @@ class SchlesingerQualificationsUpdateTest extends TestCase
 
 
         $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable()
-            , 10);
+            , 13);
         $this->assertDatabaseCount((new SchlesingerSurveyQualificationAnswer)->getTable()
-            , 241);
+            , 245);
 
 
     }
@@ -149,16 +149,17 @@ class SchlesingerQualificationsUpdateTest extends TestCase
 
         $this->load_data_into_db();
         $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable()
-            , 10);
+            , 13);
         $this->assertDatabaseCount((new SchlesingerSurveyQualificationAnswer)->getTable()
-            , 241);
+            , 245);
 
     }
 
     public function test_answers_relation_is_ok()
     {
         $this->load_data_into_db();
-        $qualificationModel = SchlesingerSurveyQualificationQuestion::first();
+        $qualificationModel = SchlesingerSurveyQualificationQuestion::whereQualificationid("115")
+            ->first();
         $this->assertEquals(17, $qualificationModel->answers()->count());
 
         $this->assertEmpty(
@@ -175,9 +176,9 @@ class SchlesingerQualificationsUpdateTest extends TestCase
 
     public function test_can_delete_related_answers()
     {
-
         $this->load_data_into_db();
-        $qualificationModel = SchlesingerSurveyQualificationQuestion::first();
+        $qualificationModel = SchlesingerSurveyQualificationQuestion::whereQualificationid("115")
+            ->first();
         $this->assertEquals(17, $qualificationModel->answers()->count());
 
         $id = $qualificationModel->id;
@@ -196,7 +197,7 @@ class SchlesingerQualificationsUpdateTest extends TestCase
     public function test_prune()
     {
         $this->load_data_into_db();
-        $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable(), 10);
+        $this->assertDatabaseCount((new SchlesingerSurveyQualificationQuestion)->getTable(), 13);
 
         // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         // DB::statement('PRAGMA foreign_keys = ON;');

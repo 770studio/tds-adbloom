@@ -13,11 +13,19 @@ class ChangeLooknFeelFieldsInWidgetsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasColumn('widgets', 'primaryColor')) {
+            Schema::table('widgets', function (BLueprint $table) {
+                $table->dropColumn('primaryColor');
+            });
+        }
+        if (Schema::hasColumn('widgets', 'secondaryColor')) {
+            Schema::table('widgets', function (BLueprint $table) {
+                $table->dropColumn('secondaryColor');
+            });
+        }
         Schema::table('widgets', function (Blueprint $table) {
-            $table->dropColumn('primaryColor');
             $table->string('buttonBackground')->nullable();
             $table->string('buttonTextColor')->nullable();
-            $table->dropColumn('secondaryColor');
             $table->string('rewardBackground')->nullable();
             $table->string('rewardTextColor')->nullable();
             $table->string('inAppCurrencySymbolUrl_type')->default('text');

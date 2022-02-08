@@ -4,9 +4,7 @@ namespace App\Console\Commands\Sclesinger;
 
 use App\Jobs\SchlesingerSurveyQualificationsUpdateJob;
 use App\Models\Integrations\Schlesinger;
-use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class SclesingerSurveyQualificationsUpdateCommand extends Command
 {
@@ -39,17 +37,13 @@ class SclesingerSurveyQualificationsUpdateCommand extends Command
      *
      * @return int
      */
-    public function handle(SchlesingerAPIService $service)
+    public function handle()
     {
-        DB::table((new Schlesinger)->getTable())
-            ->selectRaw('distinct (SurveyId)')
-            ->get()
-            ->map(function ($values) { // flatten it
-                return current($values);
-            })
-            ->each(function ($SurveyId) {
-                SchlesingerSurveyQualificationsUpdateJob::dispatch($SurveyId)->onQueue('Schlesinger');
+        Schlesinger::cursor()
+            ->each(function ($survey) {
+                SchlesingerSurveyQualificationsUpdateJob::dispatch($survey)->onQueue('Schlesinger');
             });
+
         return Command::SUCCESS;
     }
 }

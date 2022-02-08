@@ -31,8 +31,18 @@ use Illuminate\Support\Carbon;
  * @method static Builder|SchlesingerSurveyQualification whereUpdateTimeStamp($value)
  * @method static Builder|SchlesingerSurveyQualification whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property int $SurveyId
+ * @property int $qualificationId
+ * @method static Builder|SchlesingerSurveyQualification whereQualificationId($value)
+ * @method static Builder|SchlesingerSurveyQualification whereSurveyId($value)
  */
 class SchlesingerSurveyQualification extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+    protected $casts = [
+        'AnswerIds' => 'array',
+        'AnswerCodes' => 'array'
+    ];
 }

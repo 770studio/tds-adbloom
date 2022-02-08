@@ -22,5 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->call(WidgetOpportunityTableSeeder::class);
         $this->call(WidgetsTableSeeder::class);
         //$this->call(ConversionsHourlyStatsTableSeeder::class);
+        $this->call(SchlesingerSurveysTableSeeder::class);
+        $this->call(SchlesingerSurveyQualificationQuestionsTableSeeder::class);
+        $this->call(SchlesingerSurveyQualificationAnswersTableSeeder::class);
     }
 }

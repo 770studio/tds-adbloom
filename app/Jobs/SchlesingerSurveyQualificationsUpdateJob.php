@@ -2,31 +2,65 @@
 
 namespace App\Jobs;
 
+use App\Models\Integrations\Schlesinger;
+use App\Models\SchlesingerSurveyQualification;
+use App\Models\SchlesingerSurveyQualificationQuestion;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class SchlesingerSurveyQualificationsUpdateJob extends SchlesingerQualificationsUpdateJob implements ShouldQueue
 {
-    private int $SurveyId;
+
+    private Schlesinger $survey;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(int $SurveyId)
+    public function __construct(Schlesinger $survey)
     {
-        $this->SurveyId = $SurveyId;
-
+        $this->survey = $survey;
     }
 
     /**
      * Execute the job.
      *
      * @return void
+     * @throws Throwable
      */
     public function handle(SchlesingerAPIService $Schlesinger)
     {
-        //
+
+        $survey_internalId = $this->survey->getKey();
+
+        SchlesingerSurveyQualification::whereSurveyInternalid($survey_internalId)
+            ->delete();
+
+        $Schlesinger->getQualificationAdmitCriteria($this->survey->SurveyId)
+            ->parseData()
+            ->each(function (array $item) use ($survey_internalId) {
+                DB::transaction(function () use ($item, $survey_internalId) {
+                    $QualificationId = Arr::pull($item, 'QualificationId');
+                    if (!$qualification = SchlesingerSurveyQualificationQuestion::whereQualificationid($QualificationId)
+                        ->first()
+                    ) {
+                        return;
+                    }
+
+                    SchlesingerSurveyQualification::create(
+                        array_merge($item, [
+                            'survey_internalId' => $survey_internalId
+                            , 'qualification_internalId' => $qualification->getKey()
+                        ])
+                    );
+
+
+                });
+            });
+
     }
 }

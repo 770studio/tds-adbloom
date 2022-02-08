@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
-class SclesingerIndustriesUpdateTest extends TestCase
+class SclesingerIndustryTest extends TestCase
 {
     public function load_json(): array
     {
