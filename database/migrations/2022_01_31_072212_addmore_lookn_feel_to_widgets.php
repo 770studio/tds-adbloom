@@ -21,7 +21,7 @@ class AddmoreLooknFeelToWidgets extends Migration
             $table->string('bodyFontFamily')->nullable();
             $table->string('headingfontWeight')->default(700);
             $table->string('ctaFontWeight')->default(700);
-            $table->string('bodyFontWeight')->default(700);
+            $table->string('bodyFontWeight')->default(400);
 
         });
     }

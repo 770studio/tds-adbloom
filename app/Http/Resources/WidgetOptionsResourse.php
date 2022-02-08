@@ -36,7 +36,7 @@ class WidgetOptionsResourse extends JsonResource
                 "rewardBackground" => $this->rewardBackground,
                 "buttonTextColor" => $this->buttonTextColor,
                 "rewardTextColor" => $this->rewardTextColor,
-                "inAppCurrencySymbolUrl" => [
+                "inAppCurrencySymbol" => [
                     'variant' => $this->inAppCurrencySymbolUrl_type,
                     'value' => $this->inAppCurrencySymbolUrl_type === 'image'
                         ? StoreImageHelper::getPublicImageResource($this->inAppCurrencySymbolUrl)

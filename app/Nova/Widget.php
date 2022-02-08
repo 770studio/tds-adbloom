@@ -230,7 +230,7 @@ class Widget extends Resource
             )->hideFromIndex()->resolveUsing(function () {
                 return $this->bodyFontFamily ?? 'Roboto';
             }),
-            Text::make('Body font weight', 'bodyFontWeight')->default(700)->hideFromIndex(),
+            Text::make('Body font weight', 'bodyFontWeight')->default(400)->hideFromIndex(),
 
             Color::make('Text color', 'textColor')->slider()->nullable()->hideFromIndex(),
             Color::make('Button Background', 'buttonBackground')->slider()->nullable()->hideFromIndex(),

@@ -8,7 +8,6 @@ class GoogleFont extends ArrayDataStruct
     public const DEFAULT_FONT = 'Work Sans';
     public static array $BASE_ARRAY = [
         'Andada Pro' => "'Andada Pro', serif;",
-        'Anton' => "'Anton', sans-serif;",
         'Archivo' => "'Archivo', sans-serif;",
         'BioRhyme' => "'BioRhyme', serif;",
         'Cormorant' => "'Cormorant', serif;",
