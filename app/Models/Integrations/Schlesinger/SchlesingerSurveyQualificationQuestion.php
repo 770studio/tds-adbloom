@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Integrations\Schlesinger;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -50,14 +50,6 @@ class SchlesingerSurveyQualificationQuestion extends Model
         return $this->hasMany(SchlesingerSurveyQualificationAnswer::class, 'qualification_internalId', 'id');
     }
 
-    /**
-     * @param Builder $query
-     * @return void
-     */
-    public function scopeByExternalId($query, $id)
-    {
-        //   return $this->whereQualificationid($id)->getKey()
 
-    }
 
 }

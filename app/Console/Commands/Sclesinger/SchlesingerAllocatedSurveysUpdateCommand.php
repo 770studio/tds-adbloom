@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Sclesinger;
 
-use App\Models\Integrations\Schlesinger;
+use App\Models\Integrations\Schlesinger\Schlesinger;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;

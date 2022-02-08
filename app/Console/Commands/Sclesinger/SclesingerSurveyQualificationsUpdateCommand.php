@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Sclesinger;
 
 use App\Jobs\SchlesingerSurveyQualificationsUpdateJob;
-use App\Models\Integrations\Schlesinger;
+use App\Models\Integrations\Schlesinger\Schlesinger;
 use Illuminate\Console\Command;
 
 class SclesingerSurveyQualificationsUpdateCommand extends Command

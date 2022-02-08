@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Integrations\Schlesinger;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,4 +29,11 @@ use Illuminate\Support\Carbon;
 class SchlesingerIndustry extends Model
 {
     use HasFactory;
+
+    public static function getNameById($IndustryId): ?string
+    {
+        return ($industry = (new self)->whereIndustryid($IndustryId)->first())
+            ? $industry->Description
+            : null;
+    }
 }

@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Helpers\DisablesForeignKeys;
-use App\Models\SchlesingerSurveyQualificationAnswer;
-use App\Models\SchlesingerSurveyQualificationQuestion;
+use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationAnswer;
+use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationQuestion;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 

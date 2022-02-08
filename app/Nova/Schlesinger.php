@@ -2,9 +2,11 @@
 
 namespace App\Nova;
 
+use App\Models\Integrations\Schlesinger\SchlesingerIndustry;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
@@ -16,7 +18,7 @@ class Schlesinger extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\Integrations\Schlesinger::class;
+    public static $model = \App\Models\Integrations\Schlesinger\Schlesinger::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -59,6 +61,12 @@ class Schlesinger extends Resource
             Number::make('LOI', 'LOI')->sortable(),
             Number::make('IR', 'IR')->sortable(),
             Number::make('IndustryId', 'IndustryId')->sortable(),
+            Text::make('Industry', function () {
+                return SchlesingerIndustry::getNameById($this->IndustryId);
+            })->exceptOnForms(),
+
+            HasMany::make('qualifications', 'qualifications', SchlesingerSurveyQualification::class),
+
             Number::make('StudyTypeId', 'StudyTypeId')->sortable(),
             Boolean::make('IsMobileAllowed', 'IsMobileAllowed')->sortable(),
             Boolean::make('IsNonMobileAllowed', 'IsNonMobileAllowed')->sortable(),

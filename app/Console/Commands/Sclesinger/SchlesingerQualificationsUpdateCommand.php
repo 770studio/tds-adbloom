@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Sclesinger;
 
 use App\Jobs\SchlesingerQualificationsUpdateJob;
-use App\Models\Integrations\Schlesinger;
+use App\Models\Integrations\Schlesinger\Schlesinger;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 

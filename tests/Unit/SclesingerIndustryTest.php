@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\SchlesingerIndustry;
+use App\Models\Integrations\Schlesinger\SchlesingerIndustry;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use App\Services\SchlesingerAPI\SchlesingerIndustryListResponse;
 use Illuminate\Support\Collection;

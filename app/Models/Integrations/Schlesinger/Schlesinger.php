@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models\Integrations;
+namespace App\Models\Integrations\Schlesinger;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -79,5 +80,9 @@ class Schlesinger extends Model
         'Group_UpdateTimeStamp' => 'datetime',
     ];
 
+    public function qualifications(): HasMany
+    {
+        return $this->hasMany(SchlesingerSurveyQualification::class, 'survey_internalId', 'id');
+    }
 
 }

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Integrations\Schlesinger;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -45,4 +47,15 @@ class SchlesingerSurveyQualification extends Model
         'AnswerIds' => 'array',
         'AnswerCodes' => 'array'
     ];
+
+
+    public function question(): HasOne
+    {
+        return $this->hasOne(SchlesingerSurveyQualificationQuestion::class, 'id', 'qualification_internalId');
+    }
+
+    public function answers(): HasMany
+    {
+        return $this->hasMany(SchlesingerSurveyQualificationAnswer::class, 'id', 'qualification_internalId');
+    }
 }

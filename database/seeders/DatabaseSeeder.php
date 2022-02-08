@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SchlesingerSurveysTableSeeder::class);
         $this->call(SchlesingerSurveyQualificationQuestionsTableSeeder::class);
         $this->call(SchlesingerSurveyQualificationAnswersTableSeeder::class);
+        $this->call(SchlesingerSurveyQualificationsTableSeeder::class);
     }
 }

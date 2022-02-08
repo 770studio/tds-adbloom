@@ -3,10 +3,11 @@
 namespace App\Console\Commands\Sclesinger;
 
 use App\Helpers\DisablesForeignKeys;
-use App\Models\Integrations\Schlesinger;
-use App\Models\SchlesingerIndustry;
-use App\Models\SchlesingerSurveyQualificationAnswer;
-use App\Models\SchlesingerSurveyQualificationQuestion;
+use App\Models\Integrations\Schlesinger\Schlesinger;
+use App\Models\Integrations\Schlesinger\SchlesingerIndustry;
+use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualification;
+use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationAnswer;
+use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationQuestion;
 use Illuminate\Console\Command;
 
 class SchlesingerPruneCommand extends Command
@@ -52,6 +53,8 @@ class SchlesingerPruneCommand extends Command
         SchlesingerSurveyQualificationQuestion::truncate();
         SchlesingerSurveyQualificationAnswer::truncate();
         SchlesingerIndustry::truncate();
+        SchlesingerSurveyQualification::truncate();
+
         // supposed to only apply to a single connection and reset it's self
         // but I like to explicitly undo what I've done for clarity
         $this->enableForeignKeys();

@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Models\Integrations\Schlesinger;
-use App\Models\SchlesingerSurveyQualification;
-use App\Models\SchlesingerSurveyQualificationQuestion;
+use App\Models\Integrations\Schlesinger\Schlesinger;
+use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualification;
+use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationQuestion;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Arr;
