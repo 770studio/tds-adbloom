@@ -256,15 +256,15 @@ class Widget extends Resource
                 ]),
 
             Image::make('Currency icon', 'inAppCurrencySymbolUrl')->hideFromIndex()
-                ->disk('public')
-
-                // ->path( 'currency_icons')
-                ->storeAs(function (Request $request) {
-                    $file = $request->file('inAppCurrencySymbolUrl');
-                    return $file->hashName();
-                })
+                /*                ->disk('public')
+                                ->storeAs(function (Request $request) {
+                                    $file = $request->file('inAppCurrencySymbolUrl');
+                                    return $file->hashName();
+                                })*/
                 ->nullable()
-                ->prunable(),
+                ->prunable()
+                ->rules('mimes:png,svg', 'dimensions:min_width=30,min_height=30,max_width=30,max_height=30')
+                ->help('Accepted: png,svg <br>Dimensions: 30x30'),
 
             Text::make('Currency icon', 'inAppCurrencySymbolUrl_text')->hideFromIndex()
                 ->nullable(),

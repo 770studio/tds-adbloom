@@ -64,7 +64,9 @@ class Partner extends Resource
     {
         return [
             Image::make('Logo')
-                ->prunable(),
+                ->prunable()
+                ->rules('mimes:png,svg', 'dimensions:min_width=120,min_height=120,max_width=120,max_height=120')
+                ->help('Accepted: png,svg <br>Dimensions: 120x120'),
             ID::make(__('ID'), 'id')->sortable(),
             Text::make('Name')
                 ->rules('required')
