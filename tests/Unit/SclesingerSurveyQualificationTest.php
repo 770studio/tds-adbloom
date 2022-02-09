@@ -120,4 +120,12 @@ class SclesingerSurveyQualificationTest extends TestCase
 
 
     }
+
+
+    public function test_answers_relation_is_ok()
+    {
+
+        $this->assertEquals(2, SchlesingerSurveyQualification::find(2)->answers()->count());
+
+    }
 }
