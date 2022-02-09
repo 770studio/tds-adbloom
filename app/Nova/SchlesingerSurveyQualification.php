@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 
@@ -58,10 +59,10 @@ class SchlesingerSurveyQualification extends Resource
             }),
 
             Text::make('Answers', function () {
-
-
-                return $this->answers
-                    ? $this->answers->pluck('text')->implode(',')
+                /** @var Collection $answers */
+                $answers = $this->answers;
+                return $answers->isNotEmpty()
+                    ? $answers->pluck('text')->implode(',')
                     : '';
             }),
 
