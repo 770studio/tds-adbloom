@@ -104,7 +104,7 @@ class WidgetController extends Controller
                     ->validate()
                     ->transformPayouts($partner)
                     ->transformUri()
-                    ->getBuckets($widget, 5);
+                    ->getBuckets(5);
 
             }
 

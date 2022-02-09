@@ -9,7 +9,6 @@ use App\Helpers\Stack;
 use App\Helpers\StoreImageHelper;
 use App\Models\Opportunity;
 use App\Models\Partner;
-use App\Models\Widget;
 use App\Services\Response;
 use Exception;
 use Illuminate\Support\Collection;
@@ -95,7 +94,7 @@ class GeneralResearchResponse extends Response
     }
 
 
-    public function getBuckets(Widget $widget, int $limit = 5): Collection
+    public function getBuckets(int $limit = 5): Collection
     {
         try {
 
@@ -109,24 +108,21 @@ class GeneralResearchResponse extends Response
             $creatives = new Stack (StoreImageHelper::getGrlCreativeUrls());
 
             foreach ($offerwall_buckets->slice(0, $limit) as $key => $offerwall_bucket) {
-
-                $opportunity = new Opportunity([
-                    'short_id' => $offerwall->id, // id
-                    'name' => $titles->useOne(),   // title
-                    'image' => $creatives->useOne(),
-                    'description' => $descs->useOne(),
-                    'link' => $offerwall_bucket->uri, // url
-                    'payout' => $offerwall_bucket->payout->max, // reward
-                    'call_to_action' => 'Start Now', // callToAction
-                    'type' => Opportunity::TYPES['survey'], // for timeToComplete to show up
-                    'timeToComplete' => $offerwall_bucket->duration->max,
-                    'incentive' => true,
-                    'mixin' => true,
-
-                ]);
-                $opportunity->widgets()->attach($widget->getKey());
                 $buckets->push(
-                    $opportunity
+                    new Opportunity([
+                        'short_id' => $offerwall->id, // id
+                        'name' => $titles->useOne(),   // title
+                        'image' => $creatives->useOne(),
+                        'description' => $descs->useOne(),
+                        'link' => $offerwall_bucket->uri, // url
+                        'payout' => $offerwall_bucket->payout->max, // reward
+                        'call_to_action' => 'Start Now', // callToAction
+                        'type' => Opportunity::TYPES['survey'], // for timeToComplete to show up
+                        'timeToComplete' => $offerwall_bucket->duration->max,
+                        'incentive' => true,
+                        'mixin' => true,
+
+                    ])
                 );
             }
 
