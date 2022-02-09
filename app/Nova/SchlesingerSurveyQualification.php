@@ -59,8 +59,9 @@ class SchlesingerSurveyQualification extends Resource
 
             Text::make('Answers', function () {
 
+
                 return $this->answers
-                    ? implode(",", $this->answers->text)
+                    ? $this->answers->pluck('text')->implode(',')
                     : '';
             }),
 

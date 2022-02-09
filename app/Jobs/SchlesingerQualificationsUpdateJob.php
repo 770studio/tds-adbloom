@@ -18,7 +18,10 @@ class SchlesingerQualificationsUpdateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private int $LanguageId;
+    /**
+     * @var int
+     */
+    private $LanguageId;
 
     /**
      * The number of times the job may be attempted.
