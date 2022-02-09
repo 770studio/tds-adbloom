@@ -3,8 +3,8 @@
 namespace App\Console\Commands\Sclesinger;
 
 use App\Helpers\DisablesForeignKeys;
-use App\Models\Integrations\Schlesinger\Schlesinger;
 use App\Models\Integrations\Schlesinger\SchlesingerIndustry;
+use App\Models\Integrations\Schlesinger\SchlesingerSurvey;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualification;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationAnswer;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationQuestion;
@@ -49,7 +49,7 @@ class SchlesingerPruneCommand extends Command
         //disable foreign key check for this connection before running seeders
         $this->disableForeignKeys();
 
-        Schlesinger::truncate();
+        SchlesingerSurvey::truncate();
         SchlesingerSurveyQualificationQuestion::truncate();
         SchlesingerSurveyQualificationAnswer::truncate();
         SchlesingerIndustry::truncate();

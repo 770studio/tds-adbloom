@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Models\Integrations\Schlesinger\SchlesingerIndustry;
+use App\Models\Integrations\Schlesinger\SchlesingerSurvey;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
@@ -18,7 +19,7 @@ class Schlesinger extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\Integrations\Schlesinger\Schlesinger::class;
+    public static $model = SchlesingerSurvey::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

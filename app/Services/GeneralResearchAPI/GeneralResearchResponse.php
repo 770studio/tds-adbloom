@@ -119,6 +119,7 @@ class GeneralResearchResponse extends Response
                         'call_to_action' => 'Start Now', // callToAction
                         'type' => Opportunity::TYPES['survey'], // for timeToComplete to show up
                         'timeToComplete' => $offerwall_bucket->duration->max,
+                        'incentive' => true,
                         'mixin' => true,
 
                     ])

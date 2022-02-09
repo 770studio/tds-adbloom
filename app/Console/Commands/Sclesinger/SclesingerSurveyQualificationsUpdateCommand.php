@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Sclesinger;
 
 use App\Jobs\SchlesingerSurveyQualificationsUpdateJob;
-use App\Models\Integrations\Schlesinger\Schlesinger;
+use App\Models\Integrations\Schlesinger\SchlesingerSurvey;
 use Illuminate\Console\Command;
 
 class SclesingerSurveyQualificationsUpdateCommand extends Command
@@ -39,7 +39,7 @@ class SclesingerSurveyQualificationsUpdateCommand extends Command
      */
     public function handle()
     {
-        Schlesinger::cursor()
+        SchlesingerSurvey::cursor()
             ->each(function ($survey) {
                 SchlesingerSurveyQualificationsUpdateJob::dispatch($survey)->onQueue('Schlesinger');
             });
