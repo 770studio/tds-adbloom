@@ -41,7 +41,7 @@ class SclesingerSurveyQualificationsUpdateCommand extends Command
     {
         SchlesingerSurvey::cursor()
             ->each(function ($survey) {
-                SchlesingerSurveyQualificationsUpdateJob::dispatch($survey)->onQueue('Schlesinger');
+                SchlesingerSurveyQualificationsUpdateJob::dispatch($survey)->onQueue('schlesinger');
             });
 
         return Command::SUCCESS;

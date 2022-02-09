@@ -48,7 +48,7 @@ class SchlesingerQualificationsUpdateCommand extends Command
                 return current($values);
             })
             ->each(function ($lang_id) {
-                SchlesingerQualificationsUpdateJob::dispatch($lang_id)->onQueue('Schlesinger');
+                SchlesingerQualificationsUpdateJob::dispatch($lang_id)->onQueue('schlesinger');
             });
 
         return Command::SUCCESS;

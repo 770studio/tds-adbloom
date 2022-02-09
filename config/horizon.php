@@ -223,7 +223,7 @@ return [
             ],
             'supervisor-stage2' => [
                 'connection' => 'redis',
-                'queue' => ['postback_queue', 'send_to_tune'],
+                'queue' => ['postback_queue', 'send_to_tune', 'schlesinger'],
                 'balance' => 'auto',
                 'maxProcesses' => 5,
                 'balanceMaxShift' => 1,
