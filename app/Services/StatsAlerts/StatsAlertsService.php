@@ -77,8 +77,17 @@ class StatsAlertsService
                 }
             });
 
+        $this->alerts->whenEmpty(function ($collection) {
+            return $collection->push('Adam');
+        }, function ($collection) {
+            return $collection->push('Taylor');
+        });
 
-        $this->alerts->sortBy('direction')
+        $this->alerts->whenEmpty(function ($collection) {
+            $this->noAlertsForToday('Conversion Rate alert');
+            return;
+        })
+            ->sortBy('direction')
             ->each(function ($alertDTO) {
                 $this->slackAlert(
                     sprintf("%s *%s* - Conversion Rate: *%s* %% *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
@@ -94,6 +103,35 @@ class StatsAlertsService
             });
 
         dump("finished");
+    }
+
+    private function addAlert(AlertDTO $alertDTO): void
+    {
+        $this->alerts->push($alertDTO);
+    }
+
+    private function noAlertsForToday($alertName)
+    {
+        //TODO its not a reliable condition, the idea is to send it only once a day
+        if (now()->timezone("EST")->greaterThanOrEqualTo(
+            now()->timezone("EST")->setTime(17, 0)
+        )) {
+            $this->slackAlert($alertName . ": No alerts for today, great job team!");
+        }
+    }
+
+    public function slackAlert(string $slackText): void
+    {
+        dump("ALERT:" . $slackText);
+        $this->logger->debug("ALERT:" . $slackText);
+
+        if ($this->notify) {
+            //TODO can be refactored to slack log channel
+            Notification::route('slack', config('services.slack_notification.alert_incoming_webhook'))
+                ->notify(new StatsAlertNotification($slackText));
+        }
+
+
     }
 
     public function testAlert3(FlexPeriod $recent_period, FlexPeriod $older_period): void
@@ -158,28 +196,9 @@ class StatsAlertsService
         dump("finished");
     }
 
-    public function slackAlert(string $slackText): void
-    {
-        dump("ALERT:" . $slackText);
-        $this->logger->debug("ALERT:" . $slackText);
-
-        if ($this->notify) {
-            //TODO can be refactored to slack log channel
-            Notification::route('slack', config('services.slack_notification.alert_incoming_webhook'))
-                ->notify(new StatsAlertNotification($slackText));
-        }
-
-
-    }
-
     public function notify(?bool $notify): self
     {
         $this->notify = $notify;
         return $this;
-    }
-
-    private function addAlert(AlertDTO $alertDTO): void
-    {
-        $this->alerts->push($alertDTO);
     }
 }

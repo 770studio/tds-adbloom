@@ -46,6 +46,7 @@ class Kernel extends ConsoleKernel
                 ->weeklyOn(1, '02:20')->runInBackground();
             $schedule->command('schlesinger-survey-qualifications:update')->timezone('EST')
                 ->weeklyOn(1, '02:30')->runInBackground();
+            #TODO prune and mb move to one command or combine somehow
             ############ Schlesinger ############
 
 
