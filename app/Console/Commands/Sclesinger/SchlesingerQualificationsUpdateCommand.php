@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Sclesinger;
 
 use App\Jobs\SchlesingerQualificationsUpdateJob;
-use App\Models\Integrations\Schlesinger\Schlesinger;
+use App\Models\Integrations\Schlesinger\SchlesingerSurvey;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -41,14 +41,14 @@ class SchlesingerQualificationsUpdateCommand extends Command
     public function handle()
     {
         // get all languages
-        DB::table((new Schlesinger)->getTable())
+        DB::table((new SchlesingerSurvey)->getTable())
             ->selectRaw('distinct (LanguageId)')
             ->get()
             ->map(function ($values) {
                 return current($values);
             })
             ->each(function ($lang_id) {
-                SchlesingerQualificationsUpdateJob::dispatch($lang_id)->onQueue('Schlesinger');
+                SchlesingerQualificationsUpdateJob::dispatch($lang_id)->onQueue('schlesinger');
             });
 
         return Command::SUCCESS;

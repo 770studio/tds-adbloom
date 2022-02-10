@@ -105,6 +105,7 @@ class WidgetController extends Controller
                     ->transformPayouts($partner)
                     ->transformUri()
                     ->getBuckets(5);
+
             }
 
 

@@ -24,7 +24,7 @@ class WidgetOptionsResourse extends JsonResource
         /** @var Widget $this */
         return [
             "enableGrlInventory" => (bool)$this->enable_grl_inventory,
-            "partnerId" => $this->partner->short_id,
+            "partnerId" => $this->partner->external_id,
             "partnerName" => $this->partnerName,
             "incentive" => $this->partner->isIncentive(),
             "themeConfig" => [

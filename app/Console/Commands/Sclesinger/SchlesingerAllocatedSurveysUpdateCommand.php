@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Sclesinger;
 
-use App\Models\Integrations\Schlesinger\Schlesinger;
+use App\Models\Integrations\Schlesinger\SchlesingerSurvey;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +48,7 @@ class SchlesingerAllocatedSurveysUpdateCommand extends Command
                 });*/
 
         DB::transaction(function () use ($service) {
-            $table = (new Schlesinger)->getTable();
+            $table = (new SchlesingerSurvey)->getTable();
             DB::table($table)->delete();//TODO prune (truncate) once per e.g week
             DB::table($table)->insert(
                 $service->getSurveys()

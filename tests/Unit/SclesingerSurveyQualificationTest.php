@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\Integrations\Schlesinger\SchlesingerSurvey;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualification;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationQuestion;
-use App\Models\SchlesingerSurvey;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
 use App\Services\SchlesingerAPI\SchlesingerSurveyQualificationsListResponse;
 use Illuminate\Support\Arr;
@@ -118,6 +118,14 @@ class SclesingerSurveyQualificationTest extends TestCase
 
         $this->assertDatabaseCount((new SchlesingerSurveyQualification())->getTable(), 3);
 
+
+    }
+
+
+    public function test_answers_relation_is_ok()
+    {
+
+        $this->assertEquals(2, SchlesingerSurveyQualification::find(2)->answers()->count());
 
     }
 }

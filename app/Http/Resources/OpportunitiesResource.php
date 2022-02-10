@@ -48,7 +48,6 @@ class OpportunitiesResource extends JsonResource
             ]
         );
 
-
         //TODO remove unnecessary `when` used to hide an element
         return [
             'id' => $this->short_id,

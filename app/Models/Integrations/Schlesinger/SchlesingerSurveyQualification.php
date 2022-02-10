@@ -56,6 +56,6 @@ class SchlesingerSurveyQualification extends Model
 
     public function answers(): HasMany
     {
-        return $this->hasMany(SchlesingerSurveyQualificationAnswer::class, 'id', 'qualification_internalId');
+        return $this->hasMany(SchlesingerSurveyQualificationAnswer::class, 'qualification_internalId', 'qualification_internalId');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Integrations\Schlesinger\Schlesinger;
+use App\Models\Integrations\Schlesinger\SchlesingerSurvey;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualification;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationQuestion;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
@@ -14,14 +14,14 @@ use Throwable;
 class SchlesingerSurveyQualificationsUpdateJob extends SchlesingerQualificationsUpdateJob implements ShouldQueue
 {
 
-    private Schlesinger $survey;
+    private SchlesingerSurvey $survey;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Schlesinger $survey)
+    public function __construct(SchlesingerSurvey $survey)
     {
         $this->survey = $survey;
     }
