@@ -33,6 +33,11 @@ class StatsAlertsService
 
     }
 
+    public function getAlerts(): Collection
+    {
+        return $this->alerts;
+    }
+
     public function testAlert2(FlexPeriod $recent_period, FlexPeriod $older_period): void
     {
 
@@ -77,18 +82,11 @@ class StatsAlertsService
                 }
             });
 
-        $this->alerts->whenEmpty(function ($collection) {
-            return $collection->push('Adam');
-        }, function ($collection) {
-            return $collection->push('Taylor');
-        });
 
-        $this->alerts->whenEmpty(function ($collection) {
-            $this->noAlertsForToday('Conversion Rate alert');
-            return;
-        })
-            ->sortBy('direction')
-            ->each(function ($alertDTO) {
+        $this->alerts->sortBy('direction')
+            ->whenEmpty(function ($collection) {
+                $this->noAlertsForToday('Conversion Rate alert');
+            })->each(function ($alertDTO) {
                 $this->slackAlert(
                     sprintf("%s *%s* - Conversion Rate: *%s* %% *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
                         $alertDTO->direction === "UP" ? ":arrow_up:" : ":arrow_down:",
@@ -137,15 +135,6 @@ class StatsAlertsService
     public function testAlert3(FlexPeriod $recent_period, FlexPeriod $older_period): void
     {
 
-        /*  DB::listen(function ($query) {
-              $sql = $query->sql;
-              $bindings = $query->bindings;
-              $executionTime = $query->time;
-
-              echo( Str::replaceArray('?', $query->bindings, $sql) );
-              dump("\n-----");
-
-          });*/
 
         dump("start alert3 lookup");
         $this->logger->debug("alert3 lookup fired");
@@ -182,16 +171,31 @@ class StatsAlertsService
                         'older_period' => $older_item,
                     ]);
 
-                $this->slackAlert(
-                    sprintf("Campaign Activated: *%s* has received *%d* clicks and *%d* conversions in the last day, the first time in the previous 30 days",
-                        $recent_item->Offer_name,
-                        $recent_item->clicks,
-                        $recent_item->conversions,
-                    )
+                $this->addAlert(
+                    AlertDTO::fromArray([
+                        'direction' => 'UP',
+                        'recent_conversions' => $recent_item->conversions,
+                        'recent_clicks' => $recent_item->clicks,
+                        'offer_name' => $recent_item->Offer_name
+                    ])
                 );
+
+
             }
         });
 
+
+        $this->alerts->whenEmpty(function () {
+            $this->noAlertsForToday('Conversion Rate alert');
+        })->each(function ($alertDTO) {
+            $this->slackAlert(
+                sprintf("Campaign Activated: *%s* has received *%d* clicks and *%d* conversions in the last day, the first time in the previous 30 days",
+                    $alertDTO->offer_name,
+                    $alertDTO->recent_clicks,
+                    $alertDTO->recent_conversions,
+                )
+            );
+        });
 
         dump("finished");
     }

@@ -2,9 +2,6 @@
 
 namespace Tests;
 
-use App\Services\SchlesingerAPI\SchlesingerAPIService;
-use App\Services\SchlesingerAPI\SchlesingerIndustryListResponse;
-use App\Services\SchlesingerAPI\SchlesingerQualificationsListResponse;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -34,24 +31,3 @@ abstract class TestCase extends BaseTestCase
 }
 
 
-class FakeSchlesingerAPIService extends SchlesingerAPIService
-{
-    public function getIndustries()
-    {
-        return new SchlesingerIndustryListResponse(
-            json_decode(
-                file_get_contents("tests/Schlesinger/industry-list.json"), true
-            )
-        );
-
-
-    }
-
-    public function getQualificationsByLangID(int $languageId): SchlesingerQualificationsListResponse
-    {
-        return new SchlesingerQualificationsListResponse(json_decode(
-            file_get_contents("tests/Schlesinger/qualifications.json")
-        ));
-
-    }
-}
