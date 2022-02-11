@@ -44,6 +44,16 @@ class SchlesingerAPIService
 
     }
 
+    public function getLanguages()
+    {
+        return new SchlesingerLanguageListResponse(
+            $this->api
+                ->get(config('services.schlesinger.survey_api.languages_list_url'))
+                ->json()
+        );
+
+    }
+
     public function getQualificationsByLangID(int $languageId): SchlesingerQualificationsListResponse
     {
 

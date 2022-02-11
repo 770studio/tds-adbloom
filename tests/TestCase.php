@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -15,7 +16,10 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         Artisan::call('config:clear'); // чтоб перейти к тест окружению!!!
-        if (app()->environment() != 'testing') throw new Exception('wrong env');
+        if (app()->environment() !== 'testing') throw new Exception('wrong env');
+        if (DB::getDefaultConnection() !== 'sqlite') throw new Exception('wrong db');
+
+
         //$this->artisan('migrate:fresh --seed --path="./tests/database" ');
         // $app->useDatabasePath(base_path('tests/database')); //example path
 

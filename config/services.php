@@ -42,6 +42,7 @@ return [
             'industry_list_url' => env('SCHLESINGER_API_INDUSTRY_LIST_URL'),
             'qualification-answers_list_url' => env('SCHLESINGER_API_QUALIFICATION_ANSWERS_LIST_URL'),
             'survey-qualification_list_url' => env('SCHLESINGER_API_SURVEY_QUALIFICATIONS_LIST_URL'),
+            'languages_list_url' => env('SCHLESINGER_API_LANGUAGES_LIST_URL'),
         ]
     ],
     'yoursurveys_readme_io' => [
