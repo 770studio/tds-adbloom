@@ -108,7 +108,7 @@ class StatsAlertsService
         $this->alerts->push($alertDTO);
     }
 
-    private function noAlertsForToday($alertName)
+    private function noAlertsForToday($alertName): void
     {
         //TODO its not a reliable condition, the idea is to send it only once a day
         if (now()->timezone("EST")->greaterThanOrEqualTo(
@@ -186,7 +186,7 @@ class StatsAlertsService
 
 
         $this->alerts->whenEmpty(function () {
-            $this->noAlertsForToday('Conversion Rate alert');
+            $this->noAlertsForToday('Campaign Activated');
         })->each(function ($alertDTO) {
             $this->slackAlert(
                 sprintf("Campaign Activated: *%s* has received *%d* clicks and *%d* conversions in the last day, the first time in the previous 30 days",
