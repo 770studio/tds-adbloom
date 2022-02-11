@@ -65,7 +65,7 @@ class Kernel extends ConsoleKernel
 
         if (App::environment('production')) {
             $schedule->command('conversions:update')->everyThirtyMinutes()->runInBackground();
-            $schedule->command('schlesinger-surveys:update')->hourlyAt(20)->runInBackground();
+          //  $schedule->command('schlesinger-surveys:update')->hourlyAt(20)->runInBackground();
 
             // $schedule->command('yoursurveys:update 1000 CA')->hourly();
             // $schedule->command('yoursurveys:update 1000 US')->hourly();
