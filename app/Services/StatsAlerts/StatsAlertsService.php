@@ -86,6 +86,7 @@ class StatsAlertsService
         $this->alerts->sortBy('direction')
             ->whenEmpty(function ($collection) {
                 $this->noAlertsForToday('Conversion Rate alert');
+                return $collection;
             })->each(function ($alertDTO) {
                 $this->slackAlert(
                     sprintf("%s *%s* - Conversion Rate: *%s* %% *%s* by *%s* %% from prior day average of *%s* %% with *%s* clicks",
@@ -185,8 +186,9 @@ class StatsAlertsService
         });
 
 
-        $this->alerts->whenEmpty(function () {
+        $this->alerts->whenEmpty(function ($collection) {
             $this->noAlertsForToday('Campaign Activated');
+            return $collection;
         })->each(function ($alertDTO) {
             $this->slackAlert(
                 sprintf("Campaign Activated: *%s* has received *%d* clicks and *%d* conversions in the last day, the first time in the previous 30 days",
