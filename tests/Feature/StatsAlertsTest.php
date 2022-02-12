@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ConversionsHourlyStat;
 use App\Services\StatsAlerts\FlexPeriod;
 use App\Services\StatsAlerts\StatsAlertsInventoryService;
 use App\Services\StatsAlerts\StatsAlertsService;
@@ -22,9 +23,12 @@ class StatsAlertsTest extends TestCase_MySql
     public function test_can_parse_data()
     {
 
-        $this->withoutMiddleware(); // dont work at all!!!
 
-        $this->assertDatabaseCount('conversions_hourly_stats', 193211);
+        // we are using dec , jan for the tests
+        $this->assertLessThanOrEqual("2021-12-01", ConversionsHourlyStat::first()->Stat_date);
+        $this->assertGreaterThanOrEqual("2022-02-01", ConversionsHourlyStat::latest('Stat_date')->first()->Stat_date);
+
+        $this->assertGreaterThanOrEqual(193000, ConversionsHourlyStat::count());
 
         // TuneAPIGetConversionPageJob::dispatch(1, []);
         //Artisan::call('conversions:update');
