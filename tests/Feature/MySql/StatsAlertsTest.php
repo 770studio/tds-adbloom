@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\MySql;
 
 use App\Models\ConversionsHourlyStat;
 use App\Services\StatsAlerts\FlexPeriod;
@@ -11,6 +11,9 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Carbon;
 use Tests\TestCase_MySql;
 
+/**
+ *  use phpunit_mysql.xml to run these tests
+ */
 class StatsAlertsTest extends TestCase_MySql
 {
     use WithoutMiddleware;
