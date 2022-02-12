@@ -1,0 +1,741 @@
+{
+    "result": {
+        "success": true,
+        "message": "API call successful",
+        "totalCount": 122
+    },
+    "languages": [
+        {
+            "languageId": 1,
+            "languageCode": "EN",
+            "countryCode": "GB",
+            "description": "English - United Kingdom"
+        },
+        {
+            "languageId": 2,
+            "languageCode": "FR",
+            "countryCode": "FR",
+            "description": "French - France"
+        },
+        {
+            "languageId": 3,
+            "languageCode": "EN",
+            "countryCode": "US",
+            "description": "English - United States"
+        },
+        {
+            "languageId": 4,
+            "languageCode": "EN",
+            "countryCode": "AU",
+            "description": "English - Australia"
+        },
+        {
+            "languageId": 5,
+            "languageCode": "EN",
+            "countryCode": "CA",
+            "description": "English - Canada"
+        },
+        {
+            "languageId": 6,
+            "languageCode": "EN",
+            "countryCode": "IN",
+            "description": "English - India"
+        },
+        {
+            "languageId": 7,
+            "languageCode": "DE",
+            "countryCode": "DE",
+            "description": "German - Germany"
+        },
+        {
+            "languageId": 8,
+            "languageCode": "PT",
+            "countryCode": "BR",
+            "description": "Portuguese - Brazil"
+        },
+        {
+            "languageId": 9,
+            "languageCode": "FR",
+            "countryCode": "CA",
+            "description": "French - Canada"
+        },
+        {
+            "languageId": 10,
+            "languageCode": "PL",
+            "countryCode": "PL",
+            "description": "Polish - Poland"
+        },
+        {
+            "languageId": 11,
+            "languageCode": "EN",
+            "countryCode": "IE",
+            "description": "English - Ireland"
+        },
+        {
+            "languageId": 12,
+            "languageCode": "ES",
+            "countryCode": "MX",
+            "description": "Spanish - Mexico"
+        },
+        {
+            "languageId": 13,
+            "languageCode": "ES",
+            "countryCode": "US",
+            "description": "Spanish - United States"
+        },
+        {
+            "languageId": 14,
+            "languageCode": "ES",
+            "countryCode": "AR",
+            "description": "Spanish - Argentina"
+        },
+        {
+            "languageId": 15,
+            "languageCode": "EN",
+            "countryCode": "SG",
+            "description": "English - Singapore"
+        },
+        {
+            "languageId": 16,
+            "languageCode": "NL",
+            "countryCode": "NL",
+            "description": "Dutch - Netherlands"
+        },
+        {
+            "languageId": 17,
+            "languageCode": "IT",
+            "countryCode": "IT",
+            "description": "Italian - Italy"
+        },
+        {
+            "languageId": 18,
+            "languageCode": "NL",
+            "countryCode": "BE",
+            "description": "Dutch - Belgium"
+        },
+        {
+            "languageId": 19,
+            "languageCode": "EN",
+            "countryCode": "ZA",
+            "description": "English - South Africa"
+        },
+        {
+            "languageId": 20,
+            "languageCode": "EN",
+            "countryCode": "HK",
+            "description": "English - Hong Kong"
+        },
+        {
+            "languageId": 21,
+            "languageCode": "DA",
+            "countryCode": "DK",
+            "description": "Danish - Denmark"
+        },
+        {
+            "languageId": 22,
+            "languageCode": "FR",
+            "countryCode": "BE",
+            "description": "French - Belgium"
+        },
+        {
+            "languageId": 23,
+            "languageCode": "DE",
+            "countryCode": "AT",
+            "description": "German - Austria"
+        },
+        {
+            "languageId": 24,
+            "languageCode": "PT",
+            "countryCode": "PT",
+            "description": "Portuguese - Portugal"
+        },
+        {
+            "languageId": 25,
+            "languageCode": "RU",
+            "countryCode": "RU",
+            "description": "Russian - Russia"
+        },
+        {
+            "languageId": 26,
+            "languageCode": "ZH",
+            "countryCode": "CN",
+            "description": "Chinese - China"
+        },
+        {
+            "languageId": 27,
+            "languageCode": "ZH",
+            "countryCode": "SG",
+            "description": "Chinese - Singapore"
+        },
+        {
+            "languageId": 28,
+            "languageCode": "FR",
+            "countryCode": "CH",
+            "description": "French - Switzerland"
+        },
+        {
+            "languageId": 29,
+            "languageCode": "DE",
+            "countryCode": "CH",
+            "description": "German - Switzerland"
+        },
+        {
+            "languageId": 30,
+            "languageCode": "JP",
+            "countryCode": "JP",
+            "description": "Japanese - Japan"
+        },
+        {
+            "languageId": 31,
+            "languageCode": "EL",
+            "countryCode": "GR",
+            "description": "Greek - Greece"
+        },
+        {
+            "languageId": 32,
+            "languageCode": "NO",
+            "countryCode": "NO",
+            "description": "Norwegian - Norway"
+        },
+        {
+            "languageId": 33,
+            "languageCode": "ES",
+            "countryCode": "CL",
+            "description": "Spanish - Chile"
+        },
+        {
+            "languageId": 34,
+            "languageCode": "ES",
+            "countryCode": "PE",
+            "description": "Spanish - Peru"
+        },
+        {
+            "languageId": 35,
+            "languageCode": "ES",
+            "countryCode": "ES",
+            "description": "Spanish - Spain"
+        },
+        {
+            "languageId": 36,
+            "languageCode": "SV",
+            "countryCode": "SE",
+            "description": "Swedish - Sweden"
+        },
+        {
+            "languageId": 37,
+            "languageCode": "TH",
+            "countryCode": "TH",
+            "description": "Thai - Thailand"
+        },
+        {
+            "languageId": 38,
+            "languageCode": "TR",
+            "countryCode": "TR",
+            "description": "Turkish - Turkey"
+        },
+        {
+            "languageId": 39,
+            "languageCode": "ES",
+            "countryCode": "CO",
+            "description": "Spanish - Colombia"
+        },
+        {
+            "languageId": 40,
+            "languageCode": "AR",
+            "countryCode": "SA",
+            "description": "Arabic - Saudi Arabia"
+        },
+        {
+            "languageId": 41,
+            "languageCode": "HE",
+            "countryCode": "IL",
+            "description": "Hebrew - Israel"
+        },
+        {
+            "languageId": 42,
+            "languageCode": "MS",
+            "countryCode": "MY",
+            "description": "Malay - Malaysia"
+        },
+        {
+            "languageId": 43,
+            "languageCode": "ZH",
+            "countryCode": "HK",
+            "description": "Traditional Chinese - Hong Kong"
+        },
+        {
+            "languageId": 44,
+            "languageCode": "KO",
+            "countryCode": "KR",
+            "description": "Korean - Korea"
+        },
+        {
+            "languageId": 45,
+            "languageCode": "EN",
+            "countryCode": "PH",
+            "description": "English - Philippines"
+        },
+        {
+            "languageId": 46,
+            "languageCode": "ZH",
+            "countryCode": "HK",
+            "description": "Simplified Chinese - Hong Kong"
+        },
+        {
+            "languageId": 47,
+            "languageCode": "AR",
+            "countryCode": "AE",
+            "description": "Arabic - United Arab Emirates"
+        },
+        {
+            "languageId": 48,
+            "languageCode": "EN",
+            "countryCode": "AE",
+            "description": "English - United Arab Emirates"
+        },
+        {
+            "languageId": 49,
+            "languageCode": "EN",
+            "countryCode": "AR",
+            "description": "English - Argentina"
+        },
+        {
+            "languageId": 50,
+            "languageCode": "ZH",
+            "countryCode": "TW",
+            "description": "Traditional Chinese - Taiwan"
+        },
+        {
+            "languageId": 51,
+            "languageCode": "IN",
+            "countryCode": "ID",
+            "description": "Indonesian - Indonesia"
+        },
+        {
+            "languageId": 52,
+            "languageCode": "EN",
+            "countryCode": "SA",
+            "description": "English - Saudi Arabia"
+        },
+        {
+            "languageId": 53,
+            "languageCode": "VI",
+            "countryCode": "VN",
+            "description": "Vietnamese - Vietnam"
+        },
+        {
+            "languageId": 54,
+            "languageCode": "EN",
+            "countryCode": "EG",
+            "description": "English - Egypt"
+        },
+        {
+            "languageId": 55,
+            "languageCode": "EN",
+            "countryCode": "NZ",
+            "description": "English - New Zealand"
+        },
+        {
+            "languageId": 56,
+            "languageCode": "EN",
+            "countryCode": "MY",
+            "description": "English - Malaysia"
+        },
+        {
+            "languageId": 57,
+            "languageCode": "PL",
+            "countryCode": "GB",
+            "description": "Polish -  United Kingdom"
+        },
+        {
+            "languageId": 58,
+            "languageCode": "EN",
+            "countryCode": "SC",
+            "description": "English - Scotland "
+        },
+        {
+            "languageId": 59,
+            "languageCode": "EN",
+            "countryCode": "FR",
+            "description": "English - France"
+        },
+        {
+            "languageId": 60,
+            "languageCode": "EN",
+            "countryCode": "DE",
+            "description": "English - Germany"
+        },
+        {
+            "languageId": 61,
+            "languageCode": "EN",
+            "countryCode": "RU",
+            "description": "English - Russia"
+        },
+        {
+            "languageId": 62,
+            "languageCode": "EN",
+            "countryCode": "MX",
+            "description": "English - Mexico"
+        },
+        {
+            "languageId": 63,
+            "languageCode": "EN",
+            "countryCode": "BR",
+            "description": "English - Brazil"
+        },
+        {
+            "languageId": 64,
+            "languageCode": "EN",
+            "countryCode": "CN",
+            "description": "English - China"
+        },
+        {
+            "languageId": 65,
+            "languageCode": "FI",
+            "countryCode": "FI",
+            "description": "Finnish - Finland"
+        },
+        {
+            "languageId": 66,
+            "languageCode": "EN",
+            "countryCode": "FI",
+            "description": "English - Finland"
+        },
+        {
+            "languageId": 67,
+            "languageCode": "CZ",
+            "countryCode": "CZ",
+            "description": "Czech - Czech Republic"
+        },
+        {
+            "languageId": 68,
+            "languageCode": "EN",
+            "countryCode": "CZ",
+            "description": "English - Czech Republic"
+        },
+        {
+            "languageId": 69,
+            "languageCode": "ES",
+            "countryCode": "PR",
+            "description": "Spanish - Puerto-Rico"
+        },
+        {
+            "languageId": 70,
+            "languageCode": "IT",
+            "countryCode": "CH",
+            "description": "Italian - Switzerland"
+        },
+        {
+            "languageId": 71,
+            "languageCode": "EN",
+            "countryCode": "HU",
+            "description": "English - Hungary"
+        },
+        {
+            "languageId": 72,
+            "languageCode": "HU",
+            "countryCode": "HU",
+            "description": "Hungarian - Hungary"
+        },
+        {
+            "languageId": 73,
+            "languageCode": "EN",
+            "countryCode": "RO",
+            "description": "English - Romania"
+        },
+        {
+            "languageId": 74,
+            "languageCode": "RO",
+            "countryCode": "RO",
+            "description": "Romanian - Romania"
+        },
+        {
+            "languageId": 75,
+            "languageCode": "AR",
+            "countryCode": "EG",
+            "description": "Arabic - Egypt"
+        },
+        {
+            "languageId": 76,
+            "languageCode": "EN",
+            "countryCode": "NG",
+            "description": "English - Nigeria"
+        },
+        {
+            "languageId": 77,
+            "languageCode": "HI",
+            "countryCode": "IN",
+            "description": "Hindi - India"
+        },
+        {
+            "languageId": 78,
+            "languageCode": "EN",
+            "countryCode": "ID",
+            "description": "English - Indonesia"
+        },
+        {
+            "languageId": 79,
+            "languageCode": "EN",
+            "countryCode": "KE",
+            "description": "English-Kenya"
+        },
+        {
+            "languageId": 80,
+            "languageCode": "EN",
+            "countryCode": "NG",
+            "description": "English-Nigeria"
+        },
+        {
+            "languageId": 81,
+            "languageCode": "EN",
+            "countryCode": "PK",
+            "description": "English-Pakistan"
+        },
+        {
+            "languageId": 82,
+            "languageCode": "RU",
+            "countryCode": "KZ",
+            "description": "Russian-Kazakhstan"
+        },
+        {
+            "languageId": 83,
+            "languageCode": "UK",
+            "countryCode": "UA",
+            "description": "Ukrainian-Ukraine"
+        },
+        {
+            "languageId": 84,
+            "languageCode": "EN",
+            "countryCode": "PL",
+            "description": "English-Poland"
+        },
+        {
+            "languageId": 85,
+            "languageCode": "HR",
+            "countryCode": "HR",
+            "description": "Croatian-Croatia"
+        },
+        {
+            "languageId": 86,
+            "languageCode": "EN",
+            "countryCode": "GT",
+            "description": "English - Guatemala"
+        },
+        {
+            "languageId": 87,
+            "languageCode": "ES",
+            "countryCode": "GT",
+            "description": "Spanish - Guatemala"
+        },
+        {
+            "languageId": 88,
+            "languageCode": "LT",
+            "countryCode": "LT",
+            "description": "Lithuanian - Lithuania"
+        },
+        {
+            "languageId": 89,
+            "languageCode": "LV",
+            "countryCode": "LV",
+            "description": "Latvian - Latvia"
+        },
+        {
+            "languageId": 90,
+            "languageCode": "MT",
+            "countryCode": "MT",
+            "description": "Maltese - Malta"
+        },
+        {
+            "languageId": 91,
+            "languageCode": "SK",
+            "countryCode": "SK",
+            "description": "Slovak - Slovakia"
+        },
+        {
+            "languageId": 92,
+            "languageCode": "SL",
+            "countryCode": "SI",
+            "description": "Slovene - Slovenia"
+        },
+        {
+            "languageId": 93,
+            "languageCode": "ET",
+            "countryCode": "EE",
+            "description": "Estonian - Estonia"
+        },
+        {
+            "languageId": 94,
+            "languageCode": "EL",
+            "countryCode": "CY",
+            "description": "Greek - Cyprus"
+        },
+        {
+            "languageId": 95,
+            "languageCode": "LU",
+            "countryCode": "LU",
+            "description": "Luxembourgish - Luxembourg"
+        },
+        {
+            "languageId": 96,
+            "languageCode": "FR",
+            "countryCode": "LU",
+            "description": "French - Luxembourg"
+        },
+        {
+            "languageId": 97,
+            "languageCode": "DE",
+            "countryCode": "LU",
+            "description": "German - Luxembourg"
+        },
+        {
+            "languageId": 98,
+            "languageCode": "BG",
+            "countryCode": "BG",
+            "description": "Bulgarian - Bulgaria"
+        },
+        {
+            "languageId": 99,
+            "languageCode": "AM",
+            "countryCode": "ET",
+            "description": "Amharic - Ethiopia"
+        },
+        {
+            "languageId": 100,
+            "languageCode": "HY",
+            "countryCode": "AM",
+            "description": "Armenian - Armenia"
+        },
+        {
+            "languageId": 101,
+            "languageCode": "BE",
+            "countryCode": "BY",
+            "description": "Belarusian - Belarus"
+        },
+        {
+            "languageId": 102,
+            "languageCode": "MN",
+            "countryCode": "MN",
+            "description": "Mongolian - Mongolia"
+        },
+        {
+            "languageId": 103,
+            "languageCode": "ES",
+            "countryCode": "EC",
+            "description": "Spanish - Ecuador"
+        },
+        {
+            "languageId": 104,
+            "languageCode": "ES",
+            "countryCode": "AL",
+            "description": "Albanian - Albania"
+        },
+        {
+            "languageId": 105,
+            "languageCode": "AR",
+            "countryCode": "QA",
+            "description": "Arabic - Qatar"
+        },
+        {
+            "languageId": 106,
+            "languageCode": "EN",
+            "countryCode": "QA",
+            "description": "English - Qatar"
+        },
+        {
+            "languageId": 107,
+            "languageCode": "EN",
+            "countryCode": "ET",
+            "description": "English - Ethiopia"
+        },
+        {
+            "languageId": 108,
+            "languageCode": "FR",
+            "countryCode": "CD",
+            "description": "French - Congo"
+        },
+        {
+            "languageId": 109,
+            "languageCode": "AR",
+            "countryCode": "KW",
+            "description": "Arabic - Kuwait"
+        },
+        {
+            "languageId": 110,
+            "languageCode": "ES",
+            "countryCode": "SV",
+            "description": "Spanish - El Salvador"
+        },
+        {
+            "languageId": 111,
+            "languageCode": "AR",
+            "countryCode": "OM",
+            "description": "Arabic - Oman"
+        },
+        {
+            "languageId": 112,
+            "languageCode": "AR",
+            "countryCode": "BH",
+            "description": "Arabic - Bahrain"
+        },
+        {
+            "languageId": 113,
+            "languageCode": "ES",
+            "countryCode": "VE",
+            "description": "Spanish - Venezuela"
+        },
+        {
+            "languageId": 114,
+            "languageCode": "PH",
+            "countryCode": "PH",
+            "description": "Filipino-Philippines"
+        },
+        {
+            "languageId": 115,
+            "languageCode": "EN",
+            "countryCode": "JM",
+            "description": "English- Jamaica"
+        },
+        {
+            "languageId": 116,
+            "languageCode": "KIN",
+            "countryCode": "RW",
+            "description": "Rwanda  - Kinyarwanda"
+        },
+        {
+            "languageId": 117,
+            "languageCode": "SW",
+            "countryCode": "RW",
+            "description": "Rwanda  - Swahili"
+        },
+        {
+            "languageId": 118,
+            "languageCode": "FR",
+            "countryCode": "RW",
+            "description": "Rwanda  - French"
+        },
+        {
+            "languageId": 119,
+            "languageCode": "EN",
+            "countryCode": "RW",
+            "description": "Rwanda  - English"
+        },
+        {
+            "languageId": 120,
+            "languageCode": "ZH",
+            "countryCode": "MO",
+            "description": "Traditional Chinese - Macau"
+        },
+        {
+            "languageId": 121,
+            "languageCode": "ZH",
+            "countryCode": "MO",
+            "description": "Simplified Chinese - Macau"
+        },
+        {
+            "languageId": 122,
+            "languageCode": "PT",
+            "countryCode": "MO",
+            "description": "Portuguese - Macau"
+        }
+    ]
+}
