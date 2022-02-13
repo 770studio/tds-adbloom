@@ -154,7 +154,7 @@ class StatsAlertsService
 
         if ($Recent->isEmpty()) {
             dump("no results for the test within recent period");
-            return;
+           // return;
         }
 
         //   group by older period
