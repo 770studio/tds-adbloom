@@ -46,10 +46,8 @@ class GeneralResearchResponse extends Response
             : 1 / 100;
 
         $this->transformBuckets(function (&$item) use ($partner, $denom) {
-            $item->payout->max = number_format($partner->calulateReward($item->payout->max) * $denom, 2,
-                '.', '');
-            $item->payout->min = number_format($partner->calulateReward($item->payout->min) * $denom, 2,
-                '.', '');
+            $item->payout->max = $partner->calulateReward($item->payout->max, $denom);
+            $item->payout->min = $partner->calulateReward($item->payout->min, $denom);
             return $item;
         });
 
@@ -125,7 +123,7 @@ class GeneralResearchResponse extends Response
                     ])
                 );
             }
-
+ 
             return $buckets;
 
         } catch (Exception $e) {
