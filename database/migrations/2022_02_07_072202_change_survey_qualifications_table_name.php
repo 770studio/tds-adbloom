@@ -14,6 +14,7 @@ class ChangeSurveyQualificationsTableName extends Migration
     public function up()
     {
         Schema::dropIfExists('schlesinger_survey_qualifications_acceptance');
+        Schema::dropIfExists('schlesinger_survey_qualifications');
 
         Schema::create('schlesinger_survey_qualifications', function (Blueprint $table) {
             $table->id();
