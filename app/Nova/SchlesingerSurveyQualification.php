@@ -32,6 +32,9 @@ class SchlesingerSurveyQualification extends Resource
         'id',
     ];
 
+    public static $with = ['question', 'answers'];
+
+
     /**
      * Get the fields displayed by the resource.
      *
