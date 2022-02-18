@@ -69,6 +69,11 @@ class doPartnerPostBack implements ShouldQueue, ShouldBeUnique
             Log::channel('queue')->debug('doPartnerPostBack no Opportunity found');
         }
 
+        if ($this->conversion->Stat_source !== 'widget') {
+            Log::channel('queue')->debug('Stat_source != widget. Bye for now...');
+            return;
+        }
+
         Log::channel('queue')->debug('doPartnerPostBack start executing',
             ['conversion id' => $this->conversion->id,
                 'tune id' => $this->conversion->Stat_tune_event_id,
