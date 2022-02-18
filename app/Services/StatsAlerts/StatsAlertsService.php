@@ -187,7 +187,7 @@ class StatsAlertsService
 
 
         $this->alerts->whenEmpty(function ($collection) {
-            $this->noAlertsForToday('Campaign Activated');
+           // $this->noAlertsForToday('Campaign Activated');
             return $collection;
         })->each(function ($alertDTO) {
             $this->slackAlert(
