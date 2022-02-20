@@ -6,12 +6,11 @@ use App\Models\Integrations\Schlesinger\SchlesingerSurvey;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualification;
 use App\Models\Integrations\Schlesinger\SchlesingerSurveyQualificationQuestion;
 use App\Services\SchlesingerAPI\SchlesingerAPIService;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-class SchlesingerSurveyQualificationsUpdateJob extends SchlesingerQualificationsUpdateJob implements ShouldQueue
+class SchlesingerSurveyQualificationsUpdateJob extends SchlesingerQualificationsUpdateJob
 {
 
     private SchlesingerSurvey $survey;
